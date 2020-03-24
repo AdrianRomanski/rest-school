@@ -8,6 +8,14 @@ public interface StudentService {
 
     List<StudentDTO> getAllStudents();
 
-    StudentDTO getStudentByLastName();
+    StudentDTO getStudentByFirstAndLastName(String firstName, String lastName);
+
+    StudentDTO createNewStudent(StudentDTO studentDTO);
+
+    void deleteStudentByID(Long id);
+
+    StudentDTO saveStudentByDTO(Long id, StudentDTO studentDTO);
+
+    StudentDTO getStudentByID(Long id);
 
 }

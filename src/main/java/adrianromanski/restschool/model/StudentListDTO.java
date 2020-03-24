@@ -10,5 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentListDTO {
+
     List<StudentDTO> students;
 }

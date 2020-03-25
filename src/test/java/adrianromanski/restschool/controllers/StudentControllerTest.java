@@ -1,6 +1,5 @@
 package adrianromanski.restschool.controllers;
 
-import adrianromanski.restschool.domain.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.StudentDTO;
 import adrianromanski.restschool.services.StudentService;

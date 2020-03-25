@@ -5,7 +5,6 @@ import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.StudentMapper;
 import adrianromanski.restschool.model.StudentDTO;
 import adrianromanski.restschool.repositories.StudentRepository;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

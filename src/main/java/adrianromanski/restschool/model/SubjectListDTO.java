@@ -11,4 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 public class SubjectListDTO {
     List<SubjectDTO> subjects;
+
+    public void addSubject(SubjectDTO subjectDTO) {
+        this.subjects.add(subjectDTO);
+    }
 }

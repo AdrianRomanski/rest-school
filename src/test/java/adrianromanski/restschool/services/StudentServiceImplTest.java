@@ -112,7 +112,7 @@ class StudentServiceImplTest {
     }
 
     @Test
-    void saveStudentByDTO() {
+    void updateStudent() {
         //given
         StudentDTO studentDTO = new StudentDTO();
         studentDTO.setFirstName(FIRST_NAME);
@@ -126,7 +126,7 @@ class StudentServiceImplTest {
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
 
         //when
-        StudentDTO savedDTO = studentService.saveStudentByDTO(ID, studentDTO);
+        StudentDTO savedDTO = studentService.updateStudent(ID, studentDTO);
 
         //then
         assertEquals(studentDTO.getFirstName(), savedDTO.getFirstName());

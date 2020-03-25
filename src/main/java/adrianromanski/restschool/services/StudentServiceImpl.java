@@ -5,6 +5,7 @@ import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.StudentMapper;
 import adrianromanski.restschool.model.StudentDTO;
 import adrianromanski.restschool.repositories.StudentRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,14 +43,13 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void deleteStudentByID(Long id) {
-         studentRepository.deleteById(id);
+            studentRepository.deleteById(id);
     }
 
     @Override
-    public StudentDTO saveStudentByDTO(Long id, StudentDTO studentDTO) {
+    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
         Student student = studentMapper.studentDTOToStudent(studentDTO);
         student.setId(id);
-
         return saveAndReturnDTO(student);
     }
 
@@ -57,7 +57,6 @@ public class StudentServiceImpl implements StudentService {
     public StudentDTO getStudentByID(Long id) {
         return studentMapper.studentToStudentDTO(studentRepository.findById(id)
                                                     .orElseThrow(ResourceNotFoundException::new));
-
 }
 
     public StudentDTO saveAndReturnDTO(Student student) {

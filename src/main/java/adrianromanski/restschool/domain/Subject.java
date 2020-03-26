@@ -6,24 +6,20 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"students"})
-
-public class Subject {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+@Table(name = "subjects")
+public class Subject extends BaseEntity{
 
     private String name;
     private Long value;
 
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(mappedBy = "subjects")
     private Set<Student> students = new HashSet<>();
 
     public void addStudent(Student student) {

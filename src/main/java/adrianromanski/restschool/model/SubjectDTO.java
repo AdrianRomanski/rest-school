@@ -1,9 +1,7 @@
 package adrianromanski.restschool.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import adrianromanski.restschool.domain.BaseEntity;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,9 +10,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SubjectDTO {
+public class SubjectDTO extends BaseEntity {
 
-    private Long id;
     private String name;
     private Long value;
 

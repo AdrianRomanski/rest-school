@@ -6,22 +6,23 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@EqualsAndHashCode(exclude = "subjects")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@EqualsAndHashCode(exclude = {"subjects"})
-public class Student {
+@Data
+@Table(name = "students")
+public class Student extends Person {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String firstName;
-    private String lastName;
+    @Builder
+    public Student(Long id, String firstName, String lastName) {
+        super(id, firstName, lastName);
+    }
 
     @ToString.Exclude
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "student_subjects", joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private Set<Subject> subjects = new HashSet<>();
 
     public void addSubject(Subject subject) {

@@ -1,7 +1,6 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.model.SubjectDTO;
-import adrianromanski.restschool.model.SubjectListDTO;
 
 import java.util.List;
 

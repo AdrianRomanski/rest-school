@@ -1,7 +1,10 @@
 package adrianromanski.restschool.model;
 
 import adrianromanski.restschool.domain.BaseEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;

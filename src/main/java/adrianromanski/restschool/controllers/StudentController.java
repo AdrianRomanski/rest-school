@@ -19,7 +19,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @ApiOperation("Returns a StudentListDTO Object")
+    @ApiOperation("Returns a StudentListDTO Object that contains all Students")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllStudents() {
@@ -40,7 +40,7 @@ public class StudentController {
         return studentService.getStudentByFirstAndLastName(firstName, lastName);
     }
 
-    @ApiOperation("Creating and save new Student based on StudentDTO body")
+    @ApiOperation("Create and save new Student based on StudentDTO body")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public StudentDTO createNewStudent(@RequestBody StudentDTO studentDTO) {

@@ -175,7 +175,7 @@ class SubjectServiceImplTest {
         //when
         SubjectDTO subjectDTO = subjectService.getMostPopularSubject();
 
-        assertEquals(subject1.getStudents().size(), subjectDTO.getStudents().size());
+        assertEquals(subject1.getStudents().size(), subjectDTO.getStudentsDTO().size());
 
     }
 }

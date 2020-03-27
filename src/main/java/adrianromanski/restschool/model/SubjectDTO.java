@@ -18,5 +18,6 @@ public class SubjectDTO extends BaseEntity {
     private String name;
     private Long value;
 
-    private Set<StudentDTO> students = new HashSet<>();
+    private Set<StudentDTO> studentsDTO = new HashSet<>();
+
 }

@@ -1,6 +1,6 @@
 package adrianromanski.restschool.model;
 
-import adrianromanski.restschool.domain.BaseEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +13,7 @@ import javax.persistence.MappedSuperclass;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-public class PersonDTO extends BaseEntity {
+public class PersonDTO extends BaseEntityDTO{
 
     private String firstName;
     private String lastName;

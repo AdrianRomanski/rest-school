@@ -155,6 +155,8 @@ class SubjectServiceImplTest {
     void getMostPopularSubject() {
         //given
         Subject subject1 = new Subject();
+        subject1.setName("Math");
+
 
         Student adrian = Student.builder().firstName("Adrian").build();
         Student adrian1 = Student.builder().firstName("Adrian1").build();
@@ -165,6 +167,8 @@ class SubjectServiceImplTest {
         subject1.addStudent(adrian2);
 
         Subject subject3 = new Subject();
+        subject3.setName("Biology");
+
         Student wojtek = Student.builder().firstName("Wojtek").build();
         subject3.addStudent(wojtek);
 
@@ -175,7 +179,7 @@ class SubjectServiceImplTest {
         //when
         SubjectDTO subjectDTO = subjectService.getMostPopularSubject();
 
-        assertEquals(subject1.getStudents().size(), subjectDTO.getStudentsDTO().size());
+        assertEquals(subjectDTO.getName(), subject1.getName());
 
     }
 }

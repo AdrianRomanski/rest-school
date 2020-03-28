@@ -2,6 +2,7 @@ package adrianromanski.restschool.bootstrap;
 
 import adrianromanski.restschool.domain.Student;
 import adrianromanski.restschool.domain.Subject;
+import adrianromanski.restschool.model.SubjectDTO;
 import adrianromanski.restschool.repositories.StudentRepository;
 import adrianromanski.restschool.repositories.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -40,16 +41,30 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         adrian.setFirstName("Adrian");
         adrian.setLastName("Romanski");
 
+        Student piotrek = new Student();
+        piotrek.setFirstName("Piotrek");
+        piotrek.setLastName("Cieszynski");
+
+        Student filip = new Student();
+        filip.setFirstName("Filip");
+        filip.setLastName("Konieczny");
+
         // Assign Subjects to Students
         adrian.addSubject(math);
         adrian.addSubject(biology);
+        filip.addSubject(math);
+        piotrek.addSubject(math);
 
         // Assign Students to Subjects
         biology.addStudent(adrian);
         math.addStudent(adrian);
+        math.addStudent(filip);
+        math.addStudent(piotrek);
 
         // Saving to repositories
         studentRepository.save(adrian);
+        studentRepository.save(filip);
+        studentRepository.save(piotrek);
         subjectRepository.save(biology);
         subjectRepository.save(math);
 

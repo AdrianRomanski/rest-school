@@ -77,6 +77,11 @@ public class SubjectServiceImpl implements SubjectService {
         return subjectMapper.subjectToSubjectDTO(subjects.get(0));
     }
 
+    @Override
+    public void deleteSubjectByID(Long id) {
+        subjectRepository.deleteById(id);
+    }
+
     public SubjectDTO saveAndReturnDto(Subject subject) {
         Subject savedSubject = subjectRepository.save(subject);
         return subjectMapper.subjectToSubjectDTO(subject);

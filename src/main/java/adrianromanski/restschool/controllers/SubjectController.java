@@ -73,4 +73,11 @@ public class SubjectController {
         return subjectService.getMostPopularSubject();
     }
 
+    @ApiOperation("Delete a subject based on ID provided or else throw EmptyResultDataAccessException")
+    @DeleteMapping("{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteSubjectByID(@PathVariable String ID) {
+        subjectService.deleteSubjectByID(Long.valueOf(ID));
+    }
+
 }

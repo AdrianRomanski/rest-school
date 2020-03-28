@@ -14,4 +14,6 @@ import java.util.Set;
 public class StudentDTO extends PersonDTO {
 
     private Set<SubjectDTO> subjectsDTO = new HashSet<>();
+
+    private Set<ExamDTO> examsDTO = new HashSet<>();
 }

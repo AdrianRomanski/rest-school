@@ -1,8 +1,10 @@
 package adrianromanski.restschool.bootstrap;
 
+import adrianromanski.restschool.domain.Exam;
 import adrianromanski.restschool.domain.Student;
 import adrianromanski.restschool.domain.Subject;
 import adrianromanski.restschool.model.SubjectDTO;
+import adrianromanski.restschool.repositories.ExamRepository;
 import adrianromanski.restschool.repositories.StudentRepository;
 import adrianromanski.restschool.repositories.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -11,18 +13,23 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
 @Component
 @Slf4j
 public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
+    private final ExamRepository examRepository;
 
-    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository) {
+    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
+        this.examRepository = examRepository;
     }
-
 
     @Override
     @Transactional
@@ -49,6 +56,26 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         filip.setFirstName("Filip");
         filip.setLastName("Konieczny");
 
+        // Init set of Students
+        Set<Student> students = new HashSet<>();
+        students.add(filip);
+        students.add(adrian);
+        students.add(piotrek);
+
+        // Init Exams
+        Exam mathExam = new Exam();
+        mathExam.setName("First math exam");
+        mathExam.setDate(LocalDate.now());
+        mathExam.setStudents(students);
+
+        // Assign subject to Exam
+        mathExam.setSubject(math);
+
+        // Assign exam to Students
+        adrian.addExam(mathExam);
+        filip.addExam(mathExam);
+        piotrek.addExam(mathExam);
+
         // Assign Subjects to Students
         adrian.addSubject(math);
         adrian.addSubject(biology);
@@ -61,15 +88,21 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         math.addStudent(filip);
         math.addStudent(piotrek);
 
+        // Assign Exams to Subjects
+        math.addExam(mathExam);
+
+
         // Saving to repositories
         studentRepository.save(adrian);
         studentRepository.save(filip);
         studentRepository.save(piotrek);
         subjectRepository.save(biology);
         subjectRepository.save(math);
+        examRepository.save(mathExam);
 
         // Logging to console
         log.info("Saved: " + studentRepository.count() + " Students");
         log.info("Saved: " + subjectRepository.count() + " Subjects");
+        log.info("Saved: " + examRepository.count() + " Exams");
     }
 }

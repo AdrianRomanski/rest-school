@@ -117,7 +117,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
         StudentDTO returnDTO = new StudentDTO();
         returnDTO.setFirstName(studentDTO.getFirstName());
-        returnDTO.setLastName(studentDTO.getLastName());
+        returnDTO.setLastName("Roman"); // Update value
         returnDTO.setId(studentDTO.getId());
 
         when(studentService.updateStudent(anyLong(), any(StudentDTO.class))).thenReturn(returnDTO);
@@ -128,7 +128,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .content(asJsonString(studentDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)));
+                .andExpect(jsonPath("$.lastName", equalTo("Roman")));
     }
 
     @Test

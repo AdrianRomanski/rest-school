@@ -11,7 +11,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table(name = "students")
 public class Student extends Person {
 
     @Builder

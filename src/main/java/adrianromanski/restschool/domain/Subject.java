@@ -14,7 +14,6 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "subjects")
 public class Subject extends BaseEntity{
 
     private String name;

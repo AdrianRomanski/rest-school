@@ -25,7 +25,7 @@ public class SubjectController {
     }
 
     @ApiOperation("Returns a Subject Object based on ID or else throw ResourceNotFoundException")
-    @GetMapping({"ID"})
+    @GetMapping("id-{ID}")
     @ResponseStatus(HttpStatus.OK)
     public SubjectDTO getSubjectByID(@PathVariable String ID) {
         return subjectService.getSubjectByID(Long.valueOf(ID));
@@ -39,14 +39,14 @@ public class SubjectController {
     }
 
     @ApiOperation("Update an existing subject with matching ID or create a new one")
-    @PutMapping({"ID"})
+    @PutMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)
     public SubjectDTO updateSubject(@PathVariable String ID, @RequestBody SubjectDTO subjectDTO) {
         return subjectService.updateSubject(Long.valueOf(ID), subjectDTO);
     }
 
     @ApiOperation("Returns a Subject Object based on name")
-    @GetMapping({"name"})
+    @GetMapping("name-{name}")
     @ResponseStatus(HttpStatus.OK)
     public SubjectDTO getSubjectByName(@PathVariable String name) {
         return subjectService.getSubjectByName(name);

@@ -15,4 +15,5 @@ public interface ExamService  {
     ExamDTO getExamById(Long id);
 
     void deleteExamById(Long id);
+
 }

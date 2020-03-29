@@ -26,7 +26,7 @@ public class StudentController {
         return new StudentListDTO(studentService.getAllStudents());
     }
 
-    @ApiOperation("Returns a Student Object based on ID or else throw ResourceNotFoundException")
+    @ApiOperation("Returns an Student Object based on ID or else throw ResourceNotFoundException")
     @GetMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO getStudentByID(@PathVariable String ID) {
@@ -54,7 +54,7 @@ public class StudentController {
         return studentService.updateStudent(Long.valueOf(ID), studentDTO);
     }
 
-    @ApiOperation("Delete a student based on ID provided or else throw EmptyResultDataAccessException")
+    @ApiOperation("Delete a student based on ID")
     @DeleteMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteCustomer(@PathVariable String ID) {

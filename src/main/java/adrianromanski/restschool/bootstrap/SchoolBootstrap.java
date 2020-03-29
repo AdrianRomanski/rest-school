@@ -65,16 +65,25 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         // Init Exams
         Exam mathExam = new Exam();
         mathExam.setName("First math exam");
-        mathExam.setPoints(80L);
+        mathExam.setMaxPoints(80L);
         mathExam.setDate(LocalDate.now());
+        // Assign students to Exam
         mathExam.setStudents(students);
 
+        Exam biologyExam = new Exam();
+        biologyExam.setName("Second biology exam");
+        biologyExam.setMaxPoints(60L);
+        biologyExam.setDate(LocalDate.now());
+        // Assign students to Exam
+        biologyExam.setStudents(students);
 
 
         // Assign exam to Students
         adrian.addExam(mathExam);
+        adrian.addExam(biologyExam);
         filip.addExam(mathExam);
         piotrek.addExam(mathExam);
+
 
         // Assign Subjects to Students
         adrian.addSubject(math);
@@ -90,9 +99,11 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         // Assign Exams to Subjects
         math.addExam(mathExam);
+        biology.addExam(biologyExam);
 
         // Assign subject to Exam
         mathExam.setSubject(math);
+        biologyExam.setSubject(biology);
 
 
         System.out.println(mathExam.getSubject());
@@ -105,6 +116,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         subjectRepository.save(biology);
         subjectRepository.save(math);
         examRepository.save(mathExam);
+        examRepository.save(biologyExam);
 
         // Logging to console
         log.info("Saved: " + studentRepository.count() + " Students");

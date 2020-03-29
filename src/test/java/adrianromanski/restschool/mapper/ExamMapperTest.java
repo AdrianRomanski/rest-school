@@ -16,8 +16,6 @@ public class ExamMapperTest {
     private final String MATH = "Math";
     private final LocalDate DATE = LocalDate.now();
     private final Long POINTS = 100L;
-    private final Boolean PASSED = true;
-
 
     ExamMapper examMapper = ExamMapper.INSTANCE;
 
@@ -26,8 +24,7 @@ public class ExamMapperTest {
         Exam exam = new Exam();
         exam.setName(NAME);
         exam.setDate(DATE);
-        exam.setPoints(POINTS);
-        exam.setPassed(PASSED);
+        exam.setMaxPoints(POINTS);
         Subject math = new Subject();
         math.setName(MATH);
         exam.setSubject(math);
@@ -36,8 +33,7 @@ public class ExamMapperTest {
 
         assertEquals(NAME, examDTO.getName());
         assertEquals(DATE, examDTO.getDate());
-        assertEquals(POINTS, examDTO.getPoints());
-        assertEquals(PASSED, examDTO.getPassed());
+        assertEquals(POINTS, examDTO.getMaxPoints());
         assertEquals(MATH, examDTO.getSubjectDTO().getName());
     }
 
@@ -46,8 +42,7 @@ public class ExamMapperTest {
         ExamDTO examDTO = new ExamDTO();
         examDTO.setName(NAME);
         examDTO.setDate(DATE);
-        examDTO.setPoints(POINTS);
-        examDTO.setPassed(PASSED);
+        examDTO.setMaxPoints(POINTS);
         SubjectDTO math = new SubjectDTO();
         math.setName(MATH);
         examDTO.setSubjectDTO(math);
@@ -56,8 +51,7 @@ public class ExamMapperTest {
 
         assertEquals(NAME, exam.getName());
         assertEquals(DATE, exam.getDate());
-        assertEquals(POINTS, exam.getPoints());
-        assertEquals(PASSED, exam.getPassed());
+        assertEquals(POINTS, exam.getMaxPoints());
         assertEquals(MATH, exam.getSubject().getName());
     }
 

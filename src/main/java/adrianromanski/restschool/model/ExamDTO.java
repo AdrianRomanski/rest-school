@@ -1,6 +1,7 @@
 package adrianromanski.restschool.model;
 
 import adrianromanski.restschool.domain.BaseEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,9 @@ public class ExamDTO extends BaseEntity {
 
     private String name;
     private LocalDate date;
-    private Long points;
-    private Boolean passed;
+    private Long maxPoints;
 
+    @JsonIgnore
     private Set<StudentDTO> studentsDTO = new HashSet<>();
     private SubjectDTO subjectDTO;
 }

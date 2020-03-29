@@ -43,8 +43,7 @@ class ExamServiceImplTest {
         ExamDTO examDTO = new ExamDTO();
         examDTO.setDate(DATE);
         examDTO.setName(NAME);
-        examDTO.setPassed(PASSED);
-        examDTO.setPoints(POINTS);
+        examDTO.setMaxPoints(POINTS);
         examDTO.setId(ID);
         return examDTO;
     }
@@ -69,8 +68,7 @@ class ExamServiceImplTest {
         ExamDTO examDTO = initExamDTO();
 
         Exam savedExam = new Exam();
-        savedExam.setPoints(examDTO.getPoints());
-        savedExam.setPassed(examDTO.getPassed());
+        savedExam.setMaxPoints(examDTO.getMaxPoints());
         savedExam.setName(examDTO.getName());
         savedExam.setDate(examDTO.getDate());
 
@@ -81,8 +79,7 @@ class ExamServiceImplTest {
 
         assertEquals(savedDTO.getDate(), examDTO.getDate());
         assertEquals(savedDTO.getName(), examDTO.getName());
-        assertEquals(savedDTO.getPassed(), examDTO.getPassed());
-        assertEquals(savedDTO.getPoints(), examDTO.getPoints());
+        assertEquals(savedDTO.getMaxPoints(), examDTO.getMaxPoints());
     }
 
     @Test
@@ -91,8 +88,7 @@ class ExamServiceImplTest {
         ExamDTO examDTO = initExamDTO();
 
         Exam updatedExam = new Exam();
-        updatedExam.setPoints(examDTO.getPoints());
-        updatedExam.setPassed(examDTO.getPassed());
+        updatedExam.setMaxPoints(examDTO.getMaxPoints());
         updatedExam.setName("Just a simple exam"); // Updating name
         updatedExam.setDate(examDTO.getDate());
         updatedExam.setId(examDTO.getId());

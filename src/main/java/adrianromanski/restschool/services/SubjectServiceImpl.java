@@ -83,7 +83,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     public SubjectDTO saveAndReturnDto(Subject subject) {
-        Subject savedSubject = subjectRepository.save(subject);
+        subjectRepository.save(subject);
         return subjectMapper.subjectToSubjectDTO(subject);
     }
 }

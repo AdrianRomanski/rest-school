@@ -59,7 +59,7 @@ public class StudentServiceImpl implements StudentService {
 }
 
     public StudentDTO saveAndReturnDTO(Student student) {
-        Student savedStudent = studentRepository.save(student);
+        studentRepository.save(student);
         return studentMapper.studentToStudentDTO(student);
     }
 }

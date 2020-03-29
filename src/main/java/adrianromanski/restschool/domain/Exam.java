@@ -20,12 +20,13 @@ public class Exam extends BaseEntity {
 
     private String name;
     private LocalDate date;
+    private Long points;
+    private Boolean passed;
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "exams")
     private Set<Student> students = new HashSet<>();
 
-    @ToString.Exclude
     @ManyToOne
     private Subject subject;
 }

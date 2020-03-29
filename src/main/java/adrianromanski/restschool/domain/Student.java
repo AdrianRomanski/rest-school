@@ -13,10 +13,6 @@ import java.util.Set;
 @Data
 public class Student extends Person {
 
-    @Builder
-    public Student(Long id, String firstName, String lastName) {
-        super(id, firstName, lastName);
-    }
 
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.EAGER)

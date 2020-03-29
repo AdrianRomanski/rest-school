@@ -65,11 +65,11 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         // Init Exams
         Exam mathExam = new Exam();
         mathExam.setName("First math exam");
+        mathExam.setPoints(80L);
         mathExam.setDate(LocalDate.now());
         mathExam.setStudents(students);
 
-        // Assign subject to Exam
-        mathExam.setSubject(math);
+
 
         // Assign exam to Students
         adrian.addExam(mathExam);
@@ -90,6 +90,12 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         // Assign Exams to Subjects
         math.addExam(mathExam);
+
+        // Assign subject to Exam
+        mathExam.setSubject(math);
+
+
+        System.out.println(mathExam.getSubject());
 
 
         // Saving to repositories

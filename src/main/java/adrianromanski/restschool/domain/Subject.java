@@ -9,7 +9,6 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"students", "exams"})
 @Data
 @Entity
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class Subject extends BaseEntity{

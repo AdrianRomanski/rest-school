@@ -16,6 +16,8 @@ public class ExamDTO extends BaseEntity {
 
     private String name;
     private LocalDate date;
+    private Long points;
+    private Boolean passed;
 
     private Set<StudentDTO> studentsDTO = new HashSet<>();
     private SubjectDTO subjectDTO;

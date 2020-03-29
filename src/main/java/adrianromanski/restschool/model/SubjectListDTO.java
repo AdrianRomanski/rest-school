@@ -12,7 +12,4 @@ import java.util.List;
 public class SubjectListDTO {
     List<SubjectDTO> subjects;
 
-    public void addSubject(SubjectDTO subjectDTO) {
-        this.subjects.add(subjectDTO);
-    }
 }

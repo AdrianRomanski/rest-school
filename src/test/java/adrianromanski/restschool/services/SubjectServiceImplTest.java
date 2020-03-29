@@ -14,14 +14,17 @@ import org.mockito.MockitoAnnotations;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 class SubjectServiceImplTest {
 
-    public static final String MATHEMATICS = "Mathematics";
-    public static final Long ID = 1L;
+    public static final String BIOLOGY = "Biology";
+    public static final String MATH = "Math";
+    public static final String PHYSICAL_EDUCATION = "Physical education";
+
     SubjectService subjectService;
 
     @Mock
@@ -33,6 +36,30 @@ class SubjectServiceImplTest {
         MockitoAnnotations.initMocks(this);
 
         subjectService = new SubjectServiceImpl(SubjectMapper.INSTANCE, subjectRepository);
+    }
+
+    Subject initBiology() {
+        Subject subject = new Subject();
+        subject.setName(BIOLOGY);
+        subject.setValue(10L);
+        subject.setId(1L);
+        return subject;
+    }
+
+    Subject initMath() {
+        Subject subject = new Subject();
+        subject.setName(MATH);
+        subject.setValue(10L);
+        subject.setId(2L);
+        return subject;
+    }
+
+    Subject initPE() {
+        Subject subject = new Subject();
+        subject.setName(PHYSICAL_EDUCATION);
+        subject.setValue(1L);
+        subject.setId(3L);
+        return subject;
     }
 
     @Test
@@ -53,7 +80,7 @@ class SubjectServiceImplTest {
     void createNewSubject() {
         //given
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName(MATHEMATICS);
+        subjectDTO.setName(MATH);
 
         Subject savedSubject = new Subject();
         savedSubject.setName(subjectDTO.getName());
@@ -71,26 +98,27 @@ class SubjectServiceImplTest {
     void updateSubject() {
         //given
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName(MATHEMATICS);
+        subjectDTO.setName(MATH);
+        subjectDTO.setId(1L);
 
         Subject savedSubject = new Subject();
         savedSubject.setName(subjectDTO.getName());
-        savedSubject.setId(ID);
+        savedSubject.setId(subjectDTO.getId());
 
         when(subjectRepository.save(any(Subject.class))).thenReturn(savedSubject);
 
         //when
-        SubjectDTO savedDTO = subjectService.updateSubject(ID, subjectDTO);
+        SubjectDTO savedDTO = subjectService.updateSubject(1L, subjectDTO);
 
         //then
-        assertEquals(savedDTO.getName(), MATHEMATICS);
+        assertEquals(savedDTO.getName(), MATH);
     }
 
     @Test
     void getSubjectByID() {
         //given
         Subject subject = new Subject();
-        subject.setName(MATHEMATICS);
+        subject.setName(MATH);
         subject.setId(1L);
 
         when(subjectRepository.findById(anyLong())).thenReturn(Optional.of(subject));
@@ -107,13 +135,13 @@ class SubjectServiceImplTest {
     void getSubjectByName() {
         //Given
         Subject subject = new Subject();
-        subject.setName(MATHEMATICS);
+        subject.setName(MATH);
         subject.setId(1L);
 
         when(subjectRepository.findByName(anyString())).thenReturn(subject);
 
         //when
-        SubjectDTO subjectDTO = subjectService.getSubjectByName(MATHEMATICS);
+        SubjectDTO subjectDTO = subjectService.getSubjectByName(MATH);
 
         //then
         assertEquals(subjectDTO.getName(), subject.getName());
@@ -124,8 +152,7 @@ class SubjectServiceImplTest {
     @Test
     void getSubjectsWithFullValue() {
         //Given
-        List<Subject> subjects = Arrays.asList(Subject.builder().value(10L).build(), Subject.builder().value(10L).build(),
-                                                Subject.builder().value(1L).build());
+        List<Subject> subjects = Arrays.asList(initBiology(), initMath(), initPE());
 
         when(subjectRepository.findAll()).thenReturn(subjects);
 
@@ -139,8 +166,7 @@ class SubjectServiceImplTest {
     @Test
     void getSubjectWithLowestValue() {
         //Given
-        List<Subject> subjects = Arrays.asList(Subject.builder().value(10L).build(), Subject.builder().value(1L).build(),
-                Subject.builder().value(1L).build());
+        List<Subject> subjects = Arrays.asList(initBiology(), initMath(), initPE());
 
         when(subjectRepository.findAll()).thenReturn(subjects);
 
@@ -148,7 +174,7 @@ class SubjectServiceImplTest {
         List<SubjectDTO> subjectDTOS = subjectService.getSubjectsWithLowestValue();
 
         //then
-        assertEquals(2, subjectDTOS.size());
+        assertEquals(1, subjectDTOS.size());
     }
 
     @Test
@@ -158,9 +184,12 @@ class SubjectServiceImplTest {
         subject1.setName("Math");
 
 
-        Student adrian = Student.builder().firstName("Adrian").build();
-        Student adrian1 = Student.builder().firstName("Adrian1").build();
-        Student adrian2 = Student.builder().firstName("Adrian2").build();
+        Student adrian = new Student();
+        adrian.setFirstName("Adrian");
+        Student adrian1 = new Student();
+        adrian.setFirstName("Adrian1");
+        Student adrian2 = new Student();
+        adrian.setFirstName("Adrian2");
 
         subject1.addStudent(adrian);
         subject1.addStudent(adrian1);
@@ -169,7 +198,8 @@ class SubjectServiceImplTest {
         Subject subject3 = new Subject();
         subject3.setName("Biology");
 
-        Student wojtek = Student.builder().firstName("Wojtek").build();
+        Student wojtek = new Student();
+        wojtek.setFirstName("Wojtek");
         subject3.addStudent(wojtek);
 
         List<Subject> subjects = Arrays.asList(subject1, subject3);

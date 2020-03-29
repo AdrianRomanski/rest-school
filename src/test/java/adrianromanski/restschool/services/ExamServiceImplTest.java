@@ -24,7 +24,6 @@ class ExamServiceImplTest {
     private final String NAME = "Final Math Exam";
     private final LocalDate DATE = LocalDate.now();
     private final Long POINTS = 100L;
-    private final Boolean PASSED = true;
     private final Long ID = 1L;
 
     ExamService examService;

@@ -15,5 +15,5 @@ public interface ExamResultMapper {
     ExamResultDTO examResultToExamResultDTO(ExamResult examResult);
 
     @Mapping(source = "examDTO" ,target = "exam")
-    ExamResult examResultDTOToExamResult(ExamResult examResult);
+    ExamResult examResultDTOToExamResult(ExamResultDTO examResultDTO);
 }

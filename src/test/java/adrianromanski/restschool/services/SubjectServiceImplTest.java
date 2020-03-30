@@ -1,11 +1,12 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.Student;
-import adrianromanski.restschool.domain.Subject;
+import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.mapper.SubjectMapper;
-import adrianromanski.restschool.model.StudentDTO;
-import adrianromanski.restschool.model.SubjectDTO;
+import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import adrianromanski.restschool.repositories.SubjectRepository;
+import adrianromanski.restschool.services.subject.SubjectService;
+import adrianromanski.restschool.services.subject.SubjectServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,7 +15,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.stream;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;

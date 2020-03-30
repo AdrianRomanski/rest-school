@@ -1,11 +1,11 @@
 package adrianromanski.restschool.bootstrap;
 
-import adrianromanski.restschool.domain.Exam;
-import adrianromanski.restschool.domain.ExamResult;
-import adrianromanski.restschool.domain.Student;
-import adrianromanski.restschool.domain.Subject;
-import adrianromanski.restschool.model.SubjectDTO;
+import adrianromanski.restschool.domain.base_entity.event.Exam;
+import adrianromanski.restschool.domain.base_entity.event.ExamResult;
+import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.repositories.ExamRepository;
+import adrianromanski.restschool.repositories.ExamResultRepository;
 import adrianromanski.restschool.repositories.StudentRepository;
 import adrianromanski.restschool.repositories.SubjectRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Component
 @Slf4j
@@ -27,11 +25,14 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
     private final ExamRepository examRepository;
+    private final ExamResultRepository examResultRepository;
 
-    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository) {
+    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository,
+                           ExamRepository examRepository, ExamResultRepository examResultRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.examRepository = examRepository;
+        this.examResultRepository = examResultRepository;
     }
 
     @Override
@@ -84,26 +85,23 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         // Init ExamResults
         ExamResult filipMathResult = new ExamResult();
+        filipMathResult.setName(filip.getFirstName() + " " + filip.getLastName());
+        filipMathResult.setExam(mathExam);
+        filipMathResult.setScore(60f);
+        filipMathResult.setDate(LocalDate.now());
         ExamResult adrianMathResult = new ExamResult();
-        ExamResult piotrekMathResult = new ExamResult();
-
-        // Setting scores
-        filipMathResult.setScore(60L);
-        adrianMathResult.setScore(45L);
+        adrianMathResult.setName(adrian.getFirstName() + " " + adrian.getLastName());
         adrianMathResult.setExam(mathExam);
+        adrianMathResult.setScore(45f);
         adrianMathResult.setDate(LocalDate.now());
-        adrianMathResult.setName("Adrian results of math exam");
-        piotrekMathResult.setScore(55L);
+        ExamResult piotrekMathResult = new ExamResult();
+        piotrekMathResult.setName(piotrek.getFirstName() + " " + piotrek.getLastName());
+        piotrekMathResult.setExam(mathExam);
+        piotrekMathResult.setScore(55f);
+        piotrekMathResult.setDate(LocalDate.now());
 
 
-        // Assign exam to Students
-        adrian.addExam(mathExam);
-        adrian.addExam(biologyExam);
-        filip.addExam(mathExam);
-        piotrek.addExam(mathExam);
-
-        // Assign result to exam
-        adrian.getExams().get(0).addResult(adrianMathResult);
+        //
 
 
         // Assign Subjects to Students
@@ -126,22 +124,40 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         mathExam.setSubject(math);
         biologyExam.setSubject(biology);
 
+        // Assign exam to Students
+        adrian.addExam(mathExam);
+        adrian.addExam(biologyExam);
+        filip.addExam(mathExam);
+        piotrek.addExam(mathExam);
 
-        System.out.println(mathExam.getSubject());
+        // Assign result
+        adrian.getExams().get(0).addResult(adrianMathResult);
+        filip.getExams().get(0).addResult(filipMathResult);
+        piotrek.getExams().get(0).addResult(piotrekMathResult);
+
 
 
         // Saving to repositories
+        //Students
         studentRepository.save(adrian);
         studentRepository.save(filip);
         studentRepository.save(piotrek);
+        //Subjects
         subjectRepository.save(biology);
         subjectRepository.save(math);
+        //Exams
         examRepository.save(mathExam);
         examRepository.save(biologyExam);
+        //Exam Results
+        examResultRepository.save(adrianMathResult);
+        examResultRepository.save(piotrekMathResult);
+        examResultRepository.save(filipMathResult);
+
 
         // Logging to console
         log.info("Saved: " + studentRepository.count() + " Students");
         log.info("Saved: " + subjectRepository.count() + " Subjects");
         log.info("Saved: " + examRepository.count() + " Exams");
+        log.info("Saved: " + examResultRepository.count() + " Exam Results");
     }
 }

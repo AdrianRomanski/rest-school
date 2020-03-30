@@ -1,6 +1,6 @@
-package adrianromanski.restschool.services;
+package adrianromanski.restschool.services.exam;
 
-import adrianromanski.restschool.model.ExamDTO;
+import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 
 import java.util.List;
 

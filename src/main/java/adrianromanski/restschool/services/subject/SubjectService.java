@@ -1,6 +1,6 @@
-package adrianromanski.restschool.services;
+package adrianromanski.restschool.services.subject;
 
-import adrianromanski.restschool.model.SubjectDTO;
+import adrianromanski.restschool.model.base_entity.SubjectDTO;
 
 import java.util.List;
 

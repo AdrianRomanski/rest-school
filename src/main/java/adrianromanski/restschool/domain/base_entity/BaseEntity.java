@@ -1,4 +1,4 @@
-package adrianromanski.restschool.domain;
+package adrianromanski.restschool.domain.base_entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

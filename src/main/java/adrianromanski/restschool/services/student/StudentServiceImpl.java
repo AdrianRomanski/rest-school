@@ -1,9 +1,9 @@
-package adrianromanski.restschool.services;
+package adrianromanski.restschool.services.student;
 
-import adrianromanski.restschool.domain.Student;
+import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.StudentMapper;
-import adrianromanski.restschool.model.StudentDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.repositories.StudentRepository;
 import org.springframework.stereotype.Service;
 

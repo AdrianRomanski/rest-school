@@ -1,12 +1,12 @@
-package adrianromanski.restschool.domain;
+package adrianromanski.restschool.domain.base_entity.person;
 
+import adrianromanski.restschool.domain.base_entity.Subject;
+import adrianromanski.restschool.domain.base_entity.event.Exam;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @EqualsAndHashCode(exclude = {"subjects", "exams"})
 @Entity

@@ -1,4 +1,4 @@
-package adrianromanski.restschool.model;
+package adrianromanski.restschool.model.base_entity.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,10 +6,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class StudentListDTO {
-    List<StudentDTO> students;
-
+@Data
+public class ExamListDTO {
+    List<ExamDTO> examDTOList;
 }

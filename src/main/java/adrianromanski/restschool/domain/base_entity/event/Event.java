@@ -1,5 +1,6 @@
-package adrianromanski.restschool.domain;
+package adrianromanski.restschool.domain.base_entity.event;
 
+import adrianromanski.restschool.domain.base_entity.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
-public class Event extends BaseEntity{
+public class Event extends BaseEntity {
 
     private String name;
     private LocalDate date;

@@ -1,6 +1,7 @@
-package adrianromanski.restschool.services;
+package adrianromanski.restschool.services.student;
 
-import adrianromanski.restschool.model.StudentDTO;
+
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 
 import java.util.List;
 

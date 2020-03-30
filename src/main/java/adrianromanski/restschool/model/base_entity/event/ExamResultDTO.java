@@ -1,5 +1,6 @@
-package adrianromanski.restschool.model;
+package adrianromanski.restschool.model.base_entity.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ExamResultDTO extends EventDTO {
 
+    @JsonIgnore
     private ExamDTO examDTO;
-    private Long score;
+    private float score;
+    private String grade;
 }

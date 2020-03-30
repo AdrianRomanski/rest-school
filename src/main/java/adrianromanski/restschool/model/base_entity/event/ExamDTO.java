@@ -1,6 +1,8 @@
-package adrianromanski.restschool.model;
+package adrianromanski.restschool.model.base_entity.event;
 
-import adrianromanski.restschool.domain.Event;
+import adrianromanski.restschool.domain.base_entity.event.Event;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;

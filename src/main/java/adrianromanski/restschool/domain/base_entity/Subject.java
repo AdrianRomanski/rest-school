@@ -1,5 +1,8 @@
-package adrianromanski.restschool.domain;
+package adrianromanski.restschool.domain.base_entity;
 
+import adrianromanski.restschool.domain.base_entity.BaseEntity;
+import adrianromanski.restschool.domain.base_entity.event.Exam;
+import adrianromanski.restschool.domain.base_entity.person.Student;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,7 +14,7 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Subject extends BaseEntity{
+public class Subject extends BaseEntity {
 
     private String name;
     private Long value;

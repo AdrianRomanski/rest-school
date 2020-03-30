@@ -1,8 +1,8 @@
 package adrianromanski.restschool.controllers;
 
-import adrianromanski.restschool.model.StudentDTO;
-import adrianromanski.restschool.model.StudentListDTO;
-import adrianromanski.restschool.services.StudentService;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentListDTO;
+import adrianromanski.restschool.services.student.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;

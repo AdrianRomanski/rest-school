@@ -1,9 +1,7 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.Student;
-import adrianromanski.restschool.domain.Subject;
-import adrianromanski.restschool.model.StudentDTO;
-import adrianromanski.restschool.model.SubjectDTO;
+import adrianromanski.restschool.domain.base_entity.Subject;
+import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

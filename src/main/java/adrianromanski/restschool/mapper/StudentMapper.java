@@ -1,7 +1,7 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.Student;
-import adrianromanski.restschool.model.StudentDTO;
+import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;

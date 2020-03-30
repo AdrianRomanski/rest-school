@@ -1,5 +1,7 @@
-package adrianromanski.restschool.domain;
+package adrianromanski.restschool.domain.base_entity.event;
 
+import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.base_entity.Subject;
 import lombok.*;
 
 import javax.persistence.*;

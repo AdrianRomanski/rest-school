@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -16,7 +16,7 @@ public class SubjectDTO extends BaseEntity {
     private String name;
     private Long value;
 
-    private Set<StudentDTO> studentsDTO = new HashSet<>();
-    private Set<ExamDTO> examsDTO = new HashSet<>();
+    private List<StudentDTO> studentsDTO = new ArrayList<>();
+    private List<ExamDTO> examsDTO = new ArrayList<>();
 
 }

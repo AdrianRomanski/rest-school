@@ -3,7 +3,9 @@ package adrianromanski.restschool.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode(exclude = {"subjects", "exams"})
@@ -15,21 +17,23 @@ public class Student extends Person {
 
 
     @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "student_subjects", joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
-    private Set<Subject> subjects = new HashSet<>();
+    private List<Subject> subjects = new ArrayList<>();
 
     @ToString.Exclude
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(name = "student_exams", joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "exam_id"))
-    private Set<Exam> exams = new HashSet<>();
+    private List<Exam> exams = new ArrayList<>();
+
 
     public void addSubject(Subject subject) {
         this.subjects.add(subject);
     }
 
     public void addExam(Exam exam) { this.exams.add(exam); }
+
 
 }

@@ -1,31 +1,32 @@
 package adrianromanski.restschool.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import java.time.LocalDate;
+import javax.persistence.*;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-@EqualsAndHashCode(exclude = {"students", "subject"})
+@EqualsAndHashCode(exclude = {"students", "subject", "subject"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Exam extends BaseEntity {
+public class Exam extends Event {
 
-    private String name;
-    private LocalDate date;
     private Long maxPoints;
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "exams")
-    private Set<Student> students = new HashSet<>();
+    private List<Student> students = new ArrayList<>();
+
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<ExamResult> results = new ArrayList<>();
 
     @ManyToOne
     private Subject subject;
+
+    public void addResult(ExamResult examResult) {
+        this.results.add(examResult);
+    }
 }

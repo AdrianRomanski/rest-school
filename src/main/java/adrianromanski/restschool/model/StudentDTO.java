@@ -5,15 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class StudentDTO extends PersonDTO {
 
-    private Set<SubjectDTO> subjectsDTO = new HashSet<>();
+    private List<SubjectDTO> subjectsDTO = new ArrayList<>();
 
-    private Set<ExamDTO> examsDTO = new HashSet<>();
+    private List<ExamDTO> examsDTO = new ArrayList<>();
 }

@@ -15,14 +15,16 @@ public interface ExamMapper {
 
     @Mappings({
             @Mapping(source = "subject", target = "subjectDTO"),
-            @Mapping(source = "students", target = "studentsDTO")
+            @Mapping(source = "students", target = "studentsDTO"),
+            @Mapping(source = "results", target = "resultsDTO")
     })
     ExamDTO examToExamDTO(Exam exam);
 
 
     @Mappings({
             @Mapping(source = "subjectDTO", target = "subject"),
-            @Mapping(source = "studentsDTO", target = "students")
+            @Mapping(source = "studentsDTO", target = "students"),
+            @Mapping(source = "resultsDTO", target = "results")
     })
     Exam examDTOToExam(ExamDTO examDTO);
 

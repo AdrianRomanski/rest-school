@@ -1,6 +1,7 @@
 package adrianromanski.restschool.bootstrap;
 
 import adrianromanski.restschool.domain.Exam;
+import adrianromanski.restschool.domain.ExamResult;
 import adrianromanski.restschool.domain.Student;
 import adrianromanski.restschool.domain.Subject;
 import adrianromanski.restschool.model.SubjectDTO;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -56,26 +59,41 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         filip.setFirstName("Filip");
         filip.setLastName("Konieczny");
 
-        // Init set of Students
-        Set<Student> students = new HashSet<>();
+        // Init List of Students
+        List<Student> students = new ArrayList<>();
         students.add(filip);
         students.add(adrian);
         students.add(piotrek);
 
-        // Init Exams
+        // Init Exams //
+        // Math Exam
         Exam mathExam = new Exam();
         mathExam.setName("First math exam");
         mathExam.setMaxPoints(80L);
         mathExam.setDate(LocalDate.now());
-        // Assign students to Exam
+        // Assign students to math Exam
         mathExam.setStudents(students);
 
+        // Biology Exam
         Exam biologyExam = new Exam();
         biologyExam.setName("Second biology exam");
         biologyExam.setMaxPoints(60L);
         biologyExam.setDate(LocalDate.now());
-        // Assign students to Exam
+        // Assign students to biology Exam
         biologyExam.setStudents(students);
+
+        // Init ExamResults
+        ExamResult filipMathResult = new ExamResult();
+        ExamResult adrianMathResult = new ExamResult();
+        ExamResult piotrekMathResult = new ExamResult();
+
+        // Setting scores
+        filipMathResult.setScore(60L);
+        adrianMathResult.setScore(45L);
+        adrianMathResult.setExam(mathExam);
+        adrianMathResult.setDate(LocalDate.now());
+        adrianMathResult.setName("Adrian results of math exam");
+        piotrekMathResult.setScore(55L);
 
 
         // Assign exam to Students
@@ -83,6 +101,9 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         adrian.addExam(biologyExam);
         filip.addExam(mathExam);
         piotrek.addExam(mathExam);
+
+        // Assign result to exam
+        adrian.getExams().get(0).addResult(adrianMathResult);
 
 
         // Assign Subjects to Students

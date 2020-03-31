@@ -1,6 +1,5 @@
 package adrianromanski.restschool.controllers;
 
-import adrianromanski.restschool.domain.base_entity.event.ExamResult;
 import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
 import adrianromanski.restschool.model.base_entity.event.ExamResultListDTO;
 import adrianromanski.restschool.services.exam_result.ExamResultService;

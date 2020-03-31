@@ -47,7 +47,7 @@ public class ExamController {
         return examService.getExamById(Long.valueOf(ID));
     }
     
-    @ApiOperation("Delete a student based on ID")
+    @ApiOperation("Delete an Exam based on ID")
     @DeleteMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)
     public void  deleteExamById(@PathVariable String ID) {

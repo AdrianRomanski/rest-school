@@ -43,7 +43,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     }
 
     @Override
-    public ExamResultDTO updateExam(Long id, ExamResultDTO examResultDTO) {
+    public ExamResultDTO updateExamResult(Long id, ExamResultDTO examResultDTO) {
         ExamResult examResult = examResultMapper.examResultDTOToExamResult(examResultDTO);
         examResult.setId(id);
         return saveAndReturnDTO(examResult);

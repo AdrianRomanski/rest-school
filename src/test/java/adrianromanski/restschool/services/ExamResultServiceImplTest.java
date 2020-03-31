@@ -95,7 +95,7 @@ class ExamResultServiceImplTest {
 
         when(examResultRepository.save(any(ExamResult.class))).thenReturn(updatedExamResult);
 
-        ExamResultDTO updatedDTO = examResultService.updateExam(ID, examResultDTO);
+        ExamResultDTO updatedDTO = examResultService.updateExamResult(ID, examResultDTO);
 
         assertEquals(updatedDTO.getScore(), SCORE);
         assertEquals(updatedDTO.getId(), ID);

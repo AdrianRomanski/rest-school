@@ -14,7 +14,7 @@ public interface ExamResultService {
 
     ExamResultDTO createExamResult(ExamResultDTO examResultDTO);
 
-    ExamResultDTO updateExam(Long id, ExamResultDTO examResultDTO);
+    ExamResultDTO updateExamResult(Long id, ExamResultDTO examResultDTO);
 
     void deleteExamResultByID(Long id);
 

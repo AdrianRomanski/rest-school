@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExamResultDTO extends EventDTO {
-
-    private ExamDTO examDTO;
-    private float score;
-    private String grade;
+@Data
+public class ExamResultListDTO {
+    List<ExamResultDTO> examResultDTOList;
 }

@@ -90,7 +90,7 @@ class ExamServiceImplTest {
 
         Exam updatedExam = new Exam();
         updatedExam.setMaxPoints(examDTO.getMaxPoints());
-        updatedExam.setName("Just a simple exam"); // Updating name
+        updatedExam.setName(examDTO.getName());
         updatedExam.setDate(examDTO.getDate());
         updatedExam.setId(examDTO.getId());
 
@@ -100,8 +100,8 @@ class ExamServiceImplTest {
         ExamDTO updatedDTO = examService.updateExam(ID, examDTO);
 
         //then
-        assertEquals(updatedExam.getName(), "Just a simple exam");
-        assertEquals(updatedExam.getId(), ID);
+        assertEquals(updatedDTO.getName(), NAME);
+        assertEquals(updatedDTO.getId(), ID);
     }
 
     @Test

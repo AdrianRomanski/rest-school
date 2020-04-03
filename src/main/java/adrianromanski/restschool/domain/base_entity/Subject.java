@@ -1,6 +1,5 @@
 package adrianromanski.restschool.domain.base_entity;
 
-import adrianromanski.restschool.domain.base_entity.BaseEntity;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import lombok.*;

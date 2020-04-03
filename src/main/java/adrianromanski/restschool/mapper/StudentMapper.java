@@ -15,12 +15,14 @@ public interface StudentMapper {
     @Mappings({
             @Mapping(source = "subjects", target = "subjectsDTO"),
             @Mapping(source = "exams", target = "examsDTO"),
+            @Mapping(source = "studentClass", target = "studentClassDTO")
     })
     StudentDTO studentToStudentDTO(Student student);
 
     @Mappings({
             @Mapping(source = "subjectsDTO", target = "subjects"),
             @Mapping(source = "examsDTO", target = "exams"),
+            @Mapping(source = "studentClassDTO", target = "studentClass")
     })
     Student studentDTOToStudent(StudentDTO studentDTO);
 }

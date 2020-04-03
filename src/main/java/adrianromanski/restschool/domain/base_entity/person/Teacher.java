@@ -20,4 +20,6 @@ public class Teacher extends Person {
 
     @OneToMany(mappedBy = "teacher", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<Exam> exams = new ArrayList<>();
+
+
 }

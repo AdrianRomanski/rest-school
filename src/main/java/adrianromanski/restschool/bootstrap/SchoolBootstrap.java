@@ -4,10 +4,8 @@ import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.ExamResult;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
-import adrianromanski.restschool.repositories.ExamRepository;
-import adrianromanski.restschool.repositories.ExamResultRepository;
-import adrianromanski.restschool.repositories.StudentRepository;
-import adrianromanski.restschool.repositories.SubjectRepository;
+import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.repositories.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -16,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -26,13 +25,15 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final SubjectRepository subjectRepository;
     private final ExamRepository examRepository;
     private final ExamResultRepository examResultRepository;
+    private final TeacherRepository teacherRepository;
 
-    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository,
-                           ExamRepository examRepository, ExamResultRepository examResultRepository) {
+    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository,
+                           ExamResultRepository examResultRepository, TeacherRepository teacherRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.examRepository = examRepository;
         this.examResultRepository = examResultRepository;
+        this.teacherRepository = teacherRepository;
     }
 
     @Override
@@ -61,10 +62,13 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         filip.setLastName("Konieczny");
 
         // Init List of Students
-        List<Student> students = new ArrayList<>();
-        students.add(filip);
-        students.add(adrian);
-        students.add(piotrek);
+        List<Student> students = Arrays.asList(adrian,piotrek,filip);
+
+        //Init Teacher
+        Teacher mathTeacher = new Teacher();
+        mathTeacher.setFirstName("Walter");
+        mathTeacher.setLastName("White");
+
 
         // Init Exams //
         // Math Exam
@@ -74,6 +78,10 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         mathExam.setDate(LocalDate.now());
         // Assign students to math Exam
         mathExam.setStudents(students);
+        // Assign Exam to Teacher
+        mathTeacher.getExams().add(mathExam);
+        // Assign teacher to exam
+        mathExam.setTeacher(mathTeacher);
 
         // Biology Exam
         Exam biologyExam = new Exam();
@@ -152,6 +160,9 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         examResultRepository.save(adrianMathResult);
         examResultRepository.save(piotrekMathResult);
         examResultRepository.save(filipMathResult);
+        //Teachers
+        teacherRepository.save(mathTeacher);
+
 
 
         // Logging to console
@@ -159,5 +170,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         log.info("Saved: " + subjectRepository.count() + " Subjects");
         log.info("Saved: " + examRepository.count() + " Exams");
         log.info("Saved: " + examResultRepository.count() + " Exam Results");
+        log.info("Saved: " + teacherRepository.count() + " Teachers");
+
     }
 }

@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"students", "subject", "subject"})
+@EqualsAndHashCode(exclude = {"students", "subject", "results", "teacher"})
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class Exam extends Event {
     @ManyToMany(mappedBy = "exams")
     private List<Student> students = new ArrayList<>();
 
-    @OneToMany(mappedBy = "exam", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.PERSIST)
     private List<ExamResult> results = new ArrayList<>();
 
     @ManyToOne

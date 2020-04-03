@@ -62,7 +62,10 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         filip.setLastName("Konieczny");
 
         // Init List of Students
-        List<Student> students = Arrays.asList(adrian,piotrek,filip);
+        List<Student> students = new ArrayList<>();
+        students.add(adrian);
+        students.add(piotrek);
+        students.add(filip);
 
         //Init Teacher
         Teacher mathTeacher = new Teacher();

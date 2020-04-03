@@ -27,7 +27,7 @@ public class TeacherController {
     }
 
     @ApiOperation("Returns a Teacher Object based on firstName and lastName")
-    @GetMapping("{firstName}-{lastName}")
+    @GetMapping("{firstName}/{lastName}")
     @ResponseStatus(HttpStatus.OK)
     public TeacherDTO getTeacherByFirstNameAndLastName(@PathVariable String firstName, @PathVariable String lastName) {
         return teacherService.getTeacherByFirstNameAndLastName(firstName,lastName);

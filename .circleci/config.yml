@@ -38,7 +38,7 @@ jobs:
           key: v1-dependencies-{{ checksum "pom.xml" }}
 
       # run tests! and gen code coverage
-      - run: mvn test
+      - run: mvn integration-test cobertura:cobertura
 
       # Created dir for tests - fixing bug with codecov
       - store_test_results:

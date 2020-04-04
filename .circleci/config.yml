@@ -1,20 +1,8 @@
-# Java Maven CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-java/ for more details
-#
-version: 2
+version: 2.1
+orbs:
+  codecov: codecov/codecov@1.0.2
 jobs:
   build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
-
-      steps:
-        - checkout
-        - run: mvn test
-        - store_artifacts:
-            path:  target
-
-        - run:
-        name: Send to CodeCov
-        command: bash <(curl -s https://codecov.io/bash)
+    steps:
+      - codecov/upload:
+          file: target/my-reports

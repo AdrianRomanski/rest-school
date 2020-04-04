@@ -3,6 +3,7 @@ package adrianromanski.restschool.services.student_class;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.StudentClassMapper;
+import adrianromanski.restschool.mapper.TeacherMapper;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.repositories.StudentClassRepository;
@@ -16,10 +17,12 @@ public class StudentClassServiceImpl implements StudentClassService {
 
     private final StudentClassRepository studentClassRepository;
     private final StudentClassMapper studentClassMapper;
+    private final TeacherMapper teacherMapper;
 
-    public StudentClassServiceImpl(StudentClassRepository studentClassRepository, StudentClassMapper studentClassMapper) {
+    public StudentClassServiceImpl(StudentClassRepository studentClassRepository, StudentClassMapper studentClassMapper, TeacherMapper teacherMapper) {
         this.studentClassRepository = studentClassRepository;
         this.studentClassMapper = studentClassMapper;
+        this.teacherMapper = teacherMapper;
     }
 
     @Override
@@ -49,11 +52,8 @@ public class StudentClassServiceImpl implements StudentClassService {
 
     @Override
     public TeacherDTO getStudentClassTeacher(StudentClassDTO studentClassDTO) {
-        if (studentClassDTO.getTeacherDTO() == null) {
-            throw new ResourceNotFoundException("There is no teacher assigned to this class");
-        } else {
-            return studentClassDTO.getTeacherDTO();
-        }
+        return teacherMapper.teacherToTeacherDTO(studentClassRepository.getTeacher()
+                                            .orElseThrow(ResourceNotFoundException::new));
     }
 
     @Override

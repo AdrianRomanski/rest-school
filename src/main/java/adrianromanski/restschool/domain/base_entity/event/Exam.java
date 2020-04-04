@@ -23,6 +23,7 @@ public class Exam extends Event {
     @ManyToMany(mappedBy = "exams")
     private List<Student> students = new ArrayList<>();
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "exam", cascade = CascadeType.PERSIST)
     private List<ExamResult> results = new ArrayList<>();
 

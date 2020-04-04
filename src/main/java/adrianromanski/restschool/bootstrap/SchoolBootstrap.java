@@ -2,6 +2,7 @@ package adrianromanski.restschool.bootstrap;
 
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.ExamResult;
+import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
@@ -26,19 +27,25 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final ExamRepository examRepository;
     private final ExamResultRepository examResultRepository;
     private final TeacherRepository teacherRepository;
+    private final StudentClassRepository studentClassRepository;
 
-    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository,
-                           ExamResultRepository examResultRepository, TeacherRepository teacherRepository) {
+    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository, ExamResultRepository examResultRepository,
+                           TeacherRepository teacherRepository, StudentClassRepository studentClassRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.examRepository = examRepository;
         this.examResultRepository = examResultRepository;
         this.teacherRepository = teacherRepository;
+        this.studentClassRepository = studentClassRepository;
     }
 
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        // Init Class
+        StudentClass studentClass = new StudentClass();
+        studentClass.setName("Rookies");
+
         // Init Subjects
         Subject math = new Subject();
         math.setName("Mathematics");
@@ -146,6 +153,14 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         filip.getExams().get(0).addResult(filipMathResult);
         piotrek.getExams().get(0).addResult(piotrekMathResult);
 
+        // Assign Student and Teacher to Class
+        studentClass.setTeacher(mathTeacher);
+        studentClass.setStudentList(students);
+        adrian.setStudentClass(studentClass);
+        filip.setStudentClass(studentClass);
+        piotrek.setStudentClass(studentClass);
+
+        System.out.println(studentClass.getTeacher());
 
 
         // Saving to repositories
@@ -165,6 +180,8 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         examResultRepository.save(filipMathResult);
         //Teachers
         teacherRepository.save(mathTeacher);
+        // StudentClasses
+        studentClassRepository.save(studentClass);
 
 
 
@@ -174,6 +191,6 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         log.info("Saved: " + examRepository.count() + " Exams");
         log.info("Saved: " + examResultRepository.count() + " Exam Results");
         log.info("Saved: " + teacherRepository.count() + " Teachers");
-
+        log.info("Saved: " + studentClassRepository.count() + " Student Classes");
     }
 }

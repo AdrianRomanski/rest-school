@@ -40,7 +40,7 @@ jobs:
       # run tests! and gen code coverage
       - run: mvn verify
 
-      # Created dir for tests - fixing bug with codecov
+      # Created dir for tests - fixing HTTP 403 #GitHub API: Forbidden
       - store_test_results:
           path: target/surefire-reports
 

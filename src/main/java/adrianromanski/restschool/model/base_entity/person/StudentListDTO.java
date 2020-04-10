@@ -1,14 +1,12 @@
 package adrianromanski.restschool.model.base_entity.person;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class StudentListDTO {
     List<StudentDTO> students;
 

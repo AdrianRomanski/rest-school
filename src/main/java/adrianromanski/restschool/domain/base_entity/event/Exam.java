@@ -12,7 +12,6 @@ import java.util.List;
 
 @EqualsAndHashCode(exclude = {"students", "subject", "results", "teacher"})
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Exam extends Event {

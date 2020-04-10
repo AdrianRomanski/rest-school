@@ -10,13 +10,12 @@ import java.util.List;
 
 @EqualsAndHashCode(exclude = {"exams", "studentClass"})
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Teacher extends Person {
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "teacher", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "teacher")
     private List<Exam> exams = new ArrayList<>();
 
     @ToString.Exclude

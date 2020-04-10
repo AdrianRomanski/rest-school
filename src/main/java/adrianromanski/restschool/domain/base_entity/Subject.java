@@ -11,7 +11,6 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"students", "exams"})
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 public class Subject extends BaseEntity {
 
@@ -23,7 +22,7 @@ public class Subject extends BaseEntity {
     private Set<Student> students = new HashSet<>();
 
     @ToString.Exclude
-    @OneToMany(mappedBy = "subject", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "subject")
     private Set<Exam> exams = new HashSet<>();
 
     public void addStudent(Student student) {

@@ -1,15 +1,14 @@
 package adrianromanski.restschool.model.base_entity;
 
-import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
 public class SubjectListDTO {
     List<SubjectDTO> subjects;
 

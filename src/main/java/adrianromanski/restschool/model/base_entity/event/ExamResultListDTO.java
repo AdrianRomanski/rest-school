@@ -1,14 +1,12 @@
 package adrianromanski.restschool.model.base_entity.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @AllArgsConstructor
-@NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class ExamResultListDTO {
     List<ExamResultDTO> examResultDTOList;
 }

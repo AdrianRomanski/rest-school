@@ -9,7 +9,6 @@ import javax.persistence.MappedSuperclass;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
 public class BaseEntityDTO {

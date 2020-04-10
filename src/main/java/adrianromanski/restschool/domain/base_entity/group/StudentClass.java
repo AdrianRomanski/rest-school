@@ -16,7 +16,6 @@ import java.util.List;
 @EqualsAndHashCode(exclude = {"teacher", "studentList"})
 @Data
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 public class StudentClass extends Group {
 

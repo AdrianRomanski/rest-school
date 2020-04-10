@@ -11,7 +11,6 @@ import javax.persistence.ManyToOne;
 @EqualsAndHashCode(exclude = {"exam"})
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class ExamResult extends Event {
 

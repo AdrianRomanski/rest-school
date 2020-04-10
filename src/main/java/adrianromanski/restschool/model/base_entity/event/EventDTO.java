@@ -11,7 +11,6 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @MappedSuperclass
 public class EventDTO extends BaseEntityDTO {

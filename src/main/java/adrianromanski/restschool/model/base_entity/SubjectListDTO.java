@@ -8,7 +8,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-@Setter
 public class SubjectListDTO {
     List<SubjectDTO> subjects;
 

@@ -5,7 +5,6 @@ import lombok.*;
 import java.util.List;
 
 @Getter
-@Setter
 @AllArgsConstructor
 public class StudentListDTO {
     List<StudentDTO> students;

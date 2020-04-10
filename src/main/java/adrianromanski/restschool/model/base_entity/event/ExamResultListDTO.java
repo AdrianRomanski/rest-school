@@ -6,7 +6,6 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-@Setter
 public class ExamResultListDTO {
     List<ExamResultDTO> examResultDTOList;
 }

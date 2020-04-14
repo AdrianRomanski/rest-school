@@ -1,6 +1,7 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
 import adrianromanski.restschool.domain.base_entity.event.Exam;
+import adrianromanski.restschool.domain.base_entity.event.Payment;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"exams", "studentClass"})
+@EqualsAndHashCode(exclude = {"exams", "studentClass", "payments"})
 @Data
 @NoArgsConstructor
 @Entity
@@ -21,4 +22,8 @@ public class Teacher extends Person {
     @ToString.Exclude
     @OneToOne
     private StudentClass studentClass;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "teacher")
+    private List<Payment> payments = new ArrayList<>();
 }

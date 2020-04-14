@@ -14,13 +14,15 @@ public interface TeacherMapper {
 
     @Mappings({
             @Mapping(source = "studentClass", target = "studentClassDTO"),
-            @Mapping(source = "exams", target = "examsDTO")
+            @Mapping(source = "exams", target = "examsDTO"),
+            @Mapping(source = "payments",target = "paymentsDTO")
     })
     TeacherDTO teacherToTeacherDTO(Teacher teacher);
 
     @Mappings({
             @Mapping(source = "studentClassDTO", target = "studentClass"),
-            @Mapping(source = "examsDTO", target = "exams")
+            @Mapping(source = "examsDTO", target = "exams"),
+            @Mapping(source = "paymentsDTO", target = "payments")
     })
     Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
 }

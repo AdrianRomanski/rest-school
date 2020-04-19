@@ -1,14 +1,13 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.person.LegalGuardian;
-import adrianromanski.restschool.mapper.LegalGuardianMapper;
-import adrianromanski.restschool.model.base_entity.person.LegalGuardianDTO;
-import adrianromanski.restschool.repositories.LegalGuardianRepository;
-import adrianromanski.restschool.services.legal_guardian.LegalGuardianService;
-import adrianromanski.restschool.services.legal_guardian.LegalGuardianServiceImpl;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import adrianromanski.restschool.domain.base_entity.person.Guardian;
+import adrianromanski.restschool.mapper.GuardianMapper;
+import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
+import adrianromanski.restschool.repositories.GuardianRepository;
+import adrianromanski.restschool.services.guardian.GuardianService;
+import adrianromanski.restschool.services.guardian.GuardianServiceImpl;
+import org.junit.jupiter.api.*;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -20,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class LegalGuardianServiceImplTest {
+class GuardianServiceImplTest {
 
     public static final String FIRST_NAME = "Bruce";
     public static final String LAST_NAME = "Wayne";
@@ -29,21 +28,21 @@ class LegalGuardianServiceImplTest {
     public static final long ID = 1L;
 
 
-    LegalGuardianService legalGuardianService;
+    GuardianService guardianService;
 
 
     @Mock
-    LegalGuardianRepository legalGuardianRepository;
+    GuardianRepository guardianRepository;
 
     @BeforeEach
     void beforeAll() {
         MockitoAnnotations.initMocks(this);
 
-        legalGuardianService = new LegalGuardianServiceImpl(LegalGuardianMapper.INSTANCE,legalGuardianRepository);
+        guardianService = new GuardianServiceImpl(GuardianMapper.INSTANCE, guardianRepository);
     }
 
-    LegalGuardianDTO initLegalGuardianDTO() {
-        LegalGuardianDTO legalGuardianDTO = new LegalGuardianDTO();
+    GuardianDTO initLegalGuardianDTO() {
+        GuardianDTO legalGuardianDTO = new GuardianDTO();
         legalGuardianDTO.setFirstName(FIRST_NAME);
         legalGuardianDTO.setLastName(LAST_NAME);
         legalGuardianDTO.setEmail(EMAIL);
@@ -52,8 +51,8 @@ class LegalGuardianServiceImplTest {
         return legalGuardianDTO;
     }
 
-    LegalGuardian initLegalGuardian() {
-        LegalGuardian legalGuardian = new LegalGuardian();
+    Guardian initLegalGuardian() {
+        Guardian legalGuardian = new Guardian();
         legalGuardian.setFirstName(FIRST_NAME);
         legalGuardian.setLastName(LAST_NAME);
         legalGuardian.setEmail(EMAIL);
@@ -64,22 +63,22 @@ class LegalGuardianServiceImplTest {
 
     @Test
     void getAllLegalGuardians() {
-        List<LegalGuardian> legalGuardians = Arrays.asList(new LegalGuardian(), new LegalGuardian(), new LegalGuardian());
+        List<Guardian> legalGuardians = Arrays.asList(new Guardian(), new Guardian(), new Guardian());
 
-        when(legalGuardianRepository.findAll()).thenReturn(legalGuardians);
+        when(guardianRepository.findAll()).thenReturn(legalGuardians);
 
-        List<LegalGuardianDTO> legalGuardiansDTO = legalGuardianService.getAllLegalGuardians();
+        List<GuardianDTO> legalGuardiansDTO = guardianService.getAllGuardians();
 
         assertEquals(legalGuardians.size(), legalGuardiansDTO.size());
     }
 
     @Test
     void getGuardianByID() {
-        LegalGuardian legalGuardian = initLegalGuardian();
+        Guardian legalGuardian = initLegalGuardian();
 
-        when(legalGuardianRepository.findById(ID)).thenReturn(Optional.of(legalGuardian));
+        when(guardianRepository.findById(ID)).thenReturn(Optional.of(legalGuardian));
 
-        LegalGuardianDTO legalGuardianDTO = legalGuardianService.getGuardianByID(ID);
+        GuardianDTO legalGuardianDTO = guardianService.getGuardianByID(ID);
 
         assertEquals(legalGuardianDTO.getFirstName(), FIRST_NAME);
         assertEquals(legalGuardianDTO.getLastName(), LAST_NAME);
@@ -91,12 +90,12 @@ class LegalGuardianServiceImplTest {
 
     @Test
     void getLegalGuardianByFirstAndLastName() {
-        LegalGuardian legalGuardian = initLegalGuardian();
+        Guardian legalGuardian = initLegalGuardian();
 
-        when(legalGuardianRepository.getLegalGuardianByFirstNameAndLastName(FIRST_NAME, LAST_NAME))
-                                                                        .thenReturn(Optional.of(legalGuardian));
+        when(guardianRepository.getLegalGuardianByFirstNameAndLastName(FIRST_NAME, LAST_NAME))
+                .thenReturn(Optional.of(legalGuardian));
 
-        LegalGuardianDTO legalGuardianDTO = legalGuardianService.getLegalGuardianByFirstAndLastName(FIRST_NAME, LAST_NAME);
+        GuardianDTO legalGuardianDTO = guardianService.getGuardianByFirstAndLastName(FIRST_NAME, LAST_NAME);
 
         assertEquals(legalGuardianDTO.getFirstName(), FIRST_NAME);
         assertEquals(legalGuardianDTO.getLastName(), LAST_NAME);
@@ -107,13 +106,13 @@ class LegalGuardianServiceImplTest {
 
     @Test
     void createNewLegalGuardian() {
-        LegalGuardian legalGuardian = initLegalGuardian();
+        Guardian legalGuardian = initLegalGuardian();
 
-        LegalGuardianDTO legalGuardianDTO = initLegalGuardianDTO();
+        GuardianDTO legalGuardianDTO = initLegalGuardianDTO();
 
-        when(legalGuardianRepository.save(any(LegalGuardian.class))).thenReturn(legalGuardian);
+        when(guardianRepository.save(any(Guardian.class))).thenReturn(legalGuardian);
 
-        LegalGuardianDTO returnDTO = legalGuardianService.createNewLegalGuardian(legalGuardianDTO);
+        GuardianDTO returnDTO = guardianService.createNewGuardian(legalGuardianDTO);
 
         assertEquals(returnDTO.getFirstName(), FIRST_NAME);
         assertEquals(returnDTO.getLastName(), LAST_NAME);
@@ -124,13 +123,13 @@ class LegalGuardianServiceImplTest {
 
     @Test
     void updateLegalGuardian() {
-        LegalGuardian legalGuardian = initLegalGuardian();
+        Guardian legalGuardian = initLegalGuardian();
 
-        LegalGuardianDTO legalGuardianDTO = initLegalGuardianDTO();
+        GuardianDTO legalGuardianDTO = initLegalGuardianDTO();
 
-        when(legalGuardianRepository.save(any(LegalGuardian.class))).thenReturn(legalGuardian);
+        when(guardianRepository.save(any(Guardian.class))).thenReturn(legalGuardian);
 
-        LegalGuardianDTO returnDTO = legalGuardianService.updateLegalGuardian(legalGuardianDTO, ID);
+        GuardianDTO returnDTO = guardianService.updateGuardian(legalGuardianDTO, ID);
 
         assertEquals(returnDTO.getFirstName(), FIRST_NAME);
         assertEquals(returnDTO.getLastName(), LAST_NAME);
@@ -140,9 +139,12 @@ class LegalGuardianServiceImplTest {
     }
 
     @Test
-    void deleteLegalGuardianByID() {
-        legalGuardianRepository.deleteById(ID);
+    void deleteLegalGuardianByIDHappy() {
+        Guardian legalGuardian = initLegalGuardian();
 
-        verify(legalGuardianRepository, times(1)).deleteById(ID);
+        guardianRepository.deleteById(legalGuardian.getId());
+
+        verify(guardianRepository, times(1)).deleteById(ID);
     }
 }
+

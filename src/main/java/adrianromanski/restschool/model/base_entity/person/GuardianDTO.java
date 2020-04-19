@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class LegalGuardianDTO extends PersonDTO {
+public class GuardianDTO extends PersonDTO {
 
     private String telephoneNumber;
     private String email;

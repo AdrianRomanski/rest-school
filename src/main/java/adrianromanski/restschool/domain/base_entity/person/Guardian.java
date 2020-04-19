@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 @Data
 @Entity
 @NoArgsConstructor
-public class LegalGuardian extends Person {
+public class Guardian extends Person {
 
     private String telephoneNumber;
     private String email;

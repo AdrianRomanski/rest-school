@@ -1,7 +1,8 @@
-package adrianromanski.restschool.mapper.group;
+package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.group.SportTeam;
 import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.mapper.group.SportTeamMapper;
 import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import org.junit.jupiter.api.Test;

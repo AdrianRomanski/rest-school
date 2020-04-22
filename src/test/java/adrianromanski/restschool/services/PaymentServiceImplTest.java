@@ -1,11 +1,11 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.event.Payment;
-import adrianromanski.restschool.mapper.PaymentMapper;
+import adrianromanski.restschool.mapper.event.PaymentMapper;
 import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
-import adrianromanski.restschool.repositories.PaymentRepository;
-import adrianromanski.restschool.services.payment.PaymentService;
-import adrianromanski.restschool.services.payment.PaymentServiceImpl;
+import adrianromanski.restschool.repositories.event.PaymentRepository;
+import adrianromanski.restschool.services.event.payment.PaymentService;
+import adrianromanski.restschool.services.event.payment.PaymentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

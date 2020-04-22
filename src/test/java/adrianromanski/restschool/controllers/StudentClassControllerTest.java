@@ -1,9 +1,11 @@
 package adrianromanski.restschool.controllers;
 
+import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
+import adrianromanski.restschool.controllers.group.StudentClassController;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
-import adrianromanski.restschool.services.student_class.StudentClassService;
+import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +20,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

@@ -1,9 +1,11 @@
 package adrianromanski.restschool.controllers;
 
+import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
+import adrianromanski.restschool.controllers.person.GuardianController;
 import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.services.guardian.GuardianService;
+import adrianromanski.restschool.services.person.guardian.GuardianService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

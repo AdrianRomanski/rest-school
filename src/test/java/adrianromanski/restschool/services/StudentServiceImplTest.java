@@ -1,11 +1,11 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.mapper.StudentMapper;
+import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.repositories.StudentRepository;
-import adrianromanski.restschool.services.student.StudentService;
-import adrianromanski.restschool.services.student.StudentServiceImpl;
+import adrianromanski.restschool.repositories.person.StudentRepository;
+import adrianromanski.restschool.services.person.student.StudentService;
+import adrianromanski.restschool.services.person.student.StudentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

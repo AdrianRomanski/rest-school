@@ -1,11 +1,11 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.event.Exam;
-import adrianromanski.restschool.mapper.ExamMapper;
+import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-import adrianromanski.restschool.repositories.ExamRepository;
-import adrianromanski.restschool.services.exam.ExamService;
-import adrianromanski.restschool.services.exam.ExamServiceImpl;
+import adrianromanski.restschool.repositories.event.ExamRepository;
+import adrianromanski.restschool.services.event.exam.ExamService;
+import adrianromanski.restschool.services.event.exam.ExamServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

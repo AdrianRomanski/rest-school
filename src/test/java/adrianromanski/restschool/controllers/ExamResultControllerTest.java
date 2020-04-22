@@ -1,13 +1,12 @@
 package adrianromanski.restschool.controllers;
 
-import adrianromanski.restschool.domain.base_entity.event.ExamResult;
+import adrianromanski.restschool.controllers.event.ExamResultController;
+import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
-import adrianromanski.restschool.services.exam_result.ExamResultService;
+import adrianromanski.restschool.services.event.exam_result.ExamResultService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;

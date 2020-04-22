@@ -1,6 +1,7 @@
 package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import org.junit.jupiter.api.Test;
 

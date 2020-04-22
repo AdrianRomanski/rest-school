@@ -3,6 +3,7 @@ package adrianromanski.restschool.model.base_entity.person;
 
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +22,6 @@ public class StudentDTO extends PersonDTO {
     private List<ExamDTO> examsDTO = new ArrayList<>();
 
     private StudentClassDTO studentClassDTO;
+
+    private SportTeamDTO sportTeamDTO;
 }

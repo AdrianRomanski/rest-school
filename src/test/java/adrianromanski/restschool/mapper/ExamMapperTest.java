@@ -2,6 +2,7 @@ package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.Subject;
+import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import org.junit.jupiter.api.Test;

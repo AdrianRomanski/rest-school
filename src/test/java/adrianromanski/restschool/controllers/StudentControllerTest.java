@@ -1,8 +1,10 @@
 package adrianromanski.restschool.controllers;
 
+import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
+import adrianromanski.restschool.controllers.person.StudentController;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.services.student.StudentService;
+import adrianromanski.restschool.services.person.student.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

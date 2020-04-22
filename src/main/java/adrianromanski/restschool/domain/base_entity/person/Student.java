@@ -2,6 +2,7 @@ package adrianromanski.restschool.domain.base_entity.person;
 
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
+import adrianromanski.restschool.domain.base_entity.group.SportTeam;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import lombok.*;
 
@@ -28,6 +29,10 @@ public class Student extends Person {
     @JoinTable(name = "student_exams", joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "exam_id"))
     private List<Exam> exams = new ArrayList<>();
+
+    @ManyToOne
+    private SportTeam sportTeam;
+
 
     @ManyToOne
     private StudentClass studentClass;

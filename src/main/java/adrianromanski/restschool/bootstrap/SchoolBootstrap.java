@@ -6,7 +6,12 @@ import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
-import adrianromanski.restschool.repositories.*;
+import adrianromanski.restschool.repositories.base_entity.SubjectRepository;
+import adrianromanski.restschool.repositories.event.ExamRepository;
+import adrianromanski.restschool.repositories.event.ExamResultRepository;
+import adrianromanski.restschool.repositories.group.StudentClassRepository;
+import adrianromanski.restschool.repositories.person.StudentRepository;
+import adrianromanski.restschool.repositories.person.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -15,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component

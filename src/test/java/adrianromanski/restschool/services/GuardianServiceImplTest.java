@@ -1,11 +1,11 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.person.Guardian;
-import adrianromanski.restschool.mapper.GuardianMapper;
+import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.repositories.GuardianRepository;
-import adrianromanski.restschool.services.guardian.GuardianService;
-import adrianromanski.restschool.services.guardian.GuardianServiceImpl;
+import adrianromanski.restschool.repositories.person.GuardianRepository;
+import adrianromanski.restschool.services.person.guardian.GuardianService;
+import adrianromanski.restschool.services.person.guardian.GuardianServiceImpl;
 import org.junit.jupiter.api.*;
 
 import org.mockito.Mock;

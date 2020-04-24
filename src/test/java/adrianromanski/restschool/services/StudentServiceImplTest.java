@@ -1,12 +1,14 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.services.person.student.StudentService;
 import adrianromanski.restschool.services.person.student.StudentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -17,6 +19,8 @@ import java.util.Optional;
 
 import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -64,6 +68,7 @@ class StudentServiceImplTest {
         return studentDTO;
     }
 
+    @DisplayName("[Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
     @Test
     void getAllStudents() {
         //given
@@ -78,6 +83,7 @@ class StudentServiceImplTest {
         assertEquals(3, studentDTOS.size());
     }
 
+    @DisplayName("[Happy Path], [Method] = getAllFemaleStudents, [Expected] = List containing 1 Student")
     @Test
     void getAllFemaleStudents() {
         //given
@@ -92,6 +98,7 @@ class StudentServiceImplTest {
         assertEquals(1, studentDTOS.size());
     }
 
+    @DisplayName("[Happy Path], [Method] = getAllMaleStudents, [Expected] = List containing 2 Students")
     @Test
     void getAllMaleStudents() {
         //given
@@ -106,6 +113,7 @@ class StudentServiceImplTest {
         assertEquals(2, studentDTOS.size());
     }
 
+    @DisplayName("[Happy Path], [Method] = getStudentByFirstAndLastName, [Expected] = StudentDTO with matching fields")
     @Test
     void getStudentByFirstAndLastName() {
         //Given
@@ -123,6 +131,7 @@ class StudentServiceImplTest {
         assertEquals(ID, studentDTO.getId());
     }
 
+    @DisplayName("[Happy Path], [Method] = getStudentById, [Expected] = StudentDTO with matching fields")
     @Test
     void getStudentById() {
         //given
@@ -140,6 +149,7 @@ class StudentServiceImplTest {
         assertEquals(ID, studentDTO.getId());
     }
 
+    @DisplayName("[Happy Path], [Method] = createNewStudent, [Expected] = StudentDTO  with matching fields")
     @Test
     void createNewStudent() throws Exception {
         //given
@@ -158,8 +168,9 @@ class StudentServiceImplTest {
         assertEquals(ID, returnDTO.getId());
     }
 
+    @DisplayName("[Happy Path], [Method] = updateStudent, [Expected] = StudentDTO with updated fields")
     @Test
-    void updateStudent() {
+    void updateStudentHappyPath() {
         //given
         StudentDTO studentDTO = initStudentDTO();
         Student savedStudent = initStudent1();
@@ -178,6 +189,17 @@ class StudentServiceImplTest {
         assertEquals(ID, returnDTO.getId());
     }
 
+    @DisplayName("[Unhappy Path], [Method] = updateStudent, [Reason] = Student with id not found")
+    @Test
+    void updateStudentUnHappyPath() {
+        StudentDTO studentDTO = initStudentDTO();
+
+            Throwable ex = catchThrowable(() -> studentService.updateStudent(222L,studentDTO));
+
+            assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Happy Path], [Method] = deleteStudentByID, [Expected] = studentRepository deleting student")
     @Test
     void deleteStudentByID() {
         //given
@@ -190,4 +212,14 @@ class StudentServiceImplTest {
 
         verify(studentRepository, times(1)).deleteById(anyLong());
     }
+
+    @DisplayName("[Unhappy Path], [Method] = deleteStudentByID, [Reason] = Student with id not found")
+    @Test
+    void deleteStudentByIDUnHappyPath() {
+
+        Throwable ex = catchThrowable(() -> studentService.deleteStudentByID(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
 }

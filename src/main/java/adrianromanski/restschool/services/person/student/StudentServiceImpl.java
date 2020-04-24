@@ -88,7 +88,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * Converting StudentDTO to Student and saving it to Database
+     * Converts DTO Object and Save it to Database
      * @return StudentDTO object
      */
     @Override
@@ -99,7 +99,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * Updating existing Student and saving to Database
+     * Converts DTO Object, Update Student with Matching ID and save it to Database
      * @return StudentDTO object if the student was successfully saved
      * @throws ResourceNotFoundException if not found
      */

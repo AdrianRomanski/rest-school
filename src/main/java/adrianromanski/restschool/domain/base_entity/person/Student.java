@@ -14,7 +14,6 @@ import java.util.List;
 
 @EqualsAndHashCode(exclude = {"subjects", "exams", "studentClass"})
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Student extends Person {

@@ -1,6 +1,7 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
@@ -44,22 +45,22 @@ class StudentServiceImplTest {
         studentService = new StudentServiceImpl(StudentMapper.INSTANCE, studentRepository);
     }
 
-    Student initStudent1() {
-        Student student = Student.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).build();
-        student.setId(ID);
+    Student createStudent(Long id, String firstName, String lastName, Gender gender) {
+        Student student = Student.builder().firstName(firstName).lastName(lastName).gender(gender).build();
+        student.setId(id);
         return student;
     }
 
-    Student initStudent2() {
-        Student student = Student.builder().firstName("Jessie").lastName("Pinkman").gender(MALE).build();
-        student.setId(2L);
-        return student;
+    Student createAaronSmith() {
+        return createStudent(ID,FIRST_NAME, LAST_NAME, MALE);
     }
 
-    Student initStudent3() {
-        Student student = Student.builder().firstName("Jessica").lastName("Parker").gender(FEMALE).build();
-        student.setId(3L);
-        return student;
+    Student createJessiePinkman() {
+        return createStudent(2L, "Jessie", "Pinkman", MALE);
+    }
+
+    Student createJessicaParker() {
+        return createStudent(3L, "Jessica", "Parker", FEMALE);
     }
 
     private StudentDTO initStudentDTO() {
@@ -71,60 +72,48 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
     @Test
     void getAllStudents() {
-        //given
-        List<Student> students = Arrays.asList(initStudent1(), initStudent2(), initStudent3());
+        List<Student> students = Arrays.asList(createAaronSmith(), createJessiePinkman(), createJessicaParker());
 
         when(studentRepository.findAll()).thenReturn(students);
 
-        //when
         List<StudentDTO> studentDTOS = studentService.getAllStudents();
 
-        //then
         assertEquals(3, studentDTOS.size());
     }
 
     @DisplayName("[Happy Path], [Method] = getAllFemaleStudents, [Expected] = List containing 1 Student")
     @Test
     void getAllFemaleStudents() {
-        //given
-        List<Student> students = Arrays.asList(initStudent1(), initStudent2(), initStudent3());
+        List<Student> students = Arrays.asList(createAaronSmith(), createJessiePinkman(), createJessicaParker());
 
         when(studentRepository.findAll()).thenReturn(students);
 
-        //when
         List<StudentDTO> studentDTOS = studentService.getAllFemaleStudents();
 
-        //then
         assertEquals(1, studentDTOS.size());
     }
 
     @DisplayName("[Happy Path], [Method] = getAllMaleStudents, [Expected] = List containing 2 Students")
     @Test
     void getAllMaleStudents() {
-        //given
-        List<Student> students = Arrays.asList(initStudent1(), initStudent2(), initStudent3());
+        List<Student> students = Arrays.asList(createAaronSmith(), createJessiePinkman(), createJessicaParker());
 
         when(studentRepository.findAll()).thenReturn(students);
 
-        //when
         List<StudentDTO> studentDTOS = studentService.getAllMaleStudents();
 
-        //then
         assertEquals(2, studentDTOS.size());
     }
 
     @DisplayName("[Happy Path], [Method] = getStudentByFirstAndLastName, [Expected] = StudentDTO with matching fields")
     @Test
     void getStudentByFirstAndLastName() {
-        //Given
-        Student student = initStudent1();
+        Student student = createAaronSmith();
 
         when(studentRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(student));
 
-        //when
         StudentDTO studentDTO = studentService.getStudentByFirstAndLastName(FIRST_NAME, LAST_NAME);
 
-        //then
         assertEquals(FIRST_NAME, studentDTO.getFirstName());
         assertEquals(LAST_NAME, studentDTO.getLastName());
         assertEquals(MALE, studentDTO.getGender());
@@ -134,15 +123,12 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getStudentById, [Expected] = StudentDTO with matching fields")
     @Test
     void getStudentById() {
-        //given
-       Student student = initStudent1();
+        Student student = createAaronSmith();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
 
-        //when
         StudentDTO studentDTO = studentService.getStudentByID(ID);
 
-        //then
         assertEquals(FIRST_NAME, studentDTO.getFirstName());
         assertEquals(LAST_NAME, studentDTO.getLastName());
         assertEquals(MALE, studentDTO.getGender());
@@ -152,16 +138,13 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = createNewStudent, [Expected] = StudentDTO  with matching fields")
     @Test
     void createNewStudent() throws Exception {
-        //given
         StudentDTO studentDTO = initStudentDTO();
-        Student savedStudent = initStudent1();
+        Student savedStudent =  createAaronSmith();
 
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
 
-        //when
         StudentDTO returnDTO = studentService.createNewStudent(studentDTO);
 
-        //then
         assertEquals(FIRST_NAME, returnDTO.getFirstName());
         assertEquals(LAST_NAME, returnDTO.getLastName());
         assertEquals(MALE, returnDTO.getGender());
@@ -171,18 +154,14 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = updateStudent, [Expected] = StudentDTO with updated fields")
     @Test
     void updateStudentHappyPath() {
-        //given
         StudentDTO studentDTO = initStudentDTO();
-        Student savedStudent = initStudent1();
+        Student savedStudent =  createAaronSmith();
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(savedStudent));
-
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
 
-        //when
         StudentDTO returnDTO = studentService.updateStudent(ID, studentDTO);
 
-        //then
         assertEquals(FIRST_NAME, returnDTO.getFirstName());
         assertEquals(LAST_NAME, returnDTO.getLastName());
         assertEquals(MALE, returnDTO.getGender());
@@ -202,12 +181,10 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = deleteStudentByID, [Expected] = studentRepository deleting student")
     @Test
     void deleteStudentByID() {
-        //given
-        Student student = initStudent1();
+        Student student =  createAaronSmith();
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(student));
 
-        //when
         studentService.deleteStudentByID(ID);
 
         verify(studentRepository, times(1)).deleteById(anyLong());

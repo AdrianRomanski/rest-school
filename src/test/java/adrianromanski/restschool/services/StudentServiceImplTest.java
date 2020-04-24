@@ -11,11 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,15 +25,13 @@ import static org.mockito.Mockito.*;
 class StudentServiceImplTest {
 
     public static final Long ID = 1L;
-    public static final String FIRST_NAME = "Adrian";
-    public static final String LAST_NAME = "Romanski";
+    public static final String FIRST_NAME = "Aaron";
+    public static final String LAST_NAME = "Smith";
 
     StudentService studentService;
 
-
     @Mock
     StudentRepository studentRepository;
-
 
     @BeforeEach
     void setUp() {
@@ -41,11 +40,34 @@ class StudentServiceImplTest {
         studentService = new StudentServiceImpl(StudentMapper.INSTANCE, studentRepository);
     }
 
+    Student initStudent1() {
+        Student student = Student.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).build();
+        student.setId(ID);
+        return student;
+    }
+
+    Student initStudent2() {
+        Student student = Student.builder().firstName("Jessie").lastName("Pinkman").gender(MALE).build();
+        student.setId(2L);
+        return student;
+    }
+
+    Student initStudent3() {
+        Student student = Student.builder().firstName("Jessica").lastName("Parker").gender(FEMALE).build();
+        student.setId(3L);
+        return student;
+    }
+
+    private StudentDTO initStudentDTO() {
+        StudentDTO studentDTO = StudentDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).build();
+        studentDTO.setId(ID);
+        return studentDTO;
+    }
+
     @Test
     void getAllStudents() {
-
         //given
-        List<Student> students = Arrays.asList(new Student(), new Student(), new Student());
+        List<Student> students = Arrays.asList(initStudent1(), initStudent2(), initStudent3());
 
         when(studentRepository.findAll()).thenReturn(students);
 
@@ -57,14 +79,39 @@ class StudentServiceImplTest {
     }
 
     @Test
+    void getAllFemaleStudents() {
+        //given
+        List<Student> students = Arrays.asList(initStudent1(), initStudent2(), initStudent3());
+
+        when(studentRepository.findAll()).thenReturn(students);
+
+        //when
+        List<StudentDTO> studentDTOS = studentService.getAllFemaleStudents();
+
+        //then
+        assertEquals(1, studentDTOS.size());
+    }
+
+    @Test
+    void getAllMaleStudents() {
+        //given
+        List<Student> students = Arrays.asList(initStudent1(), initStudent2(), initStudent3());
+
+        when(studentRepository.findAll()).thenReturn(students);
+
+        //when
+        List<StudentDTO> studentDTOS = studentService.getAllMaleStudents();
+
+        //then
+        assertEquals(2, studentDTOS.size());
+    }
+
+    @Test
     void getStudentByFirstAndLastName() {
-
         //Given
-        Student student = new Student();
-        student.setFirstName(FIRST_NAME);
-        student.setLastName(LAST_NAME);
+        Student student = initStudent1();
 
-        when(studentRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(student);
+        when(studentRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(student));
 
         //when
         StudentDTO studentDTO = studentService.getStudentByFirstAndLastName(FIRST_NAME, LAST_NAME);
@@ -72,72 +119,75 @@ class StudentServiceImplTest {
         //then
         assertEquals(FIRST_NAME, studentDTO.getFirstName());
         assertEquals(LAST_NAME, studentDTO.getLastName());
+        assertEquals(MALE, studentDTO.getGender());
+        assertEquals(ID, studentDTO.getId());
     }
 
     @Test
     void getStudentById() {
-        Student student = new Student();
-        student.setFirstName(FIRST_NAME);
-        student.setLastName(LAST_NAME);
-        student.setId(ID);
+        //given
+       Student student = initStudent1();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
 
         //when
         StudentDTO studentDTO = studentService.getStudentByID(ID);
 
+        //then
         assertEquals(FIRST_NAME, studentDTO.getFirstName());
         assertEquals(LAST_NAME, studentDTO.getLastName());
+        assertEquals(MALE, studentDTO.getGender());
+        assertEquals(ID, studentDTO.getId());
     }
-
 
     @Test
     void createNewStudent() throws Exception {
         //given
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setFirstName(FIRST_NAME);
-        studentDTO.setLastName(LAST_NAME);
-
-        Student savedStudent = new Student();
-        savedStudent.setFirstName(studentDTO.getFirstName());
-        savedStudent.setLastName(studentDTO.getLastName());
-        savedStudent.setId(ID);
+        StudentDTO studentDTO = initStudentDTO();
+        Student savedStudent = initStudent1();
 
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
 
         //when
-        StudentDTO savedDTO = studentService.createNewStudent(studentDTO);
+        StudentDTO returnDTO = studentService.createNewStudent(studentDTO);
 
         //then
-        assertEquals(studentDTO.getFirstName(), savedDTO.getFirstName());
-        assertEquals(studentDTO.getLastName(), savedDTO.getLastName());
+        assertEquals(FIRST_NAME, returnDTO.getFirstName());
+        assertEquals(LAST_NAME, returnDTO.getLastName());
+        assertEquals(MALE, returnDTO.getGender());
+        assertEquals(ID, returnDTO.getId());
     }
 
     @Test
     void updateStudent() {
         //given
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setFirstName(FIRST_NAME);
-        studentDTO.setLastName(LAST_NAME);
+        StudentDTO studentDTO = initStudentDTO();
+        Student savedStudent = initStudent1();
 
-        Student savedStudent = new Student();
-        savedStudent.setFirstName(studentDTO.getFirstName());
-        savedStudent.setLastName(studentDTO.getLastName());
-        savedStudent.setId(ID);
+        when(studentRepository.findById(ID)).thenReturn(Optional.of(savedStudent));
 
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
 
         //when
-        StudentDTO savedDTO = studentService.updateStudent(ID, studentDTO);
+        StudentDTO returnDTO = studentService.updateStudent(ID, studentDTO);
 
         //then
-        assertEquals(studentDTO.getFirstName(), savedDTO.getFirstName());
-        assertEquals(studentDTO.getLastName(), savedDTO.getLastName());
+        assertEquals(FIRST_NAME, returnDTO.getFirstName());
+        assertEquals(LAST_NAME, returnDTO.getLastName());
+        assertEquals(MALE, returnDTO.getGender());
+        assertEquals(ID, returnDTO.getId());
     }
 
     @Test
     void deleteStudentByID() {
-        studentRepository.deleteById(ID);
+        //given
+        Student student = initStudent1();
+
+        when(studentRepository.findById(ID)).thenReturn(Optional.of(student));
+
+        //when
+        studentService.deleteStudentByID(ID);
+
         verify(studentRepository, times(1)).deleteById(anyLong());
     }
 }

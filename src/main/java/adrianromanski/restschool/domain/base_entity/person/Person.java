@@ -1,9 +1,8 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
 import adrianromanski.restschool.domain.base_entity.BaseEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import lombok.*;
 
 import javax.persistence.MappedSuperclass;
 
@@ -11,9 +10,11 @@ import javax.persistence.MappedSuperclass;
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
+@AllArgsConstructor
 public class Person extends BaseEntity {
 
     private String firstName;
     private String lastName;
+    private Gender gender;
 
 }

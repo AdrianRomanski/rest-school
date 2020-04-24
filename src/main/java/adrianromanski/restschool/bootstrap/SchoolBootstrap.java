@@ -6,6 +6,7 @@ import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
 import adrianromanski.restschool.repositories.base_entity.SubjectRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.event.ExamResultRepository;
@@ -21,6 +22,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
 
 @Component
 @Slf4j
@@ -63,19 +67,22 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         Student adrian = new Student();
         adrian.setFirstName("Adrian");
         adrian.setLastName("Romanski");
+        adrian.setGender(MALE);
 
-        Student piotrek = new Student();
-        piotrek.setFirstName("Piotrek");
-        piotrek.setLastName("Cieszynski");
+        Student monika = new Student();
+        monika.setFirstName("Monika");
+        monika.setLastName("Zdrowa");
+        monika.setGender(FEMALE);
 
         Student filip = new Student();
         filip.setFirstName("Filip");
         filip.setLastName("Konieczny");
+        filip.setGender(MALE);
 
         // Init List of Students
         List<Student> students = new ArrayList<>();
         students.add(adrian);
-        students.add(piotrek);
+        students.add(monika);
         students.add(filip);
 
         //Init Teacher
@@ -117,7 +124,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         adrianMathResult.setScore(45f);
         adrianMathResult.setDate(LocalDate.now());
         ExamResult piotrekMathResult = new ExamResult();
-        piotrekMathResult.setName(piotrek.getFirstName() + " " + piotrek.getLastName());
+        piotrekMathResult.setName(monika.getFirstName() + " " + monika.getLastName());
         piotrekMathResult.setExam(mathExam);
         piotrekMathResult.setScore(55f);
         piotrekMathResult.setDate(LocalDate.now());
@@ -130,13 +137,13 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         adrian.addSubject(math);
         adrian.addSubject(biology);
         filip.addSubject(math);
-        piotrek.addSubject(math);
+        monika.addSubject(math);
 
         // Assign Students to Subjects
         biology.addStudent(adrian);
         math.addStudent(adrian);
         math.addStudent(filip);
-        math.addStudent(piotrek);
+        math.addStudent(monika);
 
         // Assign Exams to Subjects
         math.addExam(mathExam);
@@ -150,19 +157,19 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         adrian.addExam(mathExam);
         adrian.addExam(biologyExam);
         filip.addExam(mathExam);
-        piotrek.addExam(mathExam);
+        monika.addExam(mathExam);
 
         // Assign result
         adrian.getExams().get(0).addResult(adrianMathResult);
         filip.getExams().get(0).addResult(filipMathResult);
-        piotrek.getExams().get(0).addResult(piotrekMathResult);
+        monika.getExams().get(0).addResult(piotrekMathResult);
 
         // Assign Student and Teacher to Class
         studentClass.setTeacher(mathTeacher);
         studentClass.setStudentList(students);
         adrian.setStudentClass(studentClass);
         filip.setStudentClass(studentClass);
-        piotrek.setStudentClass(studentClass);
+        monika.setStudentClass(studentClass);
 
         System.out.println(studentClass.getTeacher());
 
@@ -171,7 +178,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         //Students
         studentRepository.save(adrian);
         studentRepository.save(filip);
-        studentRepository.save(piotrek);
+        studentRepository.save(monika);
         //Subjects
         subjectRepository.save(biology);
         subjectRepository.save(math);

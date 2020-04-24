@@ -4,6 +4,8 @@ import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.group.SportTeam;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,11 +14,15 @@ import java.util.List;
 
 @EqualsAndHashCode(exclude = {"subjects", "exams", "studentClass"})
 @Entity
-
+@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Student extends Person {
 
+    @Builder
+    public Student(String firstName, String lastName, Gender gender) {
+        super(firstName, lastName, gender);
+    }
 
     @ToString.Exclude
     @ManyToMany
@@ -32,7 +38,6 @@ public class Student extends Person {
 
     @ManyToOne
     private SportTeam sportTeam;
-
 
     @ManyToOne
     private StudentClass studentClass;

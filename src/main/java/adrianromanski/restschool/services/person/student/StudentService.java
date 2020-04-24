@@ -9,6 +9,10 @@ public interface StudentService {
 
     List<StudentDTO> getAllStudents();
 
+    List<StudentDTO> getAllFemaleStudents();
+
+    List<StudentDTO> getAllMaleStudents();
+
     StudentDTO getStudentByFirstAndLastName(String firstName, String lastName);
 
     StudentDTO createNewStudent(StudentDTO studentDTO);

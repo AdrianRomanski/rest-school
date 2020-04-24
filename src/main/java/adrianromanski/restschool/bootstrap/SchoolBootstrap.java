@@ -68,16 +68,19 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         adrian.setFirstName("Adrian");
         adrian.setLastName("Romanski");
         adrian.setGender(MALE);
+        adrian.setDateOfBirth(LocalDate.of(1992, 11, 3));
 
         Student monika = new Student();
         monika.setFirstName("Monika");
         monika.setLastName("Zdrowa");
         monika.setGender(FEMALE);
+        monika.setDateOfBirth(LocalDate.of(1994, 11, 3));
 
         Student filip = new Student();
         filip.setFirstName("Filip");
         filip.setLastName("Konieczny");
         filip.setGender(MALE);
+        filip.setDateOfBirth(LocalDate.of(1993, 11, 3));
 
         // Init List of Students
         List<Student> students = new ArrayList<>();

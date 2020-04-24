@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-
 @Api("Controller for Students")
 @RestController
 @RequestMapping("/students/")
@@ -20,14 +19,14 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @ApiOperation("Returns all Students sorted by lastName&firstName")
+    @ApiOperation("Returns all Students sorted by age -> lastName -> firstName")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllStudents() {
         return new StudentListDTO(studentService.getAllStudents());
     }
 
-    @ApiOperation("Returns all Female Students sorted by lastName&firstName")
+    @ApiOperation("Returns all Female Students sorted by age -> lastName -> firstName")
     @GetMapping("/female")
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllFemaleStudents() {
@@ -35,7 +34,7 @@ public class StudentController {
     }
 
 
-    @ApiOperation("Returns all Male Students sorted by lastName&firstName")
+    @ApiOperation("Returns all Male Students sorted by age -> lastName -> firstName")
     @GetMapping("/male")
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllMaleStudents() {
@@ -63,14 +62,14 @@ public class StudentController {
         return studentService.createNewStudent(studentDTO);
     }
 
-    @ApiOperation("Update an existing Student with matching ID")
+    @ApiOperation("Update an existing Student with matching ID or else throw ResourceNotFoundException")
     @PutMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@PathVariable String ID, @RequestBody StudentDTO studentDTO) {
         return studentService.updateStudent(Long.valueOf(ID), studentDTO);
     }
 
-    @ApiOperation("Delete a student with matching ID")
+    @ApiOperation("Delete a student with matching ID or else throw ResourceNotFoundException")
     @DeleteMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteCustomer(@PathVariable String ID) {

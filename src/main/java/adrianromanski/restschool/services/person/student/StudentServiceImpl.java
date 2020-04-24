@@ -21,6 +21,9 @@ public class StudentServiceImpl implements StudentService {
 
     private final StudentMapper studentMapper;
     private final StudentRepository studentRepository;
+    public static final Comparator<Student> COMPARATOR = Comparator.comparing(Student::getAge)
+                                                                        .thenComparing(Student::getLastName)
+                                                                        .thenComparing((Student::getFirstName));
 
     public StudentServiceImpl(StudentMapper studentMapper, StudentRepository studentRepository) {
         this.studentMapper = studentMapper;
@@ -28,39 +31,39 @@ public class StudentServiceImpl implements StudentService {
     }
 
     /**
-     * @return all Students sorted by lastName&firstName
+     * @return all Students sorted by age -> lastName -> firstName
      */
     @Override
     public List<StudentDTO> getAllStudents() {
         return studentRepository.findAll()
                 .stream()
-                .sorted(Comparator.comparing(Student::getLastName).thenComparing(Student::getFirstName))
+                .sorted(COMPARATOR)
                 .map(studentMapper::studentToStudentDTO)
                 .collect(Collectors.toList());
     }
 
     /**
-     * @return  all Female Students sorted by lastName&firstName
+     * @return  all Female Students sorted by age -> lastName -> firstName
      */
     @Override
     public List<StudentDTO> getAllFemaleStudents() {
         return studentRepository.findAll()
                 .stream()
+                .sorted(COMPARATOR)
                 .map(studentMapper::studentToStudentDTO)
-                .sorted(Comparator.comparing(StudentDTO::getLastName).thenComparing(StudentDTO::getLastName))
                 .filter(studentDTO -> studentDTO.getGender().equals(FEMALE))
                 .collect(Collectors.toList());
     }
 
     /**
-     * @return Male Students sorted by lastName&firstName
+     * @return Male Students sorted by age -> lastName -> firstName
      */
     @Override
     public List<StudentDTO> getAllMaleStudents() {
         return studentRepository.findAll()
                 .stream()
+                .sorted(COMPARATOR)
                 .map(studentMapper::studentToStudentDTO)
-                .sorted(Comparator.comparing(StudentDTO::getLastName).thenComparing(StudentDTO::getFirstName))
                 .filter(studentDTO -> studentDTO.getGender().equals(MALE))
                 .collect(Collectors.toList());
     }

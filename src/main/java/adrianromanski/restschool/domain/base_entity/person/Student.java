@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +20,8 @@ import java.util.List;
 public class Student extends Person {
 
     @Builder
-    public Student(String firstName, String lastName, Gender gender) {
-        super(firstName, lastName, gender);
+    public Student(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age) {
+        super(firstName, lastName, gender, dateOfBirth, age);
     }
 
     @ToString.Exclude

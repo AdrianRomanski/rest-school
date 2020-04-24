@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,8 @@ import java.util.List;
 public class StudentDTO extends PersonDTO {
 
     @Builder
-    public StudentDTO(String firstName, String lastName, Gender gender) {
-        super(firstName, lastName, gender);
+    public StudentDTO(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age) {
+        super(firstName, lastName, gender, dateOfBirth, age);
     }
 
     @JsonIgnore
@@ -31,7 +32,9 @@ public class StudentDTO extends PersonDTO {
     @JsonIgnore
     private List<ExamDTO> examsDTO = new ArrayList<>();
 
+    @JsonIgnore
     private StudentClassDTO studentClassDTO;
 
+    @JsonIgnore
     private SportTeamDTO sportTeamDTO;
 }

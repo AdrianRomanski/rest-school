@@ -10,9 +10,22 @@
 * __getStudentByFirstAndLastName__ - Returns Student with matching firstName and lastName
 * __getStudentByID__ - Returns Student with matching id
 #### POST
-* __createNewStudent__ - Converts DTO Object and Save it to Database
+* __createNewStudent__ - Converts DTO Object and save it to database
 #### PUT
-* __updateStudent__ - Converts DTO Object, Update Student with Matching ID and save it to Database
+* __updateStudent__ - Converts DTO Object, update Student with matching id and save it to database
 #### DELETE
 * __deleteStudentByID__ - Delete Student with matching id
+
+## <div align="center"> Teachers </div> 
+#### GET
+* __getAllTeachers__ - Returns all Teachers sorted by speciality -> yearsOfExperience
+* __getTeacherByFirstNameAndLastName__ - Returns Teacher with matching firstName and lastName
+* __getTeacherByID__ - Returns Teacher with matching id
+#### POST
+* __createNewTeacher__ - Converts DTO Object and save it to Database
+#### PUT
+* __updateStudent__ - Converts DTO Object, update Teacher with matching id and save it to database
+#### DELETE
+* __deleteTeacherById__ - Delete Student with matching id
+
 

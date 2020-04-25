@@ -63,7 +63,7 @@ class StudentServiceImplTest {
         return createStudent(3L, "Jessica", "Parker", FEMALE);
     }
 
-    private StudentDTO initStudentDTO() {
+    private StudentDTO createAaronSmithDTO() {
         StudentDTO studentDTO = StudentDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).build();
         studentDTO.setId(ID);
         return studentDTO;
@@ -138,7 +138,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = createNewStudent, [Expected] = StudentDTO  with matching fields")
     @Test
     void createNewStudent() throws Exception {
-        StudentDTO studentDTO = initStudentDTO();
+        StudentDTO studentDTO = createAaronSmithDTO();
         Student savedStudent =  createAaronSmith();
 
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
@@ -154,7 +154,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = updateStudent, [Expected] = StudentDTO with updated fields")
     @Test
     void updateStudentHappyPath() {
-        StudentDTO studentDTO = initStudentDTO();
+        StudentDTO studentDTO = createAaronSmithDTO();
         Student savedStudent =  createAaronSmith();
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(savedStudent));
@@ -168,10 +168,10 @@ class StudentServiceImplTest {
         assertEquals(ID, returnDTO.getId());
     }
 
-    @DisplayName("[Unhappy Path], [Method] = updateStudent, [Reason] = Student with id not found")
+    @DisplayName("[Unhappy Path], [Method] = updateStudent, [Reason] = Student with id 222 not found")
     @Test
     void updateStudentUnHappyPath() {
-        StudentDTO studentDTO = initStudentDTO();
+        StudentDTO studentDTO = createAaronSmithDTO();
 
             Throwable ex = catchThrowable(() -> studentService.updateStudent(222L,studentDTO));
 
@@ -190,7 +190,7 @@ class StudentServiceImplTest {
         verify(studentRepository, times(1)).deleteById(anyLong());
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteStudentByID, [Reason] = Student with id not found")
+    @DisplayName("[Unhappy Path], [Method] = deleteStudentByID, [Reason] = Student with id 222 not found")
     @Test
     void deleteStudentByIDUnHappyPath() {
 

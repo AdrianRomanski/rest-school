@@ -5,22 +5,27 @@ import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
-    private  TeacherRepository teacherRepository;
-    private  TeacherMapper teacherMapper;
+    private final TeacherRepository teacherRepository;
+    private final TeacherMapper teacherMapper;
 
     public TeacherServiceImpl(TeacherRepository teacherRepository, TeacherMapper teacherMapper) {
         this.teacherRepository = teacherRepository;
         this.teacherMapper = teacherMapper;
     }
 
+    /**
+     * @return all Teachers sorted by yearsOfExperience -> speciality
+     */
     @Override
     public List<TeacherDTO> getAllTeachers() {
         return teacherRepository.findAll()
@@ -29,12 +34,21 @@ public class TeacherServiceImpl implements TeacherService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * @return Teacher with matching firstName and lastName
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public TeacherDTO getTeacherByFirstNameAndLastName(String firstName, String lastName) {
         return teacherMapper.teacherToTeacherDTO(teacherRepository
-                                                    .getTeacherByFirstNameAndLastName(firstName,lastName));
+                                                    .getTeacherByFirstNameAndLastName(firstName,lastName)
+                                                    .orElseThrow(ResourceNotFoundException::new));
     }
 
+    /**
+     * @return Teacher with matching id
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public TeacherDTO getTeacherByID(Long id) {
         return teacherMapper.teacherToTeacherDTO(teacherRepository
@@ -42,24 +56,47 @@ public class TeacherServiceImpl implements TeacherService {
                                                     .orElseThrow(ResourceNotFoundException::new));
     }
 
+    /**
+     * Converts DTO Object and Save it to Database
+     * @return TeacherDTO object
+     */
     @Override
     public TeacherDTO createNewTeacher(TeacherDTO teacherDTO) {
-        return savedAndReturnDTO(teacherMapper.teacherDTOToTeacher(teacherDTO));
+        teacherRepository.save(teacherMapper.teacherDTOToTeacher(teacherDTO));
+        log.info("Teacher with id: " + teacherDTO.getId() + " successfully saved");
+        return teacherDTO;
     }
 
+    /**
+     * Converts DTO Object, Update Teacher with Matching ID and save it to Database
+     * @return TeacherDTO object if the student was successfully saved
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO) {
-        teacherDTO.setId(id);
-        return savedAndReturnDTO(teacherMapper.teacherDTOToTeacher(teacherDTO));
+        if(teacherRepository.findById(id).isPresent()) {
+            Teacher updatedTeacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
+            updatedTeacher.setId(id);
+            teacherRepository.save(updatedTeacher);
+            log.info("Student with id:" + id +  " successfully updated");
+            return teacherMapper.teacherToTeacherDTO(updatedTeacher);
+        } else {
+            throw new ResourceNotFoundException("Teacher with id: " + id + " not found");
+        }
     }
 
+    /**
+     * Delete Teacher with matching id
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public void deleteTeacherById(Long id) {
-        teacherRepository.deleteById(id);
-    }
-
-    TeacherDTO savedAndReturnDTO(Teacher teacher) {
-        teacherRepository.save(teacher);
-        return teacherMapper.teacherToTeacherDTO(teacher);
+        if(teacherRepository.findById(id).isPresent()) {
+            teacherRepository.deleteById(id);
+            log.info("Teacher with id:" + id +  " successfully deleted");
+        } else {
+            log.debug("Teacher with id: " + id + " not found");
+            throw new ResourceNotFoundException("Teacher with id: " + id + " not found");
+        }
     }
 }

@@ -110,9 +110,10 @@ public class StudentServiceImpl implements StudentService {
     public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
         if(studentRepository.findById(id).isPresent()) {
            Student updatedStudent = studentMapper.studentDTOToStudent(studentDTO);
+           updatedStudent.setId(id);
            studentRepository.save(updatedStudent);
-            log.info("Student with id:" + id +  "successfully updated");
-           return studentDTO;
+           log.info("Student with id:" + id +  " successfully updated");
+           return studentMapper.studentToStudentDTO(updatedStudent);
         } else {
             throw new ResourceNotFoundException("Student with id: " + id + " not found");
         }
@@ -126,7 +127,7 @@ public class StudentServiceImpl implements StudentService {
     public void deleteStudentByID(Long id) {
         if(studentRepository.findById(id).isPresent()) {
             studentRepository.deleteById(id);
-            log.info("Student with id:" + id +  "successfully deleted");
+            log.info("Student with id:" + id +  " successfully deleted");
         } else {
             log.debug("Student with id: " + id + " not found");
             throw new ResourceNotFoundException("Student with id: " + id + " not found");

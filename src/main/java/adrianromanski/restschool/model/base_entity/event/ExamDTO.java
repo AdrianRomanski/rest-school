@@ -3,6 +3,7 @@ package adrianromanski.restschool.model.base_entity.event;
 import adrianromanski.restschool.domain.base_entity.event.Event;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
+import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,4 +22,6 @@ public class ExamDTO extends Event {
     private List<StudentDTO> studentsDTO = new ArrayList<>();
     private SubjectDTO subjectDTO;
     private List<ExamResultDTO> resultsDTO = new ArrayList<>();
+
+    private TeacherDTO teacherDTO;
 }

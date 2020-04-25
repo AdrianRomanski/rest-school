@@ -24,7 +24,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * @return all Teachers sorted by yearsOfExperience -> speciality
+     * @return all Teachers sorted by speciality -> yearsOfExperience
      */
     @Override
     public List<TeacherDTO> getAllTeachers() {

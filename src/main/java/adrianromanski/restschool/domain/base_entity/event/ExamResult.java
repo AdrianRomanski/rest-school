@@ -1,9 +1,6 @@
 package adrianromanski.restschool.domain.base_entity.event;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -40,7 +37,7 @@ public class ExamResult extends Event {
                 this.grade = "D";
             } else if(result >= 35 && result < 45)  {
                 this.grade = "E";
-            } else if(result > 35) {
+            } else if(result < 35) {
                 this.grade = "F";
             }
         }

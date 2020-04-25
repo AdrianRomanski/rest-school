@@ -16,7 +16,8 @@ public interface ExamMapper {
     @Mappings({
             @Mapping(source = "subject", target = "subjectDTO"),
             @Mapping(source = "students", target = "studentsDTO"),
-            @Mapping(source = "results", target = "resultsDTO")
+            @Mapping(source = "results", target = "resultsDTO"),
+            @Mapping(source = "teacher", target = "teacherDTO")
     })
     ExamDTO examToExamDTO(Exam exam);
 
@@ -24,7 +25,8 @@ public interface ExamMapper {
     @Mappings({
             @Mapping(source = "subjectDTO", target = "subject"),
             @Mapping(source = "studentsDTO", target = "students"),
-            @Mapping(source = "resultsDTO", target = "results")
+            @Mapping(source = "resultsDTO", target = "results"),
+            @Mapping(source = "teacherDTO", target = "teacher")
     })
     Exam examDTOToExam(ExamDTO examDTO);
 

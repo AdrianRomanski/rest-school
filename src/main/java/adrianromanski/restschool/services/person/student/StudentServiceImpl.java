@@ -17,7 +17,7 @@ import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.M
 
 @Slf4j
 @Service
-public class StudentServiceImpl implements StudentService {
+public class StudentServiceImpl implements StudentService{
 
     private final StudentMapper studentMapper;
     private final StudentRepository studentRepository;

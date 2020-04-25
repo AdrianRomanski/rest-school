@@ -6,6 +6,8 @@ import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +16,7 @@ class StudentMapperTest {
     public static final Long ID = 1L;
     public static final String FIRST_NAME = "Adrian";
     public static final String LAST_NAME = "Romanski";
+    public static final long AGE = 27L;
 
 
     StudentMapper studentMapper = StudentMapper.INSTANCE;
@@ -22,11 +25,8 @@ class StudentMapperTest {
     public void studentToStudentDTO() {
         //given
 
-        Student student = new Student();
-        student.setFirstName(FIRST_NAME);
-        student.setLastName(LAST_NAME);
+        Student student = Student.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
         student.setId(ID);
-        student.setGender(MALE);
 
         //when
         StudentDTO studentDTO = studentMapper.studentToStudentDTO(student);
@@ -35,17 +35,14 @@ class StudentMapperTest {
         assertEquals(FIRST_NAME, studentDTO.getFirstName());
         assertEquals(LAST_NAME, studentDTO.getLastName());
         assertEquals(MALE, studentDTO.getGender());
+        assertEquals(AGE, studentDTO.getAge());
     }
 
     @Test
     public void studentDTOToStudent() {
         //given
-
-        StudentDTO studentDTO = new StudentDTO();
-        studentDTO.setFirstName(FIRST_NAME);
-        studentDTO.setLastName(LAST_NAME);
+        StudentDTO studentDTO = StudentDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
         studentDTO.setId(ID);
-        studentDTO.setGender(MALE);
 
         //when
         Student student = studentMapper.studentDTOToStudent(studentDTO);
@@ -54,6 +51,6 @@ class StudentMapperTest {
         assertEquals(FIRST_NAME, student.getFirstName());
         assertEquals(LAST_NAME, student.getLastName());
         assertEquals(MALE, student.getGender());
+        assertEquals(AGE, student.getAge());
     }
-
 }

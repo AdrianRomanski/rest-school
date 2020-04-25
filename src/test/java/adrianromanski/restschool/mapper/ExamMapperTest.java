@@ -2,6 +2,7 @@ package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.Subject;
+import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
@@ -13,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExamMapperTest {
 
+    public static final String WALTER = "WaLter";
+    public static final String WHITE = "White";
     private final String NAME = "Final Math Exam";
     private final String MATH = "Math";
     private final LocalDate DATE = LocalDate.now();
@@ -30,12 +33,19 @@ public class ExamMapperTest {
         math.setName(MATH);
         exam.setSubject(math);
 
+        Teacher teacher = Teacher.builder().firstName(WALTER).lastName(WHITE).build();
+        exam.setTeacher(teacher);
+        teacher.getExams().add(exam);
+
         ExamDTO examDTO = examMapper.examToExamDTO(exam);
 
         assertEquals(NAME, examDTO.getName());
         assertEquals(DATE, examDTO.getDate());
         assertEquals(POINTS, examDTO.getMaxPoints());
         assertEquals(MATH, examDTO.getSubjectDTO().getName());
+
+        assertEquals(WALTER, examDTO.getTeacherDTO().getFirstName());
+        assertEquals(WHITE, examDTO.getTeacherDTO().getLastName());
     }
 
     @Test

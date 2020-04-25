@@ -14,9 +14,9 @@ public class ExamResultMapperTest {
 
 
     public static final String MATH_FINAL = "Math Final";
-    public static final long MAX_POINTS = 80L;
+    public static final long MAX_POINTS = 100L;
     public static final String NAME = "Adrian Romanski";
-    public static final float SCORE = 60L;
+    public static final float SCORE = 95L;
     ExamResultMapper examResultMapper = ExamResultMapper.INSTANCE;
 
     @Test
@@ -24,18 +24,51 @@ public class ExamResultMapperTest {
         Exam exam = new Exam();
         exam.setName(MATH_FINAL);
         exam.setMaxPoints(MAX_POINTS);
-        ExamResult examResult = new ExamResult();
-        examResult.setExam(exam);
-        examResult.setName(NAME);
-        examResult.setScore(SCORE);
 
+        ExamResult examResult1 = new ExamResult();
+        examResult1.setExam(exam);
+        examResult1.setName(NAME);
+        examResult1.setScore(SCORE);   // A
 
-        ExamResultDTO examResultDTO = examResultMapper.examResultToExamResultDTO(examResult);
+        ExamResult examResult2 = new ExamResult();
+        examResult2.setExam(exam);
+        examResult2.setScore(80);     // B
 
-        assertEquals(examResultDTO.getScore(), SCORE);
-        assertEquals(examResultDTO.getName(), NAME);
-        assertEquals(examResultDTO.getExamDTO().getMaxPoints(), MAX_POINTS);
-        assertEquals(examResultDTO.getExamDTO().getName(), MATH_FINAL);
+        ExamResult examResult3 = new ExamResult();
+        examResult3.setExam(exam);
+        examResult3.setScore(65);    // C
+
+        ExamResult examResult4 = new ExamResult();
+        examResult4.setExam(exam);
+        examResult4.setScore(50);   // D
+
+        ExamResult examResult5 = new ExamResult();
+        examResult5.setExam(exam);
+        examResult5.setScore(40);   // E
+
+        ExamResult examResult6 = new ExamResult();
+        examResult6.setExam(exam);
+        examResult6.setScore(0);   // F
+
+        ExamResultDTO examResultDTO1 = examResultMapper.examResultToExamResultDTO(examResult1);
+        ExamResultDTO examResultDTO2 = examResultMapper.examResultToExamResultDTO(examResult2);
+        ExamResultDTO examResultDTO3 = examResultMapper.examResultToExamResultDTO(examResult3);
+        ExamResultDTO examResultDTO4 = examResultMapper.examResultToExamResultDTO(examResult4);
+        ExamResultDTO examResultDTO5 = examResultMapper.examResultToExamResultDTO(examResult5);
+        ExamResultDTO examResultDTO6 = examResultMapper.examResultToExamResultDTO(examResult6);
+
+        assertEquals(examResultDTO1.getScore(), SCORE);
+        assertEquals(examResultDTO1.getName(), NAME);
+        assertEquals(examResultDTO1.getExamDTO().getMaxPoints(), MAX_POINTS);
+        assertEquals(examResultDTO1.getExamDTO().getName(), MATH_FINAL);
+
+        // Checking set.grade method
+        assertEquals(examResultDTO1.getGrade(), "A");
+        assertEquals(examResultDTO2.getGrade(), "B");
+        assertEquals(examResultDTO3.getGrade(), "C");
+        assertEquals(examResultDTO4.getGrade(), "D");
+        assertEquals(examResultDTO5.getGrade(), "E");
+        assertEquals(examResultDTO6.getGrade(), "F");
 
     }
 

@@ -18,14 +18,16 @@
 
 ## <div align="center"> Teachers </div> 
 #### GET
-* __getAllTeachers__ - Returns all Teachers sorted by speciality -> yearsOfExperience
+* __getAllTeachers__ - Returns all Teachers sorted by Specialization -> yearsOfExperience
 * __getTeacherByFirstNameAndLastName__ - Returns Teacher with matching firstName and lastName
 * __getTeacherByID__ - Returns Teacher with matching id
+* __getTeachersBySpecialization__ - Returns Map where the keys are Specializations and values - List of Teachers
+* __getTeachersByYearsOfExperience__ - Returns Map where the keys are Years of Experience and values - List of Teachers
 #### POST
 * __createNewTeacher__ - Converts DTO Object and save it to Database
 #### PUT
 * __updateStudent__ - Converts DTO Object, update Teacher with matching id and save it to database
 #### DELETE
-* __deleteTeacherById__ - Delete Student with matching id
+* __deleteTeacherById__ - Delete Teacher with matching id
 
 

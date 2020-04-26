@@ -14,8 +14,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.*;
@@ -30,34 +32,40 @@ class TeacherServiceImplTest {
     public static final String FIRST_NAME = "Walter";
     public static final String LAST_NAME = "White";
     public static final long ID = 1L;
+    public static final String CHEMISTRY = "Chemistry";
+    public static final String BIOLOGY = "Biology";
+    public static final String PHYSICS = "Physics";
 
     TeacherService teacherService;
 
     @Mock
     TeacherRepository teacherRepository;
 
-    Teacher createTeacher(Long id, String firstName, String lastName, Gender gender) {
+    Teacher createTeacher(Long id, String firstName, String lastName, Gender gender, String specialization, LocalDate firstDay) {
         Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).gender(gender).build();
         teacher.setId(id);
+        teacher.setSpecialization(specialization);
+        teacher.setFirstDay(firstDay);
         return teacher;
     }
 
     Teacher createWalter() {
-        return createTeacher(ID, FIRST_NAME, LAST_NAME, MALE);
+        return createTeacher(ID, FIRST_NAME, LAST_NAME, MALE, CHEMISTRY, LocalDate.of(2018, 10, 3));
     }
 
     TeacherDTO createWalterDTO() {
         TeacherDTO teacherDTO = TeacherDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).build();
         teacherDTO.setId(ID);
+        teacherDTO.setSpecialization(CHEMISTRY);
         return teacherDTO;
     }
 
     Teacher createPeter() {
-        return createTeacher(2L, "Peter", "Parker", MALE);
+        return createTeacher(2L, "Peter", "Parker", MALE, BIOLOGY, LocalDate.of(2017, 10, 3));
     }
 
     Teacher createMarie() {
-        return createTeacher(3L, "Marie", "Curie", FEMALE);
+        return createTeacher(3L, "Marie", "Curie", FEMALE, PHYSICS, LocalDate.of(2017, 10, 3));
     }
 
     @BeforeEach
@@ -105,6 +113,35 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getFirstName(), FIRST_NAME);
         assertEquals(returnDTO.getLastName(), LAST_NAME);
         assertEquals(returnDTO.getId(), ID);
+    }
+
+    @DisplayName("[Happy Path], [Method] = getTeachersBySpecialization, [Expected] = Map<String, List<TeacherDTO>>")
+    @Test
+    void getTeachersBySpecialization() {
+        List<Teacher> teachers = Arrays.asList(createWalter(), createPeter(), createMarie());
+
+        when(teacherRepository.findAll()).thenReturn(teachers);
+
+        Map<String, List<TeacherDTO>> map = teacherService.getTeachersBySpecialization();
+
+        assertEquals(map.size(), 3);
+        assertTrue(map.containsKey(BIOLOGY));
+        assertTrue(map.containsKey(PHYSICS));
+        assertTrue(map.containsKey(CHEMISTRY));
+    }
+
+    @DisplayName("[Happy Path], [Method] = getTeachersByYearsOfExperience, [Expected] = Map<Long, List<TeacherDTO>>")
+    @Test
+    void getTeachersByYearsOfExperience() {
+        List<Teacher> teachers = Arrays.asList(createWalter(), createPeter(), createMarie());
+
+        when(teacherRepository.findAll()).thenReturn(teachers);
+
+        Map<Long, List<TeacherDTO>> map = teacherService.getTeachersByYearsOfExperience();
+
+        assertEquals(map.size(), 2); // Expecting size 2 because -> (2 years exp(2 person)) + (1 year exp(1 person)) = 2
+        assertTrue(map.containsKey(1L));
+        assertTrue(map.containsKey(2L));
     }
 
     @DisplayName("[Happy Path], [Method] = createNewTeacher, [Expected] = TeacherDTO with matching fields")

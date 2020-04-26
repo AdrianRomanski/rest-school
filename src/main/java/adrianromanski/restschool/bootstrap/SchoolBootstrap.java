@@ -92,6 +92,23 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         Teacher mathTeacher = new Teacher();
         mathTeacher.setFirstName("Walter");
         mathTeacher.setLastName("White");
+        mathTeacher.setDateOfBirth(LocalDate.of(1980, 10, 3));
+        mathTeacher.setFirstDay(LocalDate.of(2018, 10, 3));
+        mathTeacher.setSpecialization("Math");
+
+        Teacher biologyTeacher = new Teacher();
+        biologyTeacher.setFirstName("Mr");
+        biologyTeacher.setLastName("Bean");
+        biologyTeacher.setDateOfBirth(LocalDate.of(1970, 10, 3));
+        biologyTeacher.setFirstDay(LocalDate.of(2016, 10, 3));
+        biologyTeacher.setSpecialization("Biology");
+
+        Teacher physicsTeacher = new Teacher();
+        physicsTeacher.setFirstName("Philip");
+        physicsTeacher.setLastName("Strange");
+        physicsTeacher.setDateOfBirth(LocalDate.of(1960, 10, 3));
+        physicsTeacher.setFirstDay(LocalDate.of(2016, 10, 3));
+        physicsTeacher.setSpecialization("Physics");
 
 
         // Init Exams //
@@ -194,6 +211,8 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         examResultRepository.save(filipMathResult);
         //Teachers
         teacherRepository.save(mathTeacher);
+        teacherRepository.save(biologyTeacher);
+        teacherRepository.save(physicsTeacher);
         // StudentClasses
         studentClassRepository.save(studentClass);
 

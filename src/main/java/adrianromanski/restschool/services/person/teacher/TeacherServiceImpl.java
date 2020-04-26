@@ -8,7 +8,7 @@ import adrianromanski.restschool.repositories.person.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,14 +24,21 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * @return all Teachers sorted by speciality -> yearsOfExperience
+     * @return all Teachers sorted by Specialization -> yearsOfExperience
      */
     @Override
     public List<TeacherDTO> getAllTeachers() {
         return teacherRepository.findAll()
-                .stream()
-                .map(teacherMapper::teacherToTeacherDTO)
-                .collect(Collectors.toList());
+                                    .stream()
+                                    .map(teacherMapper::teacherToTeacherDTO)
+                                    .sorted(Comparator
+                                            .comparing(
+                                                    TeacherDTO::getSpecialization)
+                                            .thenComparing(
+                                                    TeacherDTO::getYearsOfExperience
+                                            )
+                                    )
+                                    .collect(Collectors.toList());
     }
 
     /**
@@ -54,6 +61,36 @@ public class TeacherServiceImpl implements TeacherService {
         return teacherMapper.teacherToTeacherDTO(teacherRepository
                                                     .findById(id)
                                                     .orElseThrow(ResourceNotFoundException::new));
+    }
+
+    /**
+     * @return Map where the keys are Specializations and values List of Teachers
+     */
+    @Override
+    public Map<String, List<TeacherDTO>> getTeachersBySpecialization() {
+        return teacherRepository.findAll()
+                                    .stream()
+                                    .map(teacherMapper::teacherToTeacherDTO)
+                                    .collect(
+                                            Collectors.groupingBy(
+                                                    TeacherDTO::getSpecialization
+                                            )
+                                    );
+    }
+
+    /**
+     * @return Map where the keys are years of experience and values List of Teachers
+     */
+    @Override
+    public Map<Long, List<TeacherDTO>> getTeachersByYearsOfExperience() {
+        return teacherRepository.findAll()
+                .stream()
+                .map(teacherMapper::teacherToTeacherDTO)
+                .collect(
+                        Collectors.groupingBy(
+                                TeacherDTO::getYearsOfExperience
+                        )
+                );
     }
 
     /**

@@ -8,6 +8,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,24 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Teacher extends Person {
+
+
+    private String specialization;
+
+    private Long yearsOfExperience;
+
+    private LocalDate firstDay;
+
+    public Long getYearsOfExperience() {
+        if (firstDay != null) {
+            LocalDate now = LocalDate.now();
+            Period period = Period.between(this.firstDay, now);
+            this.yearsOfExperience = (long) period.getYears();
+            return this.yearsOfExperience;
+        } else {
+            return 0L;
+        }
+    }
 
     @Builder
     public Teacher(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age) {

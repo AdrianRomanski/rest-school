@@ -84,13 +84,13 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Map<Long, List<TeacherDTO>> getTeachersByYearsOfExperience() {
         return teacherRepository.findAll()
-                .stream()
-                .map(teacherMapper::teacherToTeacherDTO)
-                .collect(
-                        Collectors.groupingBy(
-                                TeacherDTO::getYearsOfExperience
-                        )
-                );
+                                    .stream()
+                                    .map(teacherMapper::teacherToTeacherDTO)
+                                    .collect(
+                                            Collectors.groupingBy(
+                                                    TeacherDTO::getYearsOfExperience
+                                            )
+                                    );
     }
 
     /**

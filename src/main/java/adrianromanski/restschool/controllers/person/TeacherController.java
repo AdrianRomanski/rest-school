@@ -8,6 +8,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Api("Controller for teachers")
 @RestController
 @RequestMapping("/teachers/")
@@ -38,6 +41,20 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.OK)
     public TeacherDTO getTeacherByID(@PathVariable String ID) {
         return teacherService.getTeacherByID(Long.valueOf(ID));
+    }
+
+    @ApiOperation("Returns a Map where the keys are Specializations and values List of Teachers")
+    @GetMapping("/specializations")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<String, List<TeacherDTO>> getTeachersBySpecialization() {
+        return teacherService.getTeachersBySpecialization();
+    }
+
+    @ApiOperation("Returns a Map where the keys are years of experience and values List of Teachers")
+    @GetMapping("/experience")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Long, List<TeacherDTO>> getTeachersByYearsOfExperience() {
+        return teacherService.getTeachersByYearsOfExperience();
     }
 
     @ApiOperation("Create and save new Teacher based on TeacherDTO body")

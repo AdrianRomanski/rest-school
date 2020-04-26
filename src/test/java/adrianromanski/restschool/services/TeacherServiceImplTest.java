@@ -115,7 +115,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getTeachersBySpecialization, [Expected] = Map<String, List<TeacherDTO>>")
+    @DisplayName("[Happy Path], [Method] = getTeachersBySpecialization, [Expected] = Map<Biology(1), Math(1), Chemistry(1)>\"")
     @Test
     void getTeachersBySpecialization() {
         List<Teacher> teachers = Arrays.asList(createWalter(), createPeter(), createMarie());
@@ -130,7 +130,7 @@ class TeacherServiceImplTest {
         assertTrue(map.containsKey(CHEMISTRY));
     }
 
-    @DisplayName("[Happy Path], [Method] = getTeachersByYearsOfExperience, [Expected] = Map<Long, List<TeacherDTO>>")
+    @DisplayName("[Happy Path], [Method] = getTeachersByYearsOfExperience, [Expected] = Map<1 Year(1), 2 Years(2)>")
     @Test
     void getTeachersByYearsOfExperience() {
         List<Teacher> teachers = Arrays.asList(createWalter(), createPeter(), createMarie());

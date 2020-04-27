@@ -7,7 +7,6 @@ import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
 import adrianromanski.restschool.repositories.base_entity.SubjectRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.event.ExamResultRepository;
@@ -22,16 +21,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static adrianromanski.restschool.domain.base_entity.person.enums.FemaleName.CHARLOTTE;
 import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.base_entity.person.enums.LastName.*;
+import static adrianromanski.restschool.domain.base_entity.person.enums.MaleName.*;
 
 @Component
 @Slf4j
 public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
+    public static final String MATHEMATICS = "Mathematics";
+    public static final String BIOLOGY = "Biology";
+    public static final String SCIENCE = "Science";
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
     private final ExamRepository examRepository;
@@ -59,129 +64,103 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         studentClass.setName("Rookies");
 
         // Init Subjects
-        Subject math = new Subject();
-        math.setName("Mathematics");
-        math.setValue(10L);
+        Subject math = Subject.builder().name(MATHEMATICS).value(10L).build();
+        Subject biology = Subject.builder().name(BIOLOGY).value(8L).build();
+        Subject science = Subject.builder().name(SCIENCE).value(10L).build();
 
-        Subject biology = new Subject();
-        biology.setName("Biology");
-        biology.setValue(8L);
 
         // Init Students
-        Student adrian = new Student();
-        adrian.setFirstName("Adrian");
-        adrian.setLastName("Romanski");
-        adrian.setGender(MALE);
-        adrian.setDateOfBirth(LocalDate.of(1992, 11, 3));
+        Student jacob = Student.builder().firstName(JACOB.toString()).lastName(COOPER.toString()).
+                                    gender(MALE).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
 
-        Student monika = new Student();
-        monika.setFirstName("Monika");
-        monika.setLastName("Zdrowa");
-        monika.setGender(FEMALE);
-        monika.setDateOfBirth(LocalDate.of(1994, 11, 3));
+        Student charlotte = Student.builder().firstName(CHARLOTTE.toString()).lastName(HENDERSON.toString()).
+                                    gender(MALE).dateOfBirth(LocalDate.of(1994, 10, 4)).build();
 
-        Student filip = new Student();
-        filip.setFirstName("Filip");
-        filip.setLastName("Konieczny");
-        filip.setGender(MALE);
-        filip.setDateOfBirth(LocalDate.of(1993, 11, 3));
-
-        // Init Guardians
-        Guardian bruce = Guardian.builder().firstName("Bruce").lastName("Wayne").dateOfBirth(LocalDate.of(1970, 10, 3)).build();
-        Guardian george = Guardian.builder().firstName("George").lastName("Michael").dateOfBirth(LocalDate.of(1980, 10, 3)).build();
-
-        //Add Students to Guardians
-        bruce.getStudents().add(adrian);
-        bruce.getStudents().add(filip);
-        george.getStudents().add(monika);
-
-        // Add Guardian To Student
-        adrian.setGuardian(bruce);
-        filip.setGuardian(bruce);
-        monika.setGuardian(george);
+        Student ethan = Student.builder().firstName(ETHAN.toString()).lastName(PARKER.toString()).
+                                    gender(FEMALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
 
         // Init List of Students
-        List<Student> students = new ArrayList<>();
-        students.add(adrian);
-        students.add(monika);
-        students.add(filip);
+        List<Student> students = Arrays.asList(jacob, charlotte, ethan);
 
-        //Init Teacher
-        Teacher mathTeacher = new Teacher();
-        mathTeacher.setFirstName("Walter");
-        mathTeacher.setLastName("White");
-        mathTeacher.setDateOfBirth(LocalDate.of(1980, 10, 3));
-        mathTeacher.setFirstDay(LocalDate.of(2018, 10, 3));
-        mathTeacher.setSpecialization("Math");
-
-        Teacher biologyTeacher = new Teacher();
-        biologyTeacher.setFirstName("Mr");
-        biologyTeacher.setLastName("Bean");
-        biologyTeacher.setDateOfBirth(LocalDate.of(1970, 10, 3));
-        biologyTeacher.setFirstDay(LocalDate.of(2016, 10, 3));
-        biologyTeacher.setSpecialization("Biology");
-
-        Teacher physicsTeacher = new Teacher();
-        physicsTeacher.setFirstName("Philip");
-        physicsTeacher.setLastName("Strange");
-        physicsTeacher.setDateOfBirth(LocalDate.of(1960, 10, 3));
-        physicsTeacher.setFirstDay(LocalDate.of(2016, 10, 3));
-        physicsTeacher.setSpecialization("Physics");
-
-
-        // Init Exams //
-        // Math Exam
-        Exam mathExam = new Exam();
-        mathExam.setName("First math exam");
-        mathExam.setMaxPoints(80L);
-        mathExam.setDate(LocalDate.now());
-        // Assign students to math Exam
-        mathExam.setStudents(students);
-        // Assign Exam to Teacher
-        mathTeacher.getExams().add(mathExam);
-        // Assign teacher to exam
-        mathExam.setTeacher(mathTeacher);
-
-        // Biology Exam
-        Exam biologyExam = new Exam();
-        biologyExam.setName("Second biology exam");
-        biologyExam.setMaxPoints(60L);
-        biologyExam.setDate(LocalDate.now());
-        // Assign students to biology Exam
-        biologyExam.setStudents(students);
-
-        // Init ExamResults
-        ExamResult filipMathResult = new ExamResult();
-        filipMathResult.setName(filip.getFirstName() + " " + filip.getLastName());
-        filipMathResult.setExam(mathExam);
-        filipMathResult.setScore(60f);
-        filipMathResult.setDate(LocalDate.now());
-        ExamResult adrianMathResult = new ExamResult();
-        adrianMathResult.setName(adrian.getFirstName() + " " + adrian.getLastName());
-        adrianMathResult.setExam(mathExam);
-        adrianMathResult.setScore(45f);
-        adrianMathResult.setDate(LocalDate.now());
-        ExamResult piotrekMathResult = new ExamResult();
-        piotrekMathResult.setName(monika.getFirstName() + " " + monika.getLastName());
-        piotrekMathResult.setExam(mathExam);
-        piotrekMathResult.setScore(55f);
-        piotrekMathResult.setDate(LocalDate.now());
-
-
-        //
-
+        // Init List of Subjects
+        List<Subject> subjects = Arrays.asList(math, biology, science);
 
         // Assign Subjects to Students
-        adrian.addSubject(math);
-        adrian.addSubject(biology);
-        filip.addSubject(math);
-        monika.addSubject(math);
+        jacob.getSubjects().addAll(subjects);
+        ethan.getSubjects().addAll(subjects);
+        charlotte.getSubjects().addAll(subjects);
+
 
         // Assign Students to Subjects
-        biology.addStudent(adrian);
-        math.addStudent(adrian);
-        math.addStudent(filip);
-        math.addStudent(monika);
+        biology.getStudents().addAll(students);
+        math.getStudents().addAll(students);
+
+
+        // Init Guardians
+        Guardian william = Guardian.builder().firstName(WILLIAM.toString()).lastName(GONZALES.toString())
+                                    .gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
+
+        Guardian henry = Guardian.builder().firstName(HENRY.toString()).lastName(HENDERSON.toString())
+                                    .gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
+
+        //Add Students to Guardians
+        william.getStudents().addAll(Arrays.asList(jacob, ethan));
+        henry.getStudents().add(charlotte);
+
+        // Add Guardian To Student
+        jacob.setGuardian(william);
+        ethan.setGuardian(william);
+        charlotte.setGuardian(henry);
+
+
+        //Init Teacher
+        Teacher isaac_biology = Teacher.builder().firstName(ISAAC.toString()).lastName(JOHNSON.toString())
+                                        .gender(MALE).specialization(BIOLOGY)
+                                        .dateOfBirth(LocalDate.of(1980, 10, 3)).firstDay(LocalDate.of(2018, 10, 3)).build();
+
+        Teacher benjamin_math = Teacher.builder().firstName(ISAAC.toString()).lastName(PEREZ.toString())
+                                        .gender(MALE).specialization(MATHEMATICS)
+                                        .dateOfBirth(LocalDate.of(1970, 10, 3)).firstDay(LocalDate.of(2012, 10, 3)).build();
+
+        Teacher logan_science = Teacher.builder().firstName(LOGAN.toString()).lastName(RODRIGUEZ.toString())
+                                        .gender(MALE).specialization(SCIENCE)
+                                        .dateOfBirth(LocalDate.of(1960, 10, 3)).firstDay(LocalDate.of(2013, 5, 3)).build();
+
+        // Init Exam
+        Exam mathExam = Exam.builder().name(MATHEMATICS).maxPoints(100L).date(LocalDate.now()).build();
+        Exam biologyExam = Exam.builder().name(BIOLOGY).maxPoints(100L).date(LocalDate.now()).build();
+
+        // Assign students to exams
+        biologyExam.setStudents(students);
+        mathExam.setStudents(students);
+
+        // Assign Exam to Teacher
+        isaac_biology.getExams().add(biologyExam);
+        benjamin_math.getExams().add(mathExam);
+
+        // Assign teacher to exam
+        biologyExam.setTeacher(isaac_biology);
+
+        mathExam.setTeacher(benjamin_math);
+
+        // Init ExamResults
+        ExamResult ethanResultMath = ExamResult.builder().name(ethan.getFirstName() + " " + ethan.getLastName())
+                                                    .score(60f).exam(mathExam).date(LocalDate.now()).build();
+
+        ExamResult ethanResultBiology = ExamResult.builder().name(ethan.getFirstName() + " " + ethan.getLastName())
+                                                    .score(30f).exam(biologyExam).date(LocalDate.now()).build();
+
+        ExamResult jacobResultMath = ExamResult.builder().name(jacob.getFirstName() + " " + jacob.getLastName())
+                                                    .score(45f).exam(mathExam).date(LocalDate.now()).build();
+
+        ExamResult jacobResultBiology = ExamResult.builder().name(jacob.getFirstName() + " " + jacob.getLastName())
+                                                    .score(90f).exam(biologyExam).date(LocalDate.now()).build();
+
+        ExamResult charlotteResultMath = ExamResult.builder().name(charlotte.getFirstName() + " " + charlotte.getLastName())
+                                                    .score(55f).exam(mathExam).date(LocalDate.now()).build();
+
+        ExamResult charlotteResultBiology = ExamResult.builder().name(charlotte.getFirstName() + " " + charlotte.getLastName())
+                                                    .score(85f).exam(biologyExam).date(LocalDate.now()).build();
 
         // Assign Exams to Subjects
         math.addExam(mathExam);
@@ -192,60 +171,72 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         biologyExam.setSubject(biology);
 
         // Assign exam to Students
-        adrian.addExam(mathExam);
-        adrian.addExam(biologyExam);
-        filip.addExam(mathExam);
-        monika.addExam(mathExam);
+        jacob.getExams().addAll(Arrays.asList(mathExam, biologyExam));
+        ethan.getExams().addAll(Arrays.asList(mathExam, biologyExam));
+        charlotte.getExams().addAll(Arrays.asList(mathExam, biologyExam));
+
 
         // Assign result
-        adrian.getExams().get(0).addResult(adrianMathResult);
-        filip.getExams().get(0).addResult(filipMathResult);
-        monika.getExams().get(0).addResult(piotrekMathResult);
+        jacob.getExams().get(0).addResult(jacobResultMath);
+        jacob.getExams().get(1).addResult(jacobResultBiology);
+
+        ethan.getExams().get(0).addResult(ethanResultMath);
+        ethan.getExams().get(1).addResult(ethanResultBiology);
+
+        charlotte.getExams().get(0).addResult(charlotteResultMath);
+        charlotte.getExams().get(1).addResult(charlotteResultBiology);
 
         // Assign Student and Teacher to Class
-        studentClass.setTeacher(mathTeacher);
+        studentClass.setTeacher(isaac_biology);
         studentClass.setStudentList(students);
-        adrian.setStudentClass(studentClass);
-        filip.setStudentClass(studentClass);
-        monika.setStudentClass(studentClass);
 
-        System.out.println(studentClass.getTeacher());
+        // Assign Class to Student
+        jacob.setStudentClass(studentClass);
+        ethan.setStudentClass(studentClass);
+        charlotte.setStudentClass(studentClass);
 
 
         // Saving to repositories
+
         //Students
-        studentRepository.save(adrian);
-        studentRepository.save(filip);
-        studentRepository.save(monika);
+        studentRepository.save(jacob);
+        studentRepository.save(ethan);
+        studentRepository.save(charlotte);
+        log.info("Saved: " + studentRepository.count() + " Students");
+
+        // Guardians
+        guardianRepository.save(henry);
+        guardianRepository.save(william);
+        log.info("Saved: " + guardianRepository.count() + " Guardians");
+
+        //Teachers
+        teacherRepository.save(isaac_biology);
+        teacherRepository.save(benjamin_math);
+        teacherRepository.save(logan_science);
+        log.info("Saved: " + teacherRepository.count() + " Teachers");
+
         //Subjects
         subjectRepository.save(biology);
         subjectRepository.save(math);
+        subjectRepository.save(science);
+        log.info("Saved: " + subjectRepository.count() + " Subjects");
+
         //Exams
         examRepository.save(mathExam);
         examRepository.save(biologyExam);
+        log.info("Saved: " + examRepository.count() + " Exams");
+
         //Exam Results
-        examResultRepository.save(adrianMathResult);
-        examResultRepository.save(piotrekMathResult);
-        examResultRepository.save(filipMathResult);
-        //Teachers
-        teacherRepository.save(mathTeacher);
-        teacherRepository.save(biologyTeacher);
-        teacherRepository.save(physicsTeacher);
+        examResultRepository.save(jacobResultMath);
+        examResultRepository.save(charlotteResultMath);
+        examResultRepository.save(ethanResultMath);
+        log.info("Saved: " + examResultRepository.count() + " Exam Results");
+
         // StudentClasses
         studentClassRepository.save(studentClass);
-        // Guardians
-        guardianRepository.save(george);
-        guardianRepository.save(bruce);
-
-
-
-        // Logging to console
-        log.info("Saved: " + studentRepository.count() + " Students");
-        log.info("Saved: " + guardianRepository.count() + " Guardians");
-        log.info("Saved: " + subjectRepository.count() + " Subjects");
-        log.info("Saved: " + examRepository.count() + " Exams");
-        log.info("Saved: " + examResultRepository.count() + " Exam Results");
-        log.info("Saved: " + teacherRepository.count() + " Teachers");
         log.info("Saved: " + studentClassRepository.count() + " Student Classes");
+
+
+
     }
 }

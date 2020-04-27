@@ -17,6 +17,12 @@ public class Subject extends BaseEntity {
     private String name;
     private Long value;
 
+    @Builder
+    public Subject(String name, Long value) {
+        this.name = name;
+        this.value = value;
+    }
+
     @ToString.Exclude
     @ManyToMany(mappedBy = "subjects")
     private Set<Student> students = new HashSet<>();

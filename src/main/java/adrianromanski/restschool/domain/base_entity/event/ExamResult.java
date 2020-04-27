@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import java.time.LocalDate;
 
 @EqualsAndHashCode(exclude = {"exam"})
 @Entity
@@ -11,12 +12,18 @@ import javax.persistence.ManyToOne;
 @NoArgsConstructor
 public class ExamResult extends Event {
 
+    private float score;
+    private String grade;
+
+    @Builder
+    public ExamResult(String name, LocalDate date, float score, Exam exam) {
+        super(name, date);
+        this.score = getScore();
+        this.exam = exam;
+    }
+
     @ManyToOne
     private Exam exam;
-
-    private float score;
-
-    private String grade;
 
     public void setScore(float score) {
         this.score = score;

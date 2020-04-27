@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,12 @@ import java.util.List;
 public class Exam extends Event {
 
     private Long maxPoints;
+
+    @Builder
+    public Exam(String name, LocalDate date, Long maxPoints) {
+        super(name, date);
+        this.maxPoints = maxPoints;
+    }
 
     @ToString.Exclude
     @ManyToMany(mappedBy = "exams")
@@ -31,6 +38,7 @@ public class Exam extends Event {
 
     @ManyToOne
     private Teacher teacher;
+
 
     public void addResult(ExamResult examResult) {
         this.results.add(examResult);

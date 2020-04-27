@@ -17,6 +17,9 @@ import java.util.List;
 @NoArgsConstructor
 public class Guardian extends Person {
 
+    private String telephoneNumber;
+    private String email;
+
     @Builder
     public Guardian(String firstName, String lastName, Gender gender, LocalDate dateOfBirth,
                     Long age, String telephoneNumber, String email) {
@@ -25,8 +28,6 @@ public class Guardian extends Person {
         this.email = email;
     }
 
-    private String telephoneNumber;
-    private String email;
 
     @JsonBackReference
     @ToString.Exclude

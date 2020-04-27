@@ -46,7 +46,8 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final GuardianRepository guardianRepository;
 
     public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository,
-                           ExamResultRepository examResultRepository, TeacherRepository teacherRepository, StudentClassRepository studentClassRepository, GuardianRepository guardianRepository) {
+                                                           ExamResultRepository examResultRepository, TeacherRepository teacherRepository,
+                                                           StudentClassRepository studentClassRepository, GuardianRepository guardianRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.examRepository = examRepository;
@@ -202,41 +203,40 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         studentRepository.save(jacob);
         studentRepository.save(ethan);
         studentRepository.save(charlotte);
-        log.info("Saved: " + studentRepository.count() + " Students");
 
         // Guardians
         guardianRepository.save(henry);
         guardianRepository.save(william);
-        log.info("Saved: " + guardianRepository.count() + " Guardians");
 
         //Teachers
         teacherRepository.save(isaac_biology);
         teacherRepository.save(benjamin_math);
         teacherRepository.save(logan_science);
-        log.info("Saved: " + teacherRepository.count() + " Teachers");
 
         //Subjects
         subjectRepository.save(biology);
         subjectRepository.save(math);
         subjectRepository.save(science);
-        log.info("Saved: " + subjectRepository.count() + " Subjects");
 
         //Exams
         examRepository.save(mathExam);
         examRepository.save(biologyExam);
-        log.info("Saved: " + examRepository.count() + " Exams");
 
         //Exam Results
         examResultRepository.save(jacobResultMath);
         examResultRepository.save(charlotteResultMath);
         examResultRepository.save(ethanResultMath);
-        log.info("Saved: " + examResultRepository.count() + " Exam Results");
 
         // StudentClasses
         studentClassRepository.save(studentClass);
+
+        // Logging to console
+        log.info("Saved: " + studentRepository.count() + " Students");
+        log.info("Saved: " + guardianRepository.count() + " Guardians");
+        log.info("Saved: " + teacherRepository.count() + " Teachers");
+        log.info("Saved: " + subjectRepository.count() + " Subjects");
+        log.info("Saved: " + examRepository.count() + " Exams");
+        log.info("Saved: " + examResultRepository.count() + " Exam Results");
         log.info("Saved: " + studentClassRepository.count() + " Student Classes");
-
-
-
     }
 }

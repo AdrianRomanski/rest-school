@@ -47,11 +47,4 @@ public class Student extends Person {
     private StudentClass studentClass;
 
 
-    public void addSubject(Subject subject) {
-        this.subjects.add(subject);
-    }
-
-    public void addExam(Exam exam) { this.exams.add(exam); }
-
-
 }

@@ -3,10 +3,13 @@ package adrianromanski.restschool.controllers;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.GuardianController;
 import adrianromanski.restschool.domain.base_entity.person.Guardian;
+import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,8 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
 import static org.hamcrest.Matchers.*;
@@ -37,6 +39,7 @@ class GuardianControllerTest {
     public static final String NUMBER = "543-352-332";
     public static final long ID = 1L;
     public static final String GUARDIANS = "/guardians/";
+
     MockMvc mockMvc;
 
     @Mock
@@ -44,7 +47,6 @@ class GuardianControllerTest {
 
     @InjectMocks
     GuardianController guardianController;
-
 
     @BeforeEach
     void setUp() {
@@ -55,27 +57,15 @@ class GuardianControllerTest {
                                         .build();
     }
 
-
     GuardianDTO initGuardianDTO() {
-        GuardianDTO guardianDTO = new GuardianDTO();
-        guardianDTO.setFirstName(FIRST_NAME);
-        guardianDTO.setLastName(LAST_NAME);
-        guardianDTO.setEmail(EMAIL);
-        guardianDTO.setTelephoneNumber(NUMBER);
+        GuardianDTO guardianDTO = GuardianDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME)
+                                                    .email(EMAIL).telephoneNumber(NUMBER).build();
         guardianDTO.setId(ID);
         return guardianDTO;
     }
 
-    Guardian initGuardian() {
-        Guardian guardian = new Guardian();
-        guardian.setFirstName(FIRST_NAME);
-        guardian.setLastName(LAST_NAME);
-        guardian.setEmail(EMAIL);
-        guardian.setTelephoneNumber(NUMBER);
-        guardian.setId(ID);
-        return guardian;
-    }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getAllGuardians, [Expected] = List containing 3 Guardians")
     @Test
     void getAllGuardians() throws Exception {
         List<GuardianDTO> guardianDTOList = Arrays.asList(new GuardianDTO(), new GuardianDTO(), new GuardianDTO());
@@ -89,6 +79,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.guardianDTOList", hasSize(3)));
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getGuardianByID, [Expected] = GuardianDTO with matching fields")
     @Test
     void getGuardianByID() throws Exception {
         GuardianDTO guardianDTO = initGuardianDTO();
@@ -106,6 +97,43 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getGuardiansByAge, [Expected] = Map with 3 Keys (27,24,22)")
+    @Test
+    void getGuardiansByAge() throws Exception {
+        Map<Long, List<GuardianDTO>> map = new HashMap<>();
+
+        map.putIfAbsent(27L, Arrays.asList(initGuardianDTO(), initGuardianDTO()));
+        map.putIfAbsent(24L, Collections.singletonList(initGuardianDTO()));
+        map.putIfAbsent(22L, Arrays.asList(initGuardianDTO(), initGuardianDTO(), initGuardianDTO()));
+
+        when(guardianService.getGuardiansByAge()).thenReturn(map);
+
+        mockMvc.perform(get(GUARDIANS + "age")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(map)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.27", hasSize(2)))
+                .andExpect(jsonPath("$.24", hasSize(1)))
+                .andExpect(jsonPath("$.22", hasSize(3)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllStudentsForGuardian, [Expected] = List of size 2")
+    @Test
+    void getAllStudentsForGuardian() throws Exception {
+        List<StudentDTO> studentDTOS = Arrays.asList(new StudentDTO(), new StudentDTO());
+
+        when(guardianService.getAllStudentsForGuardian(anyLong())).thenReturn(studentDTOS);
+
+        mockMvc.perform(get(GUARDIANS + "id-1/getStudents")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(studentDTOS)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.students", hasSize(2)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getGuardianByFirstAndLastName, [Expected] = GuardianDTO with matching fields")
     @Test
     void getGuardianByFirstAndLastName() throws Exception {
         GuardianDTO guardianDTO = initGuardianDTO();
@@ -123,6 +151,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
 
+    @DisplayName("[POST], [Happy Path], [Method] = createNewGuardian, [Expected] = GuardianDTO with matching fields")
     @Test
     void createNewGuardian() throws Exception {
         GuardianDTO guardianDTO = initGuardianDTO();
@@ -140,6 +169,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
 
+    @DisplayName("[PUT], [Happy Path], [Method] = updateGuardian, [Expected] = GuardianDTO with updated fields")
     @Test
     void updateGuardian() throws Exception {
 
@@ -159,6 +189,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
 
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteGuardianByID, [Expected] = guardianService deleting student")
     @Test
     void deleteGuardian() throws Exception {
         mockMvc.perform(delete(GUARDIANS + ID)
@@ -168,7 +199,7 @@ class GuardianControllerTest {
         verify(guardianService).deleteGuardianByID(ID);
     }
 
-
+    @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Guardian with id 222 not found")
     @Test
     public void testNotFoundException() throws Exception {
 

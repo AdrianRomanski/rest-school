@@ -36,5 +36,8 @@ public class StudentDTO extends PersonDTO {
     private StudentClassDTO studentClassDTO;
 
     @JsonIgnore
+    private GuardianDTO guardianDTO;
+
+    @JsonIgnore
     private SportTeamDTO sportTeamDTO;
 }

@@ -1,29 +1,42 @@
 package adrianromanski.restschool.services.person.guardian;
 
 import adrianromanski.restschool.domain.base_entity.person.Guardian;
+import adrianromanski.restschool.domain.base_entity.person.Person;
+import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
+import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
+import adrianromanski.restschool.model.base_entity.person.PersonDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.repositories.person.GuardianRepository;
+import adrianromanski.restschool.repositories.person.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Slf4j
 @Service
 public class GuardianServiceImpl implements GuardianService {
 
     private final GuardianMapper guardianMapper;
+    private final StudentMapper studentMapper;
     private final GuardianRepository guardianRepository;
+    private final StudentRepository studentRepository;
 
-    public GuardianServiceImpl(GuardianMapper legalGuardianMapper, GuardianRepository legalGuardianRepository) {
-        this.guardianMapper = legalGuardianMapper;
-        this.guardianRepository = legalGuardianRepository;
+    public GuardianServiceImpl(GuardianMapper guardianMapper, StudentMapper studentMapper,
+                               GuardianRepository guardianRepository, StudentRepository studentRepository) {
+        this.guardianMapper = guardianMapper;
+        this.studentMapper = studentMapper;
+        this.guardianRepository = guardianRepository;
+        this.studentRepository = studentRepository;
     }
-
 
     /**
      * @return all Guardians
@@ -58,6 +71,34 @@ public class GuardianServiceImpl implements GuardianService {
         return guardianMapper.guardianToGuardianDTO(guardianRepository
                                         .getGuardianByFirstNameAndLastName(firstName, lastName)
                                         .orElseThrow(ResourceNotFoundException::new));
+    }
+
+
+    /**
+     * @return Map where the keys are ages of Guardians and values List of Guardians
+     */
+    @Override
+    public Map<Long, List<GuardianDTO>> getGuardiansByAge() {
+        return guardianRepository.findAll()
+                .stream()
+                .map(guardianMapper::guardianToGuardianDTO)
+                .collect(
+                        Collectors.groupingBy(
+                                PersonDTO::getAge
+                        )
+                );
+    }
+
+    /**
+     * @return List of Students for Guardian with matching id
+     */
+    @Override
+    public List<StudentDTO> getAllStudentsForGuardian(Long id) {
+        return studentRepository.findAll()
+                .stream()
+                .filter(student -> student.getGuardian().getId().equals(id))
+                .map(studentMapper::studentToStudentDTO)
+                .collect(Collectors.toList());
     }
 
 

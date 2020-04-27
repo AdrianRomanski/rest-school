@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"subjects", "exams", "studentClass"})
+@EqualsAndHashCode(exclude = {"subjects", "exams", "studentClass", "guardians"})
 @Entity
 @NoArgsConstructor
 @Data
@@ -37,8 +37,12 @@ public class Student extends Person {
     private List<Exam> exams = new ArrayList<>();
 
     @ManyToOne
+    private Guardian guardian;
+
+    @ManyToOne
     private SportTeam sportTeam;
 
+    @ToString.Exclude
     @ManyToOne
     private StudentClass studentClass;
 

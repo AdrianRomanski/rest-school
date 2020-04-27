@@ -3,6 +3,7 @@ package adrianromanski.restschool.bootstrap;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.ExamResult;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
@@ -11,6 +12,7 @@ import adrianromanski.restschool.repositories.base_entity.SubjectRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.event.ExamResultRepository;
 import adrianromanski.restschool.repositories.group.StudentClassRepository;
+import adrianromanski.restschool.repositories.person.GuardianRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -36,15 +38,17 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final ExamResultRepository examResultRepository;
     private final TeacherRepository teacherRepository;
     private final StudentClassRepository studentClassRepository;
+    private final GuardianRepository guardianRepository;
 
-    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository, ExamResultRepository examResultRepository,
-                           TeacherRepository teacherRepository, StudentClassRepository studentClassRepository) {
+    public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository,
+                           ExamResultRepository examResultRepository, TeacherRepository teacherRepository, StudentClassRepository studentClassRepository, GuardianRepository guardianRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.examRepository = examRepository;
         this.examResultRepository = examResultRepository;
         this.teacherRepository = teacherRepository;
         this.studentClassRepository = studentClassRepository;
+        this.guardianRepository = guardianRepository;
     }
 
     @Override
@@ -81,6 +85,20 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         filip.setLastName("Konieczny");
         filip.setGender(MALE);
         filip.setDateOfBirth(LocalDate.of(1993, 11, 3));
+
+        // Init Guardians
+        Guardian bruce = Guardian.builder().firstName("Bruce").lastName("Wayne").dateOfBirth(LocalDate.of(1970, 10, 3)).build();
+        Guardian george = Guardian.builder().firstName("George").lastName("Michael").dateOfBirth(LocalDate.of(1980, 10, 3)).build();
+
+        //Add Students to Guardians
+        bruce.getStudents().add(adrian);
+        bruce.getStudents().add(filip);
+        george.getStudents().add(monika);
+
+        // Add Guardian To Student
+        adrian.setGuardian(bruce);
+        filip.setGuardian(bruce);
+        monika.setGuardian(george);
 
         // Init List of Students
         List<Student> students = new ArrayList<>();
@@ -215,11 +233,15 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         teacherRepository.save(physicsTeacher);
         // StudentClasses
         studentClassRepository.save(studentClass);
+        // Guardians
+        guardianRepository.save(george);
+        guardianRepository.save(bruce);
 
 
 
         // Logging to console
         log.info("Saved: " + studentRepository.count() + " Students");
+        log.info("Saved: " + guardianRepository.count() + " Guardians");
         log.info("Saved: " + subjectRepository.count() + " Subjects");
         log.info("Saved: " + examRepository.count() + " Exams");
         log.info("Saved: " + examResultRepository.count() + " Exam Results");

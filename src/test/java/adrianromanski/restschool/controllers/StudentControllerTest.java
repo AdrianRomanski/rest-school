@@ -187,7 +187,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
     }
 
-    @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentByID, [Expected] = studentRepository deleting student")
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentByID, [Expected] = studentService deleting student")
     @Test
     void deleteStudent() throws Exception {
         mockMvc.perform(delete(STUDENTS + 1)
@@ -197,7 +197,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
         verify(studentService).deleteStudentByID(anyLong());
     }
 
-    @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Student with id not found")
+    @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Student with id 222 not found")
     @Test
     public void testNotFoundException() throws Exception {
         when(studentService.getStudentByID(anyLong())).thenThrow(ResourceNotFoundException.class);

@@ -1,13 +1,17 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
 import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+@EqualsAndHashCode(exclude = {"students"})
 @Data
 @Entity
 @NoArgsConstructor
@@ -23,5 +27,10 @@ public class Guardian extends Person {
 
     private String telephoneNumber;
     private String email;
+
+    @JsonBackReference
+    @ToString.Exclude
+    @OneToMany(mappedBy = "guardian")
+    private List<Student> students = new ArrayList<>();
 
 }

@@ -30,4 +30,18 @@
 #### DELETE
 * __deleteTeacherById__ - Delete Teacher with matching id
 
+## <div align="center"> Guardians </div> 
+#### GET
+* __getAllGuardians__ - Returns all Guardians
+* __getGuardianByID__ - GuardianDTO with matching id
+* __getGuardianByFirstAndLastName__ - Returns GuardianDTO with matching firstName and lastName
+* __getGuardiansByAge__ - Map where the keys are ages of Guardians and values List of Guardians
+* __getAllStudentsForGuardian__ - List of Students for Guardian with matching id
+#### POST
+* __createNewGuardian__ - Converts DTO Object and save it to Database
+#### PUT
+* __updateGuardian__ - Converts DTO Object, update Guardian with matching id and save it to database
+#### DELETE
+* __deleteGuardianByID__ - Delete Guardian with matching id
+
 

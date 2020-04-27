@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface GuardianRepository extends JpaRepository<Guardian, Long> {
 
-    Optional<Guardian> getLegalGuardianByFirstNameAndLastName(String firstName, String lastName);
+    Optional<Guardian> getGuardianByFirstNameAndLastName(String firstName, String lastName);
 }

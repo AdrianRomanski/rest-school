@@ -2,6 +2,7 @@ package adrianromanski.restschool.model.base_entity.group;
 
 
 import adrianromanski.restschool.model.base_entity.BaseEntityDTO;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import javax.persistence.MappedSuperclass;
 @Setter
 @NoArgsConstructor
 @MappedSuperclass
+@AllArgsConstructor
 public class GroupDTO extends BaseEntityDTO {
 
     private String name;

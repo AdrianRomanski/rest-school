@@ -15,8 +15,6 @@ public interface StudentClassService {
 
     StudentClassDTO updateStudentClass(Long id, StudentClassDTO studentClassDTO);
 
-    TeacherDTO getStudentClassTeacher(StudentClassDTO studentClassDTO);
-
     void deleteStudentClassById(Long id);
 
     // To do Later

@@ -129,25 +129,6 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.president", equalTo(JESSIE_PINKMAN)));
     }
 
-    @Test
-    void getStudentClassTeacher() throws Exception {
-        StudentClassDTO studentClassDTO = initStudentClassDTO();
-        TeacherDTO teacherDTO = new TeacherDTO();
-        teacherDTO.setFirstName(WALTER);
-        teacherDTO.setLastName(WHITE);
-        teacherDTO.setId(ID);
-        studentClassDTO.setTeacherDTO(teacherDTO);
-
-        when(studentClassService.getStudentClassTeacher(studentClassDTO)).thenReturn(teacherDTO);
-
-        mockMvc.perform(get(STUDENT_CLASS + "teacher")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(studentClassDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(WALTER)))
-                .andExpect(jsonPath("$.lastName", equalTo(WHITE)));
-    }
 
     @Test
     void deleteStudentClassById() throws Exception {

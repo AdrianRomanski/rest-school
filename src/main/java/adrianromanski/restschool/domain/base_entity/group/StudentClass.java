@@ -2,10 +2,7 @@ package adrianromanski.restschool.domain.base_entity.group;
 
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -17,6 +14,11 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 public class StudentClass extends Group {
+
+    @Builder
+    public StudentClass(String name, String president) {
+        super(name, president);
+    }
 
     @OneToOne
     private Teacher teacher;

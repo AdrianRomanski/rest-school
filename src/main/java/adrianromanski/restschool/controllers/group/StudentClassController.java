@@ -49,13 +49,6 @@ public class StudentClassController {
         return studentClassService.updateStudentClass(Long.valueOf(ID), studentClassDTO);
     }
 
-    @ApiOperation("Return a teacher assigned to Student Class")
-    @GetMapping("teacher")
-    @ResponseStatus(HttpStatus.OK)
-    public TeacherDTO getStudentClassTeacher(@RequestBody StudentClassDTO studentClassDTO) {
-        return studentClassService.getStudentClassTeacher(studentClassDTO);
-    }
-
     @ApiOperation("Delete a Student Class with matching ID")
     @DeleteMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)

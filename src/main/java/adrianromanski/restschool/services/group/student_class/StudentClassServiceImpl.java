@@ -1,30 +1,35 @@
 package adrianromanski.restschool.services.group.student_class;
 
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.StudentClassMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.repositories.group.StudentClassRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class StudentClassServiceImpl implements StudentClassService {
 
     private final StudentClassRepository studentClassRepository;
     private final StudentClassMapper studentClassMapper;
-    private final TeacherMapper teacherMapper;
 
-    public StudentClassServiceImpl(StudentClassRepository studentClassRepository, StudentClassMapper studentClassMapper, TeacherMapper teacherMapper) {
+    public StudentClassServiceImpl(StudentClassRepository studentClassRepository, StudentClassMapper studentClassMapper) {
         this.studentClassRepository = studentClassRepository;
         this.studentClassMapper = studentClassMapper;
-        this.teacherMapper = teacherMapper;
     }
 
+
+    /**
+     * @return all Student Classes
+     */
     @Override
     public List<StudentClassDTO> getAllStudentClasses() {
         return studentClassRepository.findAll()
@@ -33,36 +38,61 @@ public class StudentClassServiceImpl implements StudentClassService {
                         .collect(Collectors.toList());
     }
 
+
+    /**
+     * @return Student Class with matching id
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public StudentClassDTO getStudentClassByID(Long id) {
-        return studentClassMapper.StudentClassToStudentClassDTO(studentClassRepository.findById(id)
+        return studentClassMapper.StudentClassToStudentClassDTO(studentClassRepository
+                                                    .findById(id)
                                                     .orElseThrow(ResourceNotFoundException::new));
     }
 
+
+    /**
+     * Converts DTO Object and Save it to Database
+     * @return TeacherDTO object
+     */
     @Override
     public StudentClassDTO createNewStudentClass(StudentClassDTO studentClassDTO) {
-        return saveAndReturnDTO(studentClassMapper.StudentClassDTOToStudentClass(studentClassDTO));
+       studentClassRepository.save(studentClassMapper.StudentClassDTOToStudentClass(studentClassDTO));
+       log.info("Student Class with id: " + studentClassDTO.getId() + " successfully saved");
+       return studentClassDTO;
     }
 
+
+    /**
+     * Converts DTO Object, Update Student Class with Matching ID and save it to Database
+     * @return StudentClassDTO object if the Student Class was successfully saved
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public StudentClassDTO updateStudentClass(Long id, StudentClassDTO studentClassDTO) {
-        studentClassDTO.setId(id);
-        return saveAndReturnDTO(studentClassMapper.StudentClassDTOToStudentClass(studentClassDTO));
+        if(studentClassRepository.findById(id).isPresent()) {
+            StudentClass updatedClass = studentClassMapper.StudentClassDTOToStudentClass(studentClassDTO);
+            updatedClass.setId(id);
+            studentClassRepository.save(updatedClass);
+            log.info("Student Class with id: " + id + " successfully updated");
+            return studentClassMapper.StudentClassToStudentClassDTO(updatedClass);
+        } else {
+            throw new ResourceNotFoundException("Student Class with id: " + id + " not found");
+        }
     }
 
-    @Override
-    public TeacherDTO getStudentClassTeacher(StudentClassDTO studentClassDTO) {
-        return teacherMapper.teacherToTeacherDTO(studentClassRepository.getTeacher()
-                                            .orElseThrow(ResourceNotFoundException::new));
-    }
 
+    /**
+     * Delete Student Class with matching id
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public void deleteStudentClassById(Long id) {
-        studentClassRepository.deleteById(id);
-    }
-
-    StudentClassDTO saveAndReturnDTO(StudentClass studentClass) {
-        studentClassRepository.save(studentClass);
-        return studentClassMapper.StudentClassToStudentClassDTO(studentClass);
+        if(studentClassRepository.findById(id).isPresent()) {
+            studentClassRepository.deleteById(id);
+            log.info("Student Class with id: " + id + " successfully deleted");
+        } else {
+            throw new ResourceNotFoundException("Student Class with id: " + id + " not found");
+        }
     }
 }

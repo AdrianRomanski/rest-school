@@ -1,7 +1,7 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
@@ -18,8 +18,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,8 +33,6 @@ import static org.mockito.Mockito.*;
 class StudentServiceImplTest {
 
     public static final Long ID = 1L;
-    public static final String FIRST_NAME = "Aaron";
-    public static final String LAST_NAME = "Smith";
 
     StudentService studentService;
 
@@ -51,28 +52,34 @@ class StudentServiceImplTest {
         return student;
     }
 
-    Student createAaronSmith() {
-        return createStudent(ID,FIRST_NAME, LAST_NAME, MALE);
-    }
-
-    Student createJessiePinkman() {
-        return createStudent(2L, "Jessie", "Pinkman", MALE);
-    }
-
-    Student createJessicaParker() {
-        return createStudent(3L, "Jessica", "Parker", FEMALE);
-    }
-
-    private StudentDTO createAaronSmithDTO() {
-        StudentDTO studentDTO = StudentDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME).gender(MALE).build();
+    private StudentDTO createEthanDTO() {
+        StudentDTO studentDTO = StudentDTO.builder().firstName(ETHAN.get()).lastName(COOPER.get()).gender(MALE).build();
         studentDTO.setId(ID);
         return studentDTO;
+    }
+
+    Student createEthan() {
+        return createStudent(ID, ETHAN.get(), COOPER.get(), MALE);
+    }
+
+    Student createSebastian() {
+        return createStudent(2L, SEBASTIAN.get(), RODRIGUEZ.get(), MALE);
+    }
+
+    Student createCharlotte() {
+        return createStudent(3L, CHARLOTTE.get(), HENDERSON.get(), FEMALE);
+    }
+
+
+
+    private List<Student> getStudents() {
+        return Arrays.asList(createEthan(), createSebastian(), createCharlotte());
     }
 
     @DisplayName("[Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
     @Test
     void getAllStudents() {
-        List<Student> students = Arrays.asList(createAaronSmith(), createJessiePinkman(), createJessicaParker());
+        List<Student> students = getStudents();
 
         when(studentRepository.findAll()).thenReturn(students);
 
@@ -84,7 +91,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getAllFemaleStudents, [Expected] = List containing 1 Student")
     @Test
     void getAllFemaleStudents() {
-        List<Student> students = Arrays.asList(createAaronSmith(), createJessiePinkman(), createJessicaParker());
+        List<Student> students = getStudents();
 
         when(studentRepository.findAll()).thenReturn(students);
 
@@ -96,7 +103,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getAllMaleStudents, [Expected] = List containing 2 Students")
     @Test
     void getAllMaleStudents() {
-        List<Student> students = Arrays.asList(createAaronSmith(), createJessiePinkman(), createJessicaParker());
+        List<Student> students = getStudents();
 
         when(studentRepository.findAll()).thenReturn(students);
 
@@ -108,14 +115,14 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getStudentByFirstAndLastName, [Expected] = StudentDTO with matching fields")
     @Test
     void getStudentByFirstAndLastName() {
-        Student student = createAaronSmith();
+        Student student = createEthan();
 
         when(studentRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(student));
 
-        StudentDTO studentDTO = studentService.getStudentByFirstAndLastName(FIRST_NAME, LAST_NAME);
+        StudentDTO studentDTO = studentService.getStudentByFirstAndLastName(ETHAN.get(), COOPER.get());
 
-        assertEquals(FIRST_NAME, studentDTO.getFirstName());
-        assertEquals(LAST_NAME, studentDTO.getLastName());
+        assertEquals(ETHAN.get(), studentDTO.getFirstName());
+        assertEquals(COOPER.get(), studentDTO.getLastName());
         assertEquals(MALE, studentDTO.getGender());
         assertEquals(ID, studentDTO.getId());
     }
@@ -123,14 +130,14 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getStudentById, [Expected] = StudentDTO with matching fields")
     @Test
     void getStudentById() {
-        Student student = createAaronSmith();
+        Student student = createEthan();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
 
         StudentDTO studentDTO = studentService.getStudentByID(ID);
 
-        assertEquals(FIRST_NAME, studentDTO.getFirstName());
-        assertEquals(LAST_NAME, studentDTO.getLastName());
+        assertEquals(ETHAN.get(), studentDTO.getFirstName());
+        assertEquals(COOPER.get(), studentDTO.getLastName());
         assertEquals(MALE, studentDTO.getGender());
         assertEquals(ID, studentDTO.getId());
     }
@@ -138,15 +145,15 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = createNewStudent, [Expected] = StudentDTO  with matching fields")
     @Test
     void createNewStudent() throws Exception {
-        StudentDTO studentDTO = createAaronSmithDTO();
-        Student savedStudent =  createAaronSmith();
+        StudentDTO studentDTO = createEthanDTO();
+        Student savedStudent =  createEthan();
 
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
 
         StudentDTO returnDTO = studentService.createNewStudent(studentDTO);
 
-        assertEquals(FIRST_NAME, returnDTO.getFirstName());
-        assertEquals(LAST_NAME, returnDTO.getLastName());
+        assertEquals(ETHAN.get(), returnDTO.getFirstName());
+        assertEquals(COOPER.get(), returnDTO.getLastName());
         assertEquals(MALE, returnDTO.getGender());
         assertEquals(ID, returnDTO.getId());
     }
@@ -154,16 +161,16 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = updateStudent, [Expected] = StudentDTO with updated fields")
     @Test
     void updateStudentHappyPath() {
-        StudentDTO studentDTO = createAaronSmithDTO();
-        Student savedStudent =  createAaronSmith();
+        StudentDTO studentDTO = createEthanDTO();
+        Student savedStudent =  createEthan();
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(savedStudent));
         when(studentRepository.save(any(Student.class))).thenReturn(savedStudent);
 
         StudentDTO returnDTO = studentService.updateStudent(ID, studentDTO);
 
-        assertEquals(FIRST_NAME, returnDTO.getFirstName());
-        assertEquals(LAST_NAME, returnDTO.getLastName());
+        assertEquals(ETHAN.get(), returnDTO.getFirstName());
+        assertEquals(COOPER.get(), returnDTO.getLastName());
         assertEquals(MALE, returnDTO.getGender());
         assertEquals(ID, returnDTO.getId());
     }
@@ -171,7 +178,7 @@ class StudentServiceImplTest {
     @DisplayName("[Unhappy Path], [Method] = updateStudent, [Reason] = Student with id 222 not found")
     @Test
     void updateStudentUnHappyPath() {
-        StudentDTO studentDTO = createAaronSmithDTO();
+        StudentDTO studentDTO = createEthanDTO();
 
             Throwable ex = catchThrowable(() -> studentService.updateStudent(222L,studentDTO));
 
@@ -181,7 +188,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = deleteStudentByID, [Expected] = studentRepository deleting student")
     @Test
     void deleteStudentByID() {
-        Student student =  createAaronSmith();
+        Student student =  createEthan();
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(student));
 

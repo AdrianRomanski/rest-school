@@ -18,9 +18,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
 import java.util.*;
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
+import static adrianromanski.restschool.domain.base_entity.enums.LastName.COOPER;
+import static adrianromanski.restschool.domain.base_entity.enums.LastName.HENDERSON;
+import static adrianromanski.restschool.domain.base_entity.enums.MaleName.ETHAN;
 import static org.hamcrest.Matchers.*;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -33,8 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class GuardianControllerTest {
 
-    public static final String FIRST_NAME = "Bruce";
-    public static final String LAST_NAME = "Wayne";
     public static final String EMAIL = "WayneEnterprise@Gotham.com";
     public static final String NUMBER = "543-352-332";
     public static final long ID = 1L;
@@ -57,18 +59,16 @@ class GuardianControllerTest {
                                         .build();
     }
 
-    GuardianDTO initGuardianDTO() {
-        GuardianDTO guardianDTO = GuardianDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME)
-                                                    .email(EMAIL).telephoneNumber(NUMBER).build();
-        guardianDTO.setId(ID);
-        return guardianDTO;
+    GuardianDTO createEthan() {
+        return GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).email(EMAIL)
+                .telephoneNumber(NUMBER).build();
     }
 
 
     @DisplayName("[GET], [Happy Path], [Method] = getAllGuardians, [Expected] = List containing 3 Guardians")
     @Test
     void getAllGuardians() throws Exception {
-        List<GuardianDTO> guardianDTOList = Arrays.asList(new GuardianDTO(), new GuardianDTO(), new GuardianDTO());
+        List<GuardianDTO> guardianDTOList = Arrays.asList(createEthan(), createEthan(), createEthan());
 
         when(guardianService.getAllGuardians()).thenReturn(guardianDTOList);
 
@@ -82,7 +82,7 @@ class GuardianControllerTest {
     @DisplayName("[GET], [Happy Path], [Method] = getGuardianByID, [Expected] = GuardianDTO with matching fields")
     @Test
     void getGuardianByID() throws Exception {
-        GuardianDTO guardianDTO = initGuardianDTO();
+        GuardianDTO guardianDTO = createEthan();
 
         when(guardianService.getGuardianByID(ID)).thenReturn(guardianDTO);
 
@@ -91,8 +91,8 @@ class GuardianControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)))
+                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
                 .andExpect(jsonPath("$.email", equalTo(EMAIL)))
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
@@ -102,9 +102,9 @@ class GuardianControllerTest {
     void getGuardiansByAge() throws Exception {
         Map<Long, List<GuardianDTO>> map = new HashMap<>();
 
-        map.putIfAbsent(27L, Arrays.asList(initGuardianDTO(), initGuardianDTO()));
-        map.putIfAbsent(24L, Collections.singletonList(initGuardianDTO()));
-        map.putIfAbsent(22L, Arrays.asList(initGuardianDTO(), initGuardianDTO(), initGuardianDTO()));
+        map.putIfAbsent(27L, Arrays.asList(createEthan(), createEthan()));
+        map.putIfAbsent(24L, Collections.singletonList(createEthan()));
+        map.putIfAbsent(22L, Arrays.asList(createEthan(), createEthan(), createEthan()));
 
         when(guardianService.getGuardiansByAge()).thenReturn(map);
 
@@ -136,17 +136,17 @@ class GuardianControllerTest {
     @DisplayName("[GET], [Happy Path], [Method] = getGuardianByFirstAndLastName, [Expected] = GuardianDTO with matching fields")
     @Test
     void getGuardianByFirstAndLastName() throws Exception {
-        GuardianDTO guardianDTO = initGuardianDTO();
+        GuardianDTO guardianDTO = createEthan();
 
-        when(guardianService.getGuardianByFirstAndLastName(FIRST_NAME, LAST_NAME)).thenReturn(guardianDTO);
+        when(guardianService.getGuardianByFirstAndLastName(anyString(), anyString())).thenReturn(guardianDTO);
 
-        mockMvc.perform(get(GUARDIANS + FIRST_NAME + "_" + LAST_NAME)
+        mockMvc.perform(get(GUARDIANS + ETHAN.get() + "_" + COOPER.get())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)))
+                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
                 .andExpect(jsonPath("$.email", equalTo(EMAIL)))
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
@@ -154,7 +154,7 @@ class GuardianControllerTest {
     @DisplayName("[POST], [Happy Path], [Method] = createNewGuardian, [Expected] = GuardianDTO with matching fields")
     @Test
     void createNewGuardian() throws Exception {
-        GuardianDTO guardianDTO = initGuardianDTO();
+        GuardianDTO guardianDTO = createEthan();
 
         when(guardianService.createNewGuardian(guardianDTO)).thenReturn(guardianDTO);
 
@@ -163,8 +163,8 @@ class GuardianControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)))
+                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
                 .andExpect(jsonPath("$.email", equalTo(EMAIL)))
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
@@ -173,18 +173,18 @@ class GuardianControllerTest {
     @Test
     void updateGuardian() throws Exception {
 
-        GuardianDTO guardianDTO = initGuardianDTO();
+        GuardianDTO guardianDTO = createEthan();
         guardianDTO.setEmail("HotHotEmail@BruceWayne.com");
 
-        when(guardianService.updateGuardian(guardianDTO, 1L)).thenReturn(guardianDTO);
+        when(guardianService.updateGuardian(any(GuardianDTO.class), anyLong())).thenReturn(guardianDTO);
 
         mockMvc.perform(put("/guardians/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(FIRST_NAME)))
-                .andExpect(jsonPath("$.lastName", equalTo(LAST_NAME)))
+                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
                 .andExpect(jsonPath("$.email", equalTo("HotHotEmail@BruceWayne.com")))
                 .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }

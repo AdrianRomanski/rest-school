@@ -1,5 +1,6 @@
 package adrianromanski.restschool.domain.base_entity;
 
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import lombok.*;
@@ -14,11 +15,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class Subject extends BaseEntity {
 
-    private String name;
+    private Specialization name;
     private Long value;
 
     @Builder
-    public Subject(String name, Long value) {
+    public Subject(Specialization name, Long value) {
         this.name = name;
         this.value = value;
     }

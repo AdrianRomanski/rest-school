@@ -1,5 +1,6 @@
 package adrianromanski.restschool.mapper;
 
+import adrianromanski.restschool.domain.base_entity.enums.LastName;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
@@ -10,14 +11,14 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
+import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExamMapperTest {
 
-    public static final String WALTER = "WaLter";
-    public static final String WHITE = "White";
     private final String NAME = "Final Math Exam";
-    private final String MATH = "Math";
     private final LocalDate DATE = LocalDate.now();
     private final Long POINTS = 100L;
 
@@ -30,10 +31,10 @@ public class ExamMapperTest {
         exam.setDate(DATE);
         exam.setMaxPoints(POINTS);
         Subject math = new Subject();
-        math.setName(MATH);
+        math.setName(MATHEMATICS);
         exam.setSubject(math);
 
-        Teacher teacher = Teacher.builder().firstName(WALTER).lastName(WHITE).build();
+        Teacher teacher = Teacher.builder().firstName(ETHAN.get()).lastName(COOPER.get()).build();
         exam.setTeacher(teacher);
         teacher.getExams().add(exam);
 
@@ -42,10 +43,10 @@ public class ExamMapperTest {
         assertEquals(NAME, examDTO.getName());
         assertEquals(DATE, examDTO.getDate());
         assertEquals(POINTS, examDTO.getMaxPoints());
-        assertEquals(MATH, examDTO.getSubjectDTO().getName());
+        assertEquals(MATHEMATICS, examDTO.getSubjectDTO().getName());
 
-        assertEquals(WALTER, examDTO.getTeacherDTO().getFirstName());
-        assertEquals(WHITE, examDTO.getTeacherDTO().getLastName());
+        assertEquals(ETHAN.get(), examDTO.getTeacherDTO().getFirstName());
+        assertEquals(COOPER.get(), examDTO.getTeacherDTO().getLastName());
     }
 
     @Test
@@ -55,7 +56,7 @@ public class ExamMapperTest {
         examDTO.setDate(DATE);
         examDTO.setMaxPoints(POINTS);
         SubjectDTO math = new SubjectDTO();
-        math.setName(MATH);
+        math.setName(MATHEMATICS);
         examDTO.setSubjectDTO(math);
 
         Exam exam = examMapper.examDTOToExam(examDTO);
@@ -63,7 +64,7 @@ public class ExamMapperTest {
         assertEquals(NAME, exam.getName());
         assertEquals(DATE, exam.getDate());
         assertEquals(POINTS, exam.getMaxPoints());
-        assertEquals(MATH, exam.getSubject().getName());
+        assertEquals(MATHEMATICS, exam.getSubject().getName());
     }
 
 

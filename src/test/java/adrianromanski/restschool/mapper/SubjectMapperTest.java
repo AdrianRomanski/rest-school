@@ -1,21 +1,20 @@
 package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.Subject;
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.mapper.base_entity.SubjectMapper;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import org.junit.jupiter.api.Test;
 
+import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SubjectMapperTest {
 
     public static final Long ID = 1L;
-    public static final String NAME = "Biology";
     public static final Long VALUE = 10L;
 
-
     SubjectMapper subjectMapper = SubjectMapper.INSTANCE;
-
 
     @Test
     public void subjectToSubjectDTO() {
@@ -24,13 +23,13 @@ public class SubjectMapperTest {
         Subject subject = new Subject();
         subject.setValue(VALUE);
         subject.setId(ID);
-        subject.setName(NAME);
+        subject.setName(BIOLOGY);
 
         //when
         SubjectDTO subjectDTO = subjectMapper.subjectToSubjectDTO(subject);
 
         assertEquals(ID, subjectDTO.getId());
-        assertEquals(NAME, subjectDTO.getName());
+        assertEquals(BIOLOGY, subjectDTO.getName());
         assertEquals(VALUE, subjectDTO.getValue());
     }
 
@@ -41,13 +40,13 @@ public class SubjectMapperTest {
         SubjectDTO subjectDTO = new SubjectDTO();
         subjectDTO.setValue(VALUE);
         subjectDTO.setId(ID);
-        subjectDTO.setName(NAME);
+        subjectDTO.setName(BIOLOGY);
 
         //when
         Subject subject = subjectMapper.subjectDTOToSubject(subjectDTO);
 
         assertEquals(ID, subject.getId());
-        assertEquals(NAME, subject.getName());
+        assertEquals(BIOLOGY, subject.getName());
         assertEquals(VALUE, subject.getValue());
     }
 

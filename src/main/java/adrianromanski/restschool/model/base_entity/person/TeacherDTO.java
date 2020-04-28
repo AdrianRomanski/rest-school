@@ -1,6 +1,7 @@
 package adrianromanski.restschool.model.base_entity.person;
 
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
@@ -17,13 +18,16 @@ import java.util.List;
 @NoArgsConstructor
 public class TeacherDTO extends PersonDTO {
 
-    private String specialization;
+    private Specialization specialization;
     private LocalDate firstDay;
     private Long yearsOfExperience;
 
     @Builder
-    public TeacherDTO(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age) {
+    public TeacherDTO(String firstName, String lastName, Gender gender,
+                      LocalDate dateOfBirth, Long age,LocalDate firstDay,Specialization specialization) {
         super(firstName, lastName, gender, dateOfBirth, age);
+        this.firstDay = firstDay;
+        this.specialization = specialization;
     }
 
     @JsonIgnore

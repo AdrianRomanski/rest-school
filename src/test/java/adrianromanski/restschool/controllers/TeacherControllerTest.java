@@ -2,8 +2,9 @@
 
     import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
     import adrianromanski.restschool.controllers.person.TeacherController;
+    import adrianromanski.restschool.domain.base_entity.enums.Gender;
+    import adrianromanski.restschool.domain.base_entity.enums.Specialization;
     import adrianromanski.restschool.domain.base_entity.person.Teacher;
-    import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
     import adrianromanski.restschool.exceptions.ResourceNotFoundException;
     import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
     import adrianromanski.restschool.services.person.teacher.TeacherService;
@@ -21,8 +22,13 @@
     import java.util.*;
 
     import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-    import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
-    import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
+    import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.ARIA;
+    import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
+    import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
+    import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
+    import static adrianromanski.restschool.domain.base_entity.enums.MaleName.BENJAMIN;
+    import static adrianromanski.restschool.domain.base_entity.enums.MaleName.ETHAN;
+    import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
     import static org.hamcrest.Matchers.equalTo;
     import static org.hamcrest.Matchers.hasSize;
 
@@ -33,13 +39,8 @@
 
     class TeacherControllerTest {
 
-        public static final String WALTER = "Walter";
-        public static final String WHITE = "White";
         public static final String TEACHERS = "/teachers/";
         public static final long ID = 1L;
-        public static final String CHEMISTRY = "Chemistry";
-        public static final String BIOLOGY = "Biology";
-        public static final String PHYSICS = "Physics";
 
         MockMvc mockMvc;
 
@@ -58,29 +59,29 @@
                     .build();
         }
 
-        TeacherDTO createTeacherDTO(Long id, String firstName, String lastName, Gender gender, String specialization) {
+        TeacherDTO createTeacherDTO(Long id, String firstName, String lastName, Gender gender, Specialization specialization) {
             TeacherDTO teacherDTO = TeacherDTO.builder().firstName(firstName).lastName(lastName).gender(gender).build();
             teacherDTO.setId(id);
             teacherDTO.setSpecialization(specialization);
             return teacherDTO;
         }
 
-        TeacherDTO createWalter() {
-            return createTeacherDTO(ID, WALTER, WHITE, MALE, CHEMISTRY);
+        TeacherDTO createEthan() {
+            return createTeacherDTO(ID, ETHAN.get(), COOPER.get(), MALE, CHEMISTRY);
         }
 
-        TeacherDTO createPeter() {
-            return createTeacherDTO(2L, "Peter", "Parker", MALE, BIOLOGY);
+        TeacherDTO createBenjamin() {
+            return createTeacherDTO(2L, BENJAMIN.get(), RODRIGUEZ.get(), MALE, BIOLOGY);
         }
 
-        TeacherDTO createMarie() {
-            return createTeacherDTO(3L, "Marie", "Curie", FEMALE, PHYSICS);
+        TeacherDTO createAria() {
+            return createTeacherDTO(3L, ARIA.get(), WILLIAMS.get(), FEMALE, PHYSICS);
         }
 
         @DisplayName("[GET], [Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
         @Test
         void getAllTeachers() throws Exception {
-            List<TeacherDTO> teacherDTOList = Arrays.asList(createWalter(), createPeter(), createMarie());
+            List<TeacherDTO> teacherDTOList = Arrays.asList(createEthan(), createBenjamin(), createAria());
 
             when(teacherService.getAllTeachers()).thenReturn(teacherDTOList);
 
@@ -95,23 +96,23 @@
         @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName, [Expected] = StudentDTO with matching fields")
         @Test
         void getTeacherByFirstNameAndLastName() throws Exception {
-            TeacherDTO teacherDTO = createWalter();
+            TeacherDTO teacherDTO = createEthan();
 
-            when(teacherService.getTeacherByFirstNameAndLastName(WALTER, WHITE)).thenReturn(teacherDTO);
+            when(teacherService.getTeacherByFirstNameAndLastName(ETHAN.get(), COOPER.get())).thenReturn(teacherDTO);
 
-            mockMvc.perform(get(TEACHERS + WALTER + "/" + WHITE)
+            mockMvc.perform(get(TEACHERS + ETHAN.get() + "/" + COOPER.get())
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(teacherDTO)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.firstName", equalTo(WALTER)))
-                    .andExpect(jsonPath("$.lastName", equalTo(WHITE)));
+                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
         @DisplayName("[GET], [Happy Path], [Method] = getStudentById, [Expected] = StudentDTO with matching fields")
         @Test
         void getTeacherByID() throws Exception {
-            TeacherDTO teacherDTO = createWalter();
+            TeacherDTO teacherDTO = createEthan();
 
             when(teacherService.getTeacherByID(ID)).thenReturn(teacherDTO);
 
@@ -120,17 +121,17 @@
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(teacherDTO)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.firstName", equalTo(WALTER)))
-                    .andExpect(jsonPath("$.lastName", equalTo(WHITE)));
+                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
         @DisplayName("[GET], [Happy Path], [Method] = getTeachersBySpecialization, [Expected] = Map<Biology(2), Math(1), Chemistry(3)>")
         @Test
         void getTeachersBySpecialization() throws Exception {
-            Map<String, List<TeacherDTO>> map = new HashMap<>();
-            map.putIfAbsent("Biology", Arrays.asList(createPeter(), createPeter()));
-            map.putIfAbsent("Physics", Collections.singletonList(createMarie()));
-            map.putIfAbsent("Chemistry", Arrays.asList(createWalter(), createWalter(), createWalter()));
+            Map<Specialization, List<TeacherDTO>> map = new HashMap<>();
+            map.putIfAbsent(BIOLOGY, Arrays.asList(createBenjamin(), createAria()));
+            map.putIfAbsent(PHYSICS, Collections.singletonList(createBenjamin()));
+            map.putIfAbsent(CHEMISTRY, Arrays.asList(createAria(), createEthan(), createBenjamin()));
 
             when(teacherService.getTeachersBySpecialization()).thenReturn(map);
 
@@ -139,9 +140,9 @@
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(map)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.Biology", hasSize(2)))
-                    .andExpect(jsonPath("$.Physics", hasSize(1)))
-                    .andExpect(jsonPath("$.Chemistry", hasSize(3)));
+                    .andExpect(jsonPath("$.BIOLOGY", hasSize(2)))
+                    .andExpect(jsonPath("$.PHYSICS", hasSize(1)))
+                    .andExpect(jsonPath("$.CHEMISTRY", hasSize(3)));
 
         }
 
@@ -149,8 +150,8 @@
         @Test
         void getTeachersByYearsOfExperience() throws Exception {
             Map<Long, List<TeacherDTO>> map = new HashMap<>();
-            map.putIfAbsent(5L, Collections.singletonList(createWalter()));
-            map.putIfAbsent(12L, Arrays.asList(createMarie(), createPeter()));
+            map.putIfAbsent(5L, Collections.singletonList(createEthan()));
+            map.putIfAbsent(12L, Arrays.asList(createAria(), createBenjamin()));
 
             when(teacherService.getTeachersByYearsOfExperience()).thenReturn(map);
 
@@ -166,7 +167,7 @@
         @DisplayName("[POST], [Happy Path], [Method] = createNewTeacher, [Expected] = TeacherDTO  with matching fields")
         @Test
         void createNewTeacher() throws Exception {
-            TeacherDTO teacherDTO = createWalter();
+            TeacherDTO teacherDTO = createEthan();
 
             when(teacherService.createNewTeacher(any(TeacherDTO.class))).thenReturn(teacherDTO);
 
@@ -175,14 +176,14 @@
                     .accept(MediaType.APPLICATION_JSON)
                     .content(asJsonString(teacherDTO)))
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.firstName", equalTo(WALTER)))
-                    .andExpect(jsonPath("$.lastName", equalTo(WHITE)));
+                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
         @DisplayName("[PUT], [Happy Path], [Method] = updateTeacher, [Expected] = TeacherDTO with updated fields")
         @Test
         void updateTeacher() throws Exception {
-            TeacherDTO teacherDTO = createWalter();
+            TeacherDTO teacherDTO = createEthan();
             teacherDTO.setFirstName("Updated");
 
             when(teacherService.updateTeacher(teacherDTO.getId(), teacherDTO)).thenReturn(teacherDTO);
@@ -193,7 +194,7 @@
                     .content(asJsonString(teacherDTO)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.firstName", equalTo("Updated")))
-                    .andExpect(jsonPath("$.lastName", equalTo(WHITE)));
+                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
         @DisplayName("[DELETE], [Happy Path], [Method] = deleteTeacherById, [Expected] = teacherService deleting student")

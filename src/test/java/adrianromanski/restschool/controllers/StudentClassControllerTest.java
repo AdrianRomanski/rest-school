@@ -2,6 +2,7 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.group.StudentClassController;
+import adrianromanski.restschool.domain.base_entity.enums.MaleName;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
@@ -18,6 +19,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.Arrays;
 import java.util.List;
 
+import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -30,10 +32,8 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
 
     public static final String NAME = "First year";
     public static final long ID = 1L;
-    public static final String JESSIE_PINKMAN = "Jessie Pinkman";
     public static final String STUDENT_CLASS = "/student-class/";
-    public static final String WALTER = "Walter";
-    public static final String WHITE = "White";
+
     @Mock
     StudentClassService studentClassService;
 
@@ -52,10 +52,8 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
     }
 
     StudentClassDTO initStudentClassDTO() {
-        StudentClassDTO studentClassDTO = new StudentClassDTO();
-        studentClassDTO.setName(NAME);
+        StudentClassDTO studentClassDTO = StudentClassDTO.builder().name(NAME).president(ISAAC.get()).build();
         studentClassDTO.setId(ID);
-        studentClassDTO.setPresident(JESSIE_PINKMAN);
         return studentClassDTO;
     }
 
@@ -86,7 +84,7 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .content(asJsonString(studentClassDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)))
-                .andExpect(jsonPath("$.president", equalTo(JESSIE_PINKMAN)));
+                .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
     @Test
@@ -106,7 +104,7 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .content(asJsonString(studentClassDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", equalTo(NAME)))
-                .andExpect(jsonPath("$.president", equalTo(JESSIE_PINKMAN)));
+                .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
     @Test
@@ -126,7 +124,7 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .content(asJsonString(studentClassDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)))
-                .andExpect(jsonPath("$.president", equalTo(JESSIE_PINKMAN)));
+                .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
 

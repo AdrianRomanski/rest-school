@@ -1,5 +1,6 @@
 package adrianromanski.restschool.services.person.teacher;
 
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 
@@ -17,7 +18,7 @@ public interface TeacherService {
 
     TeacherDTO getTeacherByID(Long id);
 
-    Map<String, List<TeacherDTO>> getTeachersBySpecialization();
+    Map<Specialization, List<TeacherDTO>> getTeachersBySpecialization();
 
     Map<Long, List<TeacherDTO>> getTeachersByYearsOfExperience();
 

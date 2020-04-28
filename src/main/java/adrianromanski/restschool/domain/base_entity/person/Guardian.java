@@ -1,11 +1,10 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import java.time.LocalDate;
 import java.util.ArrayList;

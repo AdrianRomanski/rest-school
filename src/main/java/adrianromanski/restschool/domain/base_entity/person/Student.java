@@ -4,8 +4,7 @@ import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.group.SportTeam;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import lombok.*;
 
 import javax.persistence.*;

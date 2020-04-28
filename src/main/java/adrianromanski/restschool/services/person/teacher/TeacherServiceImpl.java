@@ -1,5 +1,6 @@
 package adrianromanski.restschool.services.person.teacher;
 
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
@@ -69,7 +70,7 @@ public class TeacherServiceImpl implements TeacherService {
      * @return Map where the keys are Specializations and values List of Teachers
      */
     @Override
-    public Map<String, List<TeacherDTO>> getTeachersBySpecialization() {
+    public Map<Specialization, List<TeacherDTO>> getTeachersBySpecialization() {
         return teacherRepository.findAll()
                 .stream()
                 .map(teacherMapper::teacherToTeacherDTO)

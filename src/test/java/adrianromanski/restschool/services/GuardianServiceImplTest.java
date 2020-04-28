@@ -2,7 +2,7 @@ package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
@@ -23,8 +23,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.ARIA;
+import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.CHARLOTTE;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,8 +37,6 @@ import static org.mockito.Mockito.*;
 
 class GuardianServiceImplTest {
 
-    public static final String FIRST_NAME = "Bruce";
-    public static final String LAST_NAME = "Wayne";
     public static final String EMAIL = "WayneEnterprise@Gotham.com";
     public static final String NUMBER = "543-352-332";
     public static final long ID = 1L;
@@ -55,21 +57,22 @@ class GuardianServiceImplTest {
                                                                     guardianRepository, studentRepository);
     }
 
-    GuardianDTO createBruceWayneDTO() {
-        GuardianDTO guardianDTO = GuardianDTO.builder().firstName(FIRST_NAME).lastName(LAST_NAME)
+    GuardianDTO createEthanDTO() {
+        GuardianDTO guardianDTO = GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get())
                                                     .email(EMAIL).telephoneNumber(NUMBER).build();
         guardianDTO.setId(ID);
         return guardianDTO;
     }
 
-    Guardian createBruceWayne() {
-        Guardian guardian = Guardian.builder().firstName(FIRST_NAME).lastName(LAST_NAME)
-                                            .email(EMAIL).telephoneNumber(NUMBER).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
-        Student jessiePinkman = createJessiePinkman();
-        Student jessicaParker = createJessicaParker();
-        guardian.getStudents().addAll(Arrays.asList(jessiePinkman, jessicaParker));
-        jessiePinkman.setGuardian(guardian);
-        jessicaParker.setGuardian(guardian);
+    Guardian createEthan() {
+        Guardian guardian = Guardian.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).email(EMAIL)
+                                                    .telephoneNumber(NUMBER).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
+
+        Student sebastian = createSebastian();
+        Student charlotte = createCharlotte();
+        guardian.getStudents().addAll(Arrays.asList(sebastian, charlotte));
+        sebastian.setGuardian(guardian);
+        charlotte.setGuardian(guardian);
         guardian.setId(ID);
         return guardian;
     }
@@ -80,18 +83,19 @@ class GuardianServiceImplTest {
         return student;
     }
 
-    Student createJessiePinkman() {
-        return createStudent(2L, "Jessie", "Pinkman", MALE);
+    Student createSebastian() {
+        return createStudent(2L, SEBASTIAN.get(), RODRIGUEZ.get(), MALE);
     }
 
-    Student createJessicaParker() {
-        return createStudent(3L, "Jessica", "Parker", FEMALE);
+    Student createCharlotte() {
+        return createStudent(3L, CHARLOTTE.get(), HENDERSON.get(), FEMALE);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getAllGuardians, [Expected] = List containing 3 Guardians")
     @Test
     void getAllLegalGuardians() {
-        List<Guardian> legalGuardians = Arrays.asList(createBruceWayne(), createBruceWayne(), createBruceWayne());
+        List<Guardian> legalGuardians = Arrays.asList(createEthan(), createEthan(), createEthan());
 
         when(guardianRepository.findAll()).thenReturn(legalGuardians);
 
@@ -103,14 +107,14 @@ class GuardianServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getGuardianByID, [Expected] = GuardianDTO with matching fields")
     @Test
     void getGuardianByID() {
-        Guardian legalGuardian = createBruceWayne();
+        Guardian legalGuardian = createEthan();
 
         when(guardianRepository.findById(ID)).thenReturn(Optional.of(legalGuardian));
 
         GuardianDTO legalGuardianDTO = guardianService.getGuardianByID(ID);
 
-        assertEquals(legalGuardianDTO.getFirstName(), FIRST_NAME);
-        assertEquals(legalGuardianDTO.getLastName(), LAST_NAME);
+        assertEquals(legalGuardianDTO.getFirstName(), ETHAN.get());
+        assertEquals(legalGuardianDTO.getLastName(), HENDERSON.get());
         assertEquals(legalGuardianDTO.getTelephoneNumber(), NUMBER);
         assertEquals(legalGuardianDTO.getEmail(), EMAIL);
         assertEquals(legalGuardianDTO.getId(), ID);
@@ -119,15 +123,15 @@ class GuardianServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getGuardianByFirstAndLastName, [Expected] = GuardianDTO with matching fields")
     @Test
     void getLegalGuardianByFirstAndLastName() {
-        Guardian legalGuardian = createBruceWayne();
+        Guardian legalGuardian = createEthan();
 
-        when(guardianRepository.getGuardianByFirstNameAndLastName(FIRST_NAME, LAST_NAME))
+        when(guardianRepository.getGuardianByFirstNameAndLastName(anyString(), anyString()))
                 .thenReturn(Optional.of(legalGuardian));
 
-        GuardianDTO legalGuardianDTO = guardianService.getGuardianByFirstAndLastName(FIRST_NAME, LAST_NAME);
+        GuardianDTO legalGuardianDTO = guardianService.getGuardianByFirstAndLastName(ETHAN.get(), COOPER.get());
 
-        assertEquals(legalGuardianDTO.getFirstName(), FIRST_NAME);
-        assertEquals(legalGuardianDTO.getLastName(), LAST_NAME);
+        assertEquals(legalGuardianDTO.getFirstName(), ETHAN.get());
+        assertEquals(legalGuardianDTO.getLastName(), HENDERSON.get());
         assertEquals(legalGuardianDTO.getTelephoneNumber(), NUMBER);
         assertEquals(legalGuardianDTO.getEmail(), EMAIL);
         assertEquals(legalGuardianDTO.getId(), ID);
@@ -136,7 +140,7 @@ class GuardianServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getGuardiansByAge, [Expected] = Map<27, List<2 x GuardianDTO>>")
     @Test
     void getGuardiansByAge() {
-        List<Guardian> guardians = Arrays.asList(createBruceWayne(), createBruceWayne());
+        List<Guardian> guardians = Arrays.asList(createEthan(), createEthan());
 
         when(guardianRepository.findAll()).thenReturn(guardians);
 
@@ -149,31 +153,31 @@ class GuardianServiceImplTest {
     @DisplayName("[Happy Path], [Method] = getAllStudentsForGuardian, [Expected] = List<2 x StudentDTO>")
     @Test
     void getAllStudentsForGuardian() {
-        Guardian guardian = createBruceWayne();
+        Guardian guardian = createEthan();
 
         when(studentRepository.findAll()).thenReturn(guardian.getStudents());
 
         List<StudentDTO> studentsDTO = guardianService.getAllStudentsForGuardian(guardian.getId());
 
         assertEquals(studentsDTO.size(), 2);
-        assertEquals(studentsDTO.get(0).getFirstName(), "Jessie");
-        assertEquals(studentsDTO.get(1).getFirstName(), "Jessica");
+        assertEquals(studentsDTO.get(0).getFirstName(), SEBASTIAN.get());
+        assertEquals(studentsDTO.get(1).getFirstName(), CHARLOTTE.get());
     }
 
     @DisplayName("[Happy Path], [Method] = createNewGuardian, [Expected] = GuardianDTO with matching fields")
     @Test
     void createNewLegalGuardian() {
-        Guardian guardian = createBruceWayne();
+        Guardian guardian = createEthan();
 
-        GuardianDTO guardianDTO = createBruceWayneDTO();
+        GuardianDTO guardianDTO = createEthanDTO();
 
         when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
         when(guardianRepository.save(any(Guardian.class))).thenReturn(guardian);
 
         GuardianDTO returnDTO = guardianService.createNewGuardian(guardianDTO);
 
-        assertEquals(returnDTO.getFirstName(), FIRST_NAME);
-        assertEquals(returnDTO.getLastName(), LAST_NAME);
+        assertEquals(returnDTO.getFirstName(), ETHAN.get());
+        assertEquals(returnDTO.getLastName(), HENDERSON.get());
         assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
         assertEquals(returnDTO.getEmail(), EMAIL);
         assertEquals(returnDTO.getId(), ID);
@@ -182,9 +186,9 @@ class GuardianServiceImplTest {
     @DisplayName("[Happy Path], [Method] = updateTeacher, [Expected] = TeacherDTO with updated fields")
     @Test
     void updateLegalGuardianHappyPath() {
-        Guardian guardian = createBruceWayne();
+        Guardian guardian = createEthan();
 
-        GuardianDTO guardianDTO = createBruceWayneDTO();
+        GuardianDTO guardianDTO = createEthanDTO();
         guardianDTO.setFirstName("Updated");
 
         when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
@@ -193,7 +197,7 @@ class GuardianServiceImplTest {
         GuardianDTO returnDTO = guardianService.updateGuardian(guardianDTO, ID);
 
         assertEquals(returnDTO.getFirstName(), "Updated");
-        assertEquals(returnDTO.getLastName(), LAST_NAME);
+        assertEquals(returnDTO.getLastName(), HENDERSON.get());
         assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
         assertEquals(returnDTO.getEmail(), EMAIL);
         assertEquals(returnDTO.getId(), ID);
@@ -202,7 +206,7 @@ class GuardianServiceImplTest {
     @DisplayName("[Unhappy Path], [Method] = updateGuardian, [Reason] = Guardian with id 222 not found")
     @Test
     void updateLegalGuardianUnhappyPath() {
-        GuardianDTO guardianDTO = createBruceWayneDTO();
+        GuardianDTO guardianDTO = createEthanDTO();
 
         Throwable ex = catchThrowable(() -> guardianService.updateGuardian(guardianDTO, 222L));
 
@@ -212,7 +216,7 @@ class GuardianServiceImplTest {
     @DisplayName("[Happy Path], [Method] = deleteGuardianByID, [Expected] = guardianRepository deleting student")
     @Test
     void deleteLegalGuardianByIDHappyPath() {
-        Guardian guardian = createBruceWayne();
+        Guardian guardian = createEthan();
 
         when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
         guardianService.deleteGuardianByID(guardian.getId());

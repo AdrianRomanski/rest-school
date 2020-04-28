@@ -1,6 +1,6 @@
 package adrianromanski.restschool.model.base_entity.person;
 
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.model.base_entity.BaseEntityDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

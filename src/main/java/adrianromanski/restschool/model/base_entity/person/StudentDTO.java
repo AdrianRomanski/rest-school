@@ -1,13 +1,12 @@
 package adrianromanski.restschool.model.base_entity.person;
 
 
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;

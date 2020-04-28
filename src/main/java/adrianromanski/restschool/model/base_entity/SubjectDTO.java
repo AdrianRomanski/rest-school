@@ -1,6 +1,7 @@
 package adrianromanski.restschool.model.base_entity;
 
 import adrianromanski.restschool.domain.base_entity.BaseEntity;
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class SubjectDTO extends BaseEntity {
 
-    private String name;
+    private Specialization name;
     private Long value;
 
     private List<StudentDTO> studentsDTO = new ArrayList<>();

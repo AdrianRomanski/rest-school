@@ -12,8 +12,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
 
 @Slf4j
 @Service

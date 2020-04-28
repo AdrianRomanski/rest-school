@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
+import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
@@ -21,9 +22,6 @@ import static org.mockito.Mockito.when;
 
 class SubjectServiceImplTest {
 
-    public static final String BIOLOGY = "Biology";
-    public static final String MATH = "Math";
-    public static final String PHYSICAL_EDUCATION = "Physical education";
 
     SubjectService subjectService;
 
@@ -48,7 +46,7 @@ class SubjectServiceImplTest {
 
     Subject initMath() {
         Subject subject = new Subject();
-        subject.setName(MATH);
+        subject.setName(MATHEMATICS);
         subject.setValue(10L);
         subject.setId(2L);
         return subject;
@@ -56,7 +54,7 @@ class SubjectServiceImplTest {
 
     Subject initPE() {
         Subject subject = new Subject();
-        subject.setName(PHYSICAL_EDUCATION);
+        subject.setName(PHYSICS);
         subject.setValue(1L);
         subject.setId(3L);
         return subject;
@@ -80,7 +78,7 @@ class SubjectServiceImplTest {
     void createNewSubject() {
         //given
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName(MATH);
+        subjectDTO.setName(MATHEMATICS);
 
         Subject savedSubject = new Subject();
         savedSubject.setName(subjectDTO.getName());
@@ -98,7 +96,7 @@ class SubjectServiceImplTest {
     void updateSubject() {
         //given
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName(MATH);
+        subjectDTO.setName(MATHEMATICS);
         subjectDTO.setId(1L);
 
         Subject savedSubject = new Subject();
@@ -111,14 +109,14 @@ class SubjectServiceImplTest {
         SubjectDTO savedDTO = subjectService.updateSubject(1L, subjectDTO);
 
         //then
-        assertEquals(savedDTO.getName(), MATH);
+        assertEquals(savedDTO.getName(), MATHEMATICS);
     }
 
     @Test
     void getSubjectByID() {
         //given
         Subject subject = new Subject();
-        subject.setName(MATH);
+        subject.setName(MATHEMATICS);
         subject.setId(1L);
 
         when(subjectRepository.findById(anyLong())).thenReturn(Optional.of(subject));
@@ -135,13 +133,13 @@ class SubjectServiceImplTest {
     void getSubjectByName() {
         //Given
         Subject subject = new Subject();
-        subject.setName(MATH);
+        subject.setName(MATHEMATICS);
         subject.setId(1L);
 
         when(subjectRepository.findByName(anyString())).thenReturn(subject);
 
         //when
-        SubjectDTO subjectDTO = subjectService.getSubjectByName(MATH);
+        SubjectDTO subjectDTO = subjectService.getSubjectByName(MATHEMATICS.toString());
 
         //then
         assertEquals(subjectDTO.getName(), subject.getName());
@@ -181,7 +179,7 @@ class SubjectServiceImplTest {
     void getMostPopularSubject() {
         //given
         Subject subject1 = new Subject();
-        subject1.setName("Math");
+        subject1.setName(MATHEMATICS);
 
 
         Student adrian = new Student();
@@ -196,7 +194,7 @@ class SubjectServiceImplTest {
         subject1.addStudent(adrian2);
 
         Subject subject3 = new Subject();
-        subject3.setName("Biology");
+        subject3.setName(BIOLOGY);
 
         Student wojtek = new Student();
         wojtek.setFirstName("Wojtek");

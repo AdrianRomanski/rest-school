@@ -1,5 +1,6 @@
 package adrianromanski.restschool.bootstrap;
 
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.ExamResult;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
@@ -24,19 +25,17 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static adrianromanski.restschool.domain.base_entity.person.enums.FemaleName.CHARLOTTE;
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.person.enums.Gender.MALE;
-import static adrianromanski.restschool.domain.base_entity.person.enums.LastName.*;
-import static adrianromanski.restschool.domain.base_entity.person.enums.MaleName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.CHARLOTTE;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
 
 @Component
 @Slf4j
 public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
-    public static final String MATHEMATICS = "Mathematics";
-    public static final String BIOLOGY = "Biology";
-    public static final String SCIENCE = "Science";
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
     private final ExamRepository examRepository;
@@ -67,24 +66,24 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         // Init Subjects
         Subject math = Subject.builder().name(MATHEMATICS).value(10L).build();
         Subject biology = Subject.builder().name(BIOLOGY).value(8L).build();
-        Subject science = Subject.builder().name(SCIENCE).value(10L).build();
+        Subject physics = Subject.builder().name(PHYSICS).value(10L).build();
 
 
         // Init Students
-        Student jacob = Student.builder().firstName(JACOB.toString()).lastName(COOPER.toString()).
+        Student jacob = Student.builder().firstName(JACOB.get()).lastName(COOPER.get()).
                                     gender(MALE).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
 
-        Student charlotte = Student.builder().firstName(CHARLOTTE.toString()).lastName(HENDERSON.toString()).
+        Student charlotte = Student.builder().firstName(CHARLOTTE.get()).lastName(HENDERSON.get()).
                                     gender(MALE).dateOfBirth(LocalDate.of(1994, 10, 4)).build();
 
-        Student ethan = Student.builder().firstName(ETHAN.toString()).lastName(PARKER.toString()).
+        Student ethan = Student.builder().firstName(ETHAN.get()).lastName(PARKER.get()).
                                     gender(FEMALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
 
         // Init List of Students
         List<Student> students = Arrays.asList(jacob, charlotte, ethan);
 
         // Init List of Subjects
-        List<Subject> subjects = Arrays.asList(math, biology, science);
+        List<Subject> subjects = Arrays.asList(math, biology, physics);
 
         // Assign Subjects to Students
         jacob.getSubjects().addAll(subjects);
@@ -98,10 +97,10 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
 
         // Init Guardians
-        Guardian william = Guardian.builder().firstName(WILLIAM.toString()).lastName(GONZALES.toString())
+        Guardian william = Guardian.builder().firstName(WILLIAM.get()).lastName(GONZALES.get())
                                     .gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
 
-        Guardian henry = Guardian.builder().firstName(HENRY.toString()).lastName(HENDERSON.toString())
+        Guardian henry = Guardian.builder().firstName(HENRY.get()).lastName(HENDERSON.get())
                                     .gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
 
         //Add Students to Guardians
@@ -115,21 +114,21 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
 
         //Init Teacher
-        Teacher isaac_biology = Teacher.builder().firstName(ISAAC.toString()).lastName(JOHNSON.toString())
+        Teacher isaac_biology = Teacher.builder().firstName(ISAAC.get()).lastName(JOHNSON.get())
                                         .gender(MALE).specialization(BIOLOGY)
                                         .dateOfBirth(LocalDate.of(1980, 10, 3)).firstDay(LocalDate.of(2018, 10, 3)).build();
 
-        Teacher benjamin_math = Teacher.builder().firstName(ISAAC.toString()).lastName(PEREZ.toString())
+        Teacher benjamin_math = Teacher.builder().firstName(ISAAC.get()).lastName(PEREZ.get())
                                         .gender(MALE).specialization(MATHEMATICS)
                                         .dateOfBirth(LocalDate.of(1970, 10, 3)).firstDay(LocalDate.of(2012, 10, 3)).build();
 
-        Teacher logan_science = Teacher.builder().firstName(LOGAN.toString()).lastName(RODRIGUEZ.toString())
-                                        .gender(MALE).specialization(SCIENCE)
+        Teacher logan_physics = Teacher.builder().firstName(LOGAN.get()).lastName(RODRIGUEZ.get())
+                                        .gender(MALE).specialization(PHYSICS)
                                         .dateOfBirth(LocalDate.of(1960, 10, 3)).firstDay(LocalDate.of(2013, 5, 3)).build();
 
         // Init Exam
-        Exam mathExam = Exam.builder().name(MATHEMATICS).maxPoints(100L).date(LocalDate.now()).build();
-        Exam biologyExam = Exam.builder().name(BIOLOGY).maxPoints(100L).date(LocalDate.now()).build();
+        Exam mathExam = Exam.builder().name(MATHEMATICS.toString()).maxPoints(100L).date(LocalDate.now()).build();
+        Exam biologyExam = Exam.builder().name(BIOLOGY.toString()).maxPoints(100L).date(LocalDate.now()).build();
 
         // Assign students to exams
         biologyExam.setStudents(students);
@@ -211,12 +210,12 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         //Teachers
         teacherRepository.save(isaac_biology);
         teacherRepository.save(benjamin_math);
-        teacherRepository.save(logan_science);
+        teacherRepository.save(logan_physics);
 
         //Subjects
         subjectRepository.save(biology);
         subjectRepository.save(math);
-        subjectRepository.save(science);
+        subjectRepository.save(physics);
 
         //Exams
         examRepository.save(mathExam);

@@ -20,6 +20,7 @@ import java.util.List;
 
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
+import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
@@ -29,11 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SubjectControllerTest {
-
-    public static final String BIOLOGY = "Biology";
-    public static final String MATH = "Math";
-    public static final String PHYSICAL_EDUCATION = "Physical education";
-
 
     @Mock
     SubjectService subjectService;
@@ -62,7 +58,7 @@ class SubjectControllerTest {
 
     SubjectDTO initMath() {
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName(MATH);
+        subjectDTO.setName(MATHEMATICS);
         subjectDTO.setValue(10L);
         subjectDTO.setId(2L);
         return subjectDTO;
@@ -70,7 +66,7 @@ class SubjectControllerTest {
 
     SubjectDTO initPE() {
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setName(PHYSICAL_EDUCATION);
+        subjectDTO.setName(PHYSICS);
         subjectDTO.setValue(1L);
         subjectDTO.setId(3L);
         return subjectDTO;
@@ -100,7 +96,7 @@ class SubjectControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo(BIOLOGY)));
+                .andExpect(jsonPath("$.name", equalTo(BIOLOGY.toString())));
     }
 
     @Test
@@ -118,7 +114,7 @@ class SubjectControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(subjectDTO)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name", equalTo(BIOLOGY)));
+                .andExpect(jsonPath("$.name", equalTo(BIOLOGY.toString())));
     }
 
     @Test
@@ -137,7 +133,7 @@ class SubjectControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(subjectDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo(BIOLOGY)))
+                .andExpect(jsonPath("$.name", equalTo(BIOLOGY.toString())))
                 .andExpect(jsonPath("$.value", equalTo(1)));
     }
 
@@ -152,7 +148,7 @@ class SubjectControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(subjectDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo(BIOLOGY)));
+                .andExpect(jsonPath("$.name", equalTo(BIOLOGY.toString())));
     }
 
     @Test
@@ -197,7 +193,7 @@ class SubjectControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(biology)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo(BIOLOGY)));
+                .andExpect(jsonPath("$.name", equalTo(BIOLOGY.toString())));
     }
 
     @Test

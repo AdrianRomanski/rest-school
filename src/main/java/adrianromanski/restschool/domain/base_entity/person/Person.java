@@ -1,7 +1,7 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
 import adrianromanski.restschool.domain.base_entity.BaseEntity;
-import adrianromanski.restschool.domain.base_entity.person.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import lombok.*;
 
 import javax.persistence.MappedSuperclass;

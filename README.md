@@ -2,7 +2,6 @@
 
 ## <div align="center"> [![CircleCI](https://circleci.com/gh/AdrianRomanski/rest-school.svg?style=svg)](https://circleci.com/gh/AdrianRomanski/rest-school) [![codecov](https://codecov.io/gh/AdrianRomanski/rest-school/branch/master/graph/badge.svg)](https://codecov.io/gh/AdrianRomanski/rest-school) </div>
 
-## <div align="left"> Person </div>
 ## <div align="center"> Student </div>
 #### GET
 * __getAllStudents__ - Return all Students sorted by age -> lastName -> firstName
@@ -45,7 +44,6 @@
 #### DELETE
 * __deleteGuardianByID__ - Delete Guardian with matching id
 
-## <div align="left"> Groups </div>
 ## <div align="center"> Student Class </div>
 #### GET
 * __getAllStudentClasses__ - Return all Student Classes
@@ -56,3 +54,14 @@
 * __updateStudentClass__ - Converts DTO Object, update Student Class with matching id and save it to database
 #### DELETE
 * __deleteStudentClassById__ - Delete Student Class with matching id
+
+## <div align="center"> Sport Team </div>
+#### GET
+* __getAllSportTeam__ - Return all Sport Teams
+* __getSportTeamById__ -  Sport Team with matching id
+#### POST
+* __createNewSportTeam__ - Converts DTO Object and save it to Database
+#### PUT
+* __updateSportTeam__ - Converts DTO Object, update Sport Team with matching id and save it to database
+#### DELETE
+* __deleteStudentClassById__ - Delete Sport Team with matching id

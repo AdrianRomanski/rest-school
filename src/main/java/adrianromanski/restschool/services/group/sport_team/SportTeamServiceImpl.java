@@ -23,6 +23,9 @@ public class SportTeamServiceImpl implements SportTeamService {
         this.sportTeamMapper = sportTeamMapper;
     }
 
+    /**
+     * @return all Sport Teams
+     */
     @Override
     public List<SportTeamDTO> getAllSportTeam() {
         return sportTeamRepository.findAll()
@@ -32,6 +35,10 @@ public class SportTeamServiceImpl implements SportTeamService {
     }
 
 
+    /**
+     * @return Sport Team with matching id
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public SportTeamDTO getSportTeamById(Long id) {
         return sportTeamMapper.sportTeamToSportTeamDTO(sportTeamRepository
@@ -39,6 +46,10 @@ public class SportTeamServiceImpl implements SportTeamService {
                             .orElseThrow(ResourceNotFoundException::new));
     }
 
+    /**
+     * Converts DTO Object and Save it to Database
+     * @return SportTeamDTO object
+     */
     @Override
     public SportTeamDTO createNewSportTeam(SportTeamDTO sportTeamDTO) {
         sportTeamRepository.save(sportTeamMapper.sportTeamDTOToSportTeam(sportTeamDTO));
@@ -46,6 +57,11 @@ public class SportTeamServiceImpl implements SportTeamService {
         return sportTeamDTO;
     }
 
+    /**
+     * Converts DTO Object, Update Sport Team with Matching ID and save it to Database
+     * @return SportTeamDTO object if the Sport Team  was successfully saved
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public SportTeamDTO updateSportTeam(SportTeamDTO sportTeamDTO, Long id) {
         if(sportTeamRepository.findById(id).isPresent()) {
@@ -59,6 +75,10 @@ public class SportTeamServiceImpl implements SportTeamService {
         }
     }
 
+    /**
+     * Delete Sport Team with matching id
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public void deleteSportTeamById(Long id) {
         if(sportTeamRepository.findById(id).isPresent()) {

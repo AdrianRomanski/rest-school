@@ -77,6 +77,7 @@ public class StudentClassServiceImpl implements StudentClassService {
             log.info("Student Class with id: " + id + " successfully updated");
             return studentClassMapper.StudentClassToStudentClassDTO(updatedClass);
         } else {
+            log.debug("Student Class id: " + id + " not found");
             throw new ResourceNotFoundException("Student Class with id: " + id + " not found");
         }
     }
@@ -92,6 +93,7 @@ public class StudentClassServiceImpl implements StudentClassService {
             studentClassRepository.deleteById(id);
             log.info("Student Class with id: " + id + " successfully deleted");
         } else {
+            log.debug("Student Class id: " + id + " not found");
             throw new ResourceNotFoundException("Student Class with id: " + id + " not found");
         }
     }

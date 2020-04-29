@@ -5,11 +5,13 @@ import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.SportTeamMapper;
 import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
 import adrianromanski.restschool.repositories.group.SportTeamRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class SportTeamServiceImpl implements SportTeamService {
 
@@ -32,28 +34,39 @@ public class SportTeamServiceImpl implements SportTeamService {
 
     @Override
     public SportTeamDTO getSportTeamById(Long id) {
-        return sportTeamMapper.sportTeamToSportTeamDTO(sportTeamRepository.findById(id)
-                                                                    .orElseThrow(ResourceNotFoundException::new));
+        return sportTeamMapper.sportTeamToSportTeamDTO(sportTeamRepository
+                            .findById(id)
+                            .orElseThrow(ResourceNotFoundException::new));
     }
 
     @Override
     public SportTeamDTO createNewSportTeam(SportTeamDTO sportTeamDTO) {
-        return saveAndReturnDTO(sportTeamMapper.sportTeamDTOToSportTeam(sportTeamDTO));
+        sportTeamRepository.save(sportTeamMapper.sportTeamDTOToSportTeam(sportTeamDTO));
+        log.info("Sport Team with id: " + sportTeamDTO.getId() + " successfully saved");
+        return sportTeamDTO;
     }
 
     @Override
     public SportTeamDTO updateSportTeam(SportTeamDTO sportTeamDTO, Long id) {
-        sportTeamDTO.setId(id);
-        return saveAndReturnDTO((sportTeamMapper.sportTeamDTOToSportTeam(sportTeamDTO)));
+        if(sportTeamRepository.findById(id).isPresent()) {
+            SportTeam updated = sportTeamMapper.sportTeamDTOToSportTeam(sportTeamDTO);
+            updated.setId(id);
+            sportTeamRepository.save(updated);
+            log.info("Sport Team with id: " + id + " successfully updated");
+            return sportTeamMapper.sportTeamToSportTeamDTO(updated);
+        } else {
+            throw new ResourceNotFoundException("Sport Team with id: " + id + " not found");
+        }
     }
 
     @Override
     public void deleteSportTeamById(Long id) {
-        sportTeamRepository.deleteById(id);
-    }
-
-    private SportTeamDTO saveAndReturnDTO(SportTeam team) {
-        sportTeamRepository.save(team);
-        return sportTeamMapper.sportTeamToSportTeamDTO(team);
+        if(sportTeamRepository.findById(id).isPresent()) {
+            sportTeamRepository.deleteById(id);
+            log.info("Sport Team with id: " + id + " successfully deleted");
+        } else {
+            log.debug("Sport Team id: " + id + " not found");
+            throw new ResourceNotFoundException("Sport Team with id: " + id + " not found");
+        }
     }
 }

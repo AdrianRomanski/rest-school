@@ -52,9 +52,10 @@ class StudentClassServiceImplTest {
         studentClassDTO.setId(ID);
         return studentClassDTO;
     }
-        @DisplayName("[Happy Path], [Method] = getAllStudentClasses, [Expected] = List containing 3 Student Classes")
-        @Test
-        void getAllStudentClasses() {
+
+    @DisplayName("[Happy Path], [Method] = getAllStudentClasses, [Expected] = List containing 3 Student Classes")
+    @Test
+    void getAllStudentClasses() {
         List<StudentClass> studentClasses = Arrays.asList(createRookies(), createRookies(), createRookies());
 
         when(studentClassRepository.findAll()).thenReturn(studentClasses);

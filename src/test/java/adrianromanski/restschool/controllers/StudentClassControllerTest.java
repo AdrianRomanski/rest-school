@@ -3,11 +3,13 @@ package adrianromanski.restschool.controllers;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.group.StudentClassController;
 import adrianromanski.restschool.domain.base_entity.enums.MaleName;
+import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -57,9 +59,9 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
         return studentClassDTO;
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getAllStudentClasses, [Expected] = List containing 3 Student Classes")
     @Test
     void getAllStudentClasses() throws Exception {
-
         List<StudentClassDTO> studentClassDTOList = Arrays.asList(new StudentClassDTO(), new StudentClassDTO());
 
         when(studentClassService.getAllStudentClasses()).thenReturn(studentClassDTOList);
@@ -72,6 +74,7 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.studentClasses", hasSize(2)));
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentClassByID, [Expected] = StudentClassDTO with matching fields")
     @Test
     void getStudentClassByID() throws Exception {
         StudentClassDTO studentClassDTO = initStudentClassDTO();
@@ -87,16 +90,12 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
+    @DisplayName("[POST], [Happy Path], [Method] = createNewStudentClass, [Expected] = StudentClassDTO  with matching fields")
     @Test
     void createNewStudentClass() throws Exception {
         StudentClassDTO studentClassDTO = initStudentClassDTO();
 
-        StudentClassDTO returnDTO = new StudentClassDTO();
-        returnDTO.setPresident(studentClassDTO.getPresident());
-        returnDTO.setName(studentClassDTO.getName());
-        returnDTO.setId(studentClassDTO.getId());
-
-        when(studentClassService.createNewStudentClass(studentClassDTO)).thenReturn(returnDTO);
+        when(studentClassService.createNewStudentClass(any(StudentClassDTO.class))).thenReturn(studentClassDTO);
 
         mockMvc.perform(post(STUDENT_CLASS)
                 .accept(MediaType.APPLICATION_JSON)
@@ -107,18 +106,14 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
+    @DisplayName("[PUT], [Happy Path], [Method] = updateStudentClass, [Expected] = StudentClassDTO with updated fields")
     @Test
     void updateStudentClass() throws Exception {
         StudentClassDTO studentClassDTO = initStudentClassDTO();
 
-        StudentClassDTO returnDTO = new StudentClassDTO();
-        returnDTO.setPresident(studentClassDTO.getPresident());
-        returnDTO.setName(studentClassDTO.getName());
-        returnDTO.setId(studentClassDTO.getId());
+        when(studentClassService.updateStudentClass(anyLong(), any(StudentClassDTO.class))).thenReturn(studentClassDTO);
 
-        when(studentClassService.updateStudentClass(ID, studentClassDTO)).thenReturn(returnDTO);
-
-        mockMvc.perform(put(STUDENT_CLASS + studentClassDTO.getId())
+        mockMvc.perform(put(STUDENT_CLASS + ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(studentClassDTO)))
@@ -127,9 +122,10 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
-
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentClassById, [Expected] = studentClassService deleting")
     @Test
     void deleteStudentClassById() throws Exception {
+
         mockMvc.perform(delete(STUDENT_CLASS + 2)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -137,6 +133,7 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
         verify(studentClassService).deleteStudentClassById(anyLong());
     }
 
+    @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Student Class with id 222 not found")
     @Test
     public void testNotFoundException() throws Exception {
 

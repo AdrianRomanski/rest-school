@@ -79,6 +79,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
         return createStudentDTO(3L, CHARLOTTE.get(), HENDERSON.get(), FEMALE);
     }
 
+
     @DisplayName("[GET], [Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
     @Test
     void getAllStudents() throws Exception {

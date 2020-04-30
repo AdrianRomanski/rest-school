@@ -46,7 +46,7 @@ class StudentServiceImplTest {
         studentService = new StudentServiceImpl(StudentMapper.INSTANCE, studentRepository);
     }
 
-    Student createStudent(Long id, String firstName, String lastName, Gender gender) {
+    private Student createStudent(Long id, String firstName, String lastName, Gender gender) {
         Student student = Student.builder().firstName(firstName).lastName(lastName).gender(gender).build();
         student.setId(id);
         return student;
@@ -58,15 +58,15 @@ class StudentServiceImplTest {
         return studentDTO;
     }
 
-    Student createEthan() {
+    private Student createEthan() {
         return createStudent(ID, ETHAN.get(), COOPER.get(), MALE);
     }
 
-    Student createSebastian() {
+    private Student createSebastian() {
         return createStudent(2L, SEBASTIAN.get(), RODRIGUEZ.get(), MALE);
     }
 
-    Student createCharlotte() {
+    private Student createCharlotte() {
         return createStudent(3L, CHARLOTTE.get(), HENDERSON.get(), FEMALE);
     }
 

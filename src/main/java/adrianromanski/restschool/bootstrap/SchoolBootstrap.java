@@ -1,5 +1,6 @@
 package adrianromanski.restschool.bootstrap;
 
+import adrianromanski.restschool.domain.base_entity.enums.MaleName;
 import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.ExamResult;
@@ -60,8 +61,14 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         // Init Class
-        StudentClass studentClass = new StudentClass();
-        studentClass.setName("Rookies");
+        StudentClass biologyClass = StudentClass.builder().name("First year Biology")
+                                                .president(GABRIEL.get()).specialization(BIOLOGY).build();
+
+        StudentClass mathClass =  StudentClass.builder().name("Second year Mathematics")
+                                                .president(OLIVER.get()).specialization(MATHEMATICS).build();
+
+        StudentClass physicsClass = StudentClass.builder().name("Last year Physics")
+                                                .president(MASON.get()).specialization(PHYSICS).build();
 
         // Init Subjects
         Subject math = Subject.builder().name(MATHEMATICS).value(10L).build();
@@ -74,10 +81,10 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
                                     gender(MALE).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
 
         Student charlotte = Student.builder().firstName(CHARLOTTE.get()).lastName(HENDERSON.get()).
-                                    gender(MALE).dateOfBirth(LocalDate.of(1994, 10, 4)).build();
+                                    gender(FEMALE).dateOfBirth(LocalDate.of(1994, 10, 4)).build();
 
         Student ethan = Student.builder().firstName(ETHAN.get()).lastName(PARKER.get()).
-                                    gender(FEMALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
+                                    gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
 
         // Init List of Students
         List<Student> students = Arrays.asList(jacob, charlotte, ethan);
@@ -125,6 +132,11 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         Teacher logan_physics = Teacher.builder().firstName(LOGAN.get()).lastName(RODRIGUEZ.get())
                                         .gender(MALE).specialization(PHYSICS)
                                         .dateOfBirth(LocalDate.of(1960, 10, 3)).firstDay(LocalDate.of(2013, 5, 3)).build();
+
+        // Assign Teacher to Classes
+        physicsClass.setTeacher(logan_physics);
+        mathClass.setTeacher(benjamin_math);
+        biologyClass.setTeacher(isaac_biology);
 
         // Init Exam
         Exam mathExam = Exam.builder().name(MATHEMATICS.toString()).maxPoints(100L).date(LocalDate.now()).build();
@@ -187,13 +199,13 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         charlotte.getExams().get(1).addResult(charlotteResultBiology);
 
         // Assign Student and Teacher to Class
-        studentClass.setTeacher(isaac_biology);
-        studentClass.setStudentList(students);
+        physicsClass.setTeacher(isaac_biology);
+        physicsClass.setStudentList(students);
 
         // Assign Class to Student
-        jacob.setStudentClass(studentClass);
-        ethan.setStudentClass(studentClass);
-        charlotte.setStudentClass(studentClass);
+        jacob.setStudentClass(physicsClass);
+        ethan.setStudentClass(physicsClass);
+        charlotte.setStudentClass(physicsClass);
 
 
         // Saving to repositories
@@ -227,7 +239,9 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         examResultRepository.save(ethanResultMath);
 
         // StudentClasses
-        studentClassRepository.save(studentClass);
+        studentClassRepository.save(physicsClass);
+        studentClassRepository.save(mathClass);
+        studentClassRepository.save(biologyClass);
 
         // Logging to console
         log.info("Saved: " + studentRepository.count() + " Students");

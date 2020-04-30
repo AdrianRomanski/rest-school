@@ -3,6 +3,7 @@ package adrianromanski.restschool.domain.base_entity.event;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -25,10 +26,12 @@ public class Exam extends Event {
         this.maxPoints = maxPoints;
     }
 
+    @JsonBackReference
     @ToString.Exclude
     @ManyToMany(mappedBy = "exams")
     private List<Student> students = new ArrayList<>();
 
+    @JsonBackReference
     @ToString.Exclude
     @OneToMany(mappedBy = "exam", cascade = CascadeType.PERSIST)
     private List<ExamResult> results = new ArrayList<>();
@@ -36,6 +39,7 @@ public class Exam extends Event {
     @ManyToOne
     private Subject subject;
 
+    @JsonBackReference
     @ManyToOne
     private Teacher teacher;
 

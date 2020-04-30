@@ -66,7 +66,7 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
 
         when(studentClassService.getAllStudentClasses()).thenReturn(studentClassDTOList);
 
-        mockMvc.perform(get(STUDENT_CLASS + "list")
+        mockMvc.perform(get(STUDENT_CLASS)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(studentClassDTOList)))

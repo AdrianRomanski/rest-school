@@ -3,6 +3,7 @@ package adrianromanski.restschool.domain.base_entity;
 import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.person.Student;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -24,10 +25,12 @@ public class Subject extends BaseEntity {
         this.value = value;
     }
 
+    @JsonBackReference
     @ToString.Exclude
     @ManyToMany(mappedBy = "subjects")
     private Set<Student> students = new HashSet<>();
 
+    @JsonBackReference
     @ToString.Exclude
     @OneToMany(mappedBy = "subject")
     private Set<Exam> exams = new HashSet<>();

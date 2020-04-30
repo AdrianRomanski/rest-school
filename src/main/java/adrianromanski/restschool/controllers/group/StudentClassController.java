@@ -1,7 +1,13 @@
 package adrianromanski.restschool.controllers.group;
 
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.group.StudentClassListDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import io.swagger.annotations.Api;
@@ -9,20 +15,22 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Api("Controller for Student Class")
 @RestController()
 @RequestMapping("/student-class/")
 public class StudentClassController {
 
-    private StudentClassService studentClassService;
+    private final StudentClassService studentClassService;
 
     public StudentClassController(StudentClassService studentClassService) {
         this.studentClassService = studentClassService;
     }
 
-
     @ApiOperation("Returns a StudentClassListDTO Object that contains all Student Classes")
-    @GetMapping("/list")
+    @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public StudentClassListDTO getAllStudentClass() {
         return new StudentClassListDTO(studentClassService.getAllStudentClasses());

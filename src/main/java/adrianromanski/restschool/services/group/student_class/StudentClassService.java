@@ -1,15 +1,32 @@
 package adrianromanski.restschool.services.group.student_class;
 
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+
 
 import java.util.List;
+import java.util.Map;
 
 public interface StudentClassService {
 
     List<StudentClassDTO> getAllStudentClasses();
 
     StudentClassDTO getStudentClassByID(Long id);
+
+    List<StudentClassDTO> getStudentClassByPresident(String president);
+
+    Map<Specialization, Map<String, List<StudentClassDTO>>> getStudentClassesGroupedBySpecialization();
+
+    List<StudentClassDTO> getAllStudentClassForSpecialization(Specialization specialization);
+
+    List<StudentClassDTO> getLargestStudentClass();
+
+    List<StudentClassDTO> getSmallestStudentClass();
+
+    Map<Gender, List<StudentDTO>> getAllStudentsForClass(Long id);
 
     StudentClassDTO createNewStudentClass(StudentClassDTO studentClassDTO);
 
@@ -19,15 +36,11 @@ public interface StudentClassService {
 
     // To do Later
 
-//    StudentDTO getStudentClassPresident(StudentClassDTO studentClassDTO);
-
 //    StudentClassDTO getStudentClassForTeacher(TeacherDTO teacherDTO);
-//
+
 //    StudentClassDTO getStudentClassForStudent(StudentDTO studentDTO);
-//
-//    List<StudentDTO> getAllStudentsForClass(StudentClassDTO studentClassDTO);
-//
-//    List<StudentClassDTO> getAllStudentClassesForSchoolYear(SchoolYear schoolYear);
+
+//    List<StudentClassDTO> getAllStudentClassesForSchoolYear(SchoolYear schoolYear); // i have to create SchoolYear
 
 
 

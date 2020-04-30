@@ -6,6 +6,7 @@ import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class StudentDTO extends PersonDTO {
     public StudentDTO(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age) {
         super(firstName, lastName, gender, dateOfBirth, age);
     }
+
 
     @JsonIgnore
     private List<SubjectDTO> subjectsDTO = new ArrayList<>();

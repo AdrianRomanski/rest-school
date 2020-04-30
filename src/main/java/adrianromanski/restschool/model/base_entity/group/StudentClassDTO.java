@@ -1,5 +1,6 @@
 package adrianromanski.restschool.model.base_entity.group;
 
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import lombok.AllArgsConstructor;
@@ -14,9 +15,12 @@ import java.util.List;
 @NoArgsConstructor
 public class StudentClassDTO extends GroupDTO {
 
+    private Specialization specialization;
+
     @Builder
-    public StudentClassDTO(String name, String president) {
+    public StudentClassDTO(String name, String president, Specialization specialization) {
         super(name, president);
+        this.specialization = specialization;
     }
 
     private TeacherDTO teacherDTO;

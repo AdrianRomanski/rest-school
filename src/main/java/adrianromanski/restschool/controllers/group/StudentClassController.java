@@ -43,6 +43,49 @@ public class StudentClassController {
         return studentClassService.getStudentClassByID(Long.valueOf(ID));
     }
 
+    @ApiOperation("Return Map where the keys are Specializations and values maps containing Student Classes grouped by name")
+    @GetMapping("specializations")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Specialization, Map<String, List<StudentClassDTO>>> getStudentClassesBySpecialization() {
+        return studentClassService.getStudentClassesGroupedBySpecialization();
+    }
+
+    @ApiOperation("Returns a list of Student Classes with matching specialization")
+    @GetMapping("specialization/{specialization}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentClassDTO> getAllStudentClassForSpecialization(@PathVariable String specialization) {
+        return studentClassService.getAllStudentClassForSpecialization(Specialization.valueOf(specialization));
+    }
+
+    @ApiOperation("Returns an Student Class Object based on ID or else throw ResourceNotFoundException")
+    @GetMapping("ID-{ID}/students")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Gender, List<StudentDTO>> getAllStudentsForClass(@PathVariable String ID) {
+        return studentClassService.getAllStudentsForClass(Long.valueOf(ID));
+    }
+
+    @ApiOperation("Returns a list of Student Classes with largest number of students")
+    @GetMapping("largest")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentClassDTO>  getLargestStudentClass() {
+        return studentClassService.getLargestStudentClass();
+    }
+
+    @ApiOperation("Returns a list of Student Classes with largest number of students")
+    @GetMapping("smallest")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentClassDTO>  getSmallestStudentClass() {
+        return studentClassService.getSmallestStudentClass();
+    }
+
+    @ApiOperation("Returns a List of Student Classes with matching president")
+    @GetMapping("president-{president}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<StudentClassDTO>  getStudentClassByPresident(@PathVariable String president) {
+        return studentClassService.getStudentClassByPresident(president);
+    }
+
+
     @ApiOperation("Create and save new Student Class based on StudentClassDTO body")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

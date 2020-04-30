@@ -2,11 +2,11 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.group.StudentClassController;
-import adrianromanski.restschool.domain.base_entity.enums.MaleName;
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.base_entity.enums.Gender;
+import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,12 +18,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+import static adrianromanski.restschool.domain.base_entity.enums.Gender.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import static adrianromanski.restschool.domain.base_entity.enums.Specialization.BIOLOGY;
+import static java.util.Collections.*;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -59,6 +61,15 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
         return studentClassDTO;
     }
 
+    private List<StudentDTO> initStudentsList() {
+        return Arrays.asList(new StudentDTO(), new StudentDTO());
+    }
+
+    private List<StudentClassDTO> initStudentClassList() {
+        return Arrays.asList(initStudentClassDTO(), initStudentClassDTO());
+    }
+
+
     @DisplayName("[GET], [Happy Path], [Method] = getAllStudentClasses, [Expected] = List containing 3 Student Classes")
     @Test
     void getAllStudentClasses() throws Exception {
@@ -89,6 +100,108 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.name", equalTo(NAME)))
                 .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentClassesGroupedBySpecialization, [Expected] = Map contains 1 key with 2 students")
+    @Test
+    void getStudentClassesBySpecialization() throws Exception {
+        Map<Specialization, Map<String, List<StudentClassDTO>>> map = new HashMap<>();
+        Map<String, List<StudentClassDTO>> insideMap = new HashMap<>();
+        insideMap.put("Rookies", initStudentClassList());
+        map.put(BIOLOGY, insideMap);
+
+        when(studentClassService.getStudentClassesGroupedBySpecialization()).thenReturn(map);
+
+        mockMvc.perform(get(STUDENT_CLASS + "specializations")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(map)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.BIOLOGY.Rookies", hasSize(2)));
+    }
+
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllStudentClassForSpecialization, [Expected] = List with 1 Class and 2 Students")
+    @Test
+    void getAllStudentClassForSpecialization() throws Exception {
+        List<StudentClassDTO> list = new ArrayList<>();
+        StudentClassDTO studentClass = initStudentClassDTO();
+        studentClass.getStudentDTOList().addAll(initStudentsList());
+        list.add(studentClass);
+
+        when(studentClassService.getAllStudentClassForSpecialization(BIOLOGY)).thenReturn(list);
+
+        mockMvc.perform(get(STUDENT_CLASS + "specialization/BIOLOGY")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(list)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].id",equalTo(1)))
+                .andExpect(jsonPath("$.[0].studentDTOList",hasSize(2)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllStudentsForClass, [Expected] = Map with 2 keys")
+    @Test
+    void getAllStudentsForClass() throws Exception {
+        Map<Gender, List<StudentDTO>> map = new HashMap<>();
+        List<StudentDTO> list = initStudentsList();
+        map.put(MALE, list);
+        map.put(FEMALE, singletonList(new StudentDTO()));
+
+        when(studentClassService.getAllStudentsForClass(anyLong())).thenReturn(map);
+
+        mockMvc.perform(get(STUDENT_CLASS + "ID-1/students")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(map)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.MALE", hasSize(2)))
+                .andExpect(jsonPath("$.FEMALE", hasSize(1)));
+    }
+
+
+    @DisplayName("[GET], [Happy Path], [Method] = getLargestStudentClass, [Expected] = List with 2 students")
+    @Test
+    void getLargestStudentClass() throws Exception {
+        List<StudentClassDTO> list = initStudentClassList();
+
+        when(studentClassService.getLargestStudentClass()).thenReturn(list);
+
+        mockMvc.perform(get(STUDENT_CLASS + "largest")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(list)))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getSmallestStudentClass, [Expected] = List with 0 students")
+    @Test
+    void getSmallestStudentClass() throws Exception {
+        List<StudentClassDTO> list = new ArrayList<>();
+
+        when(studentClassService.getSmallestStudentClass()).thenReturn(list);
+
+        mockMvc.perform(get(STUDENT_CLASS + "smallest")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(list)))
+                .andExpect(status().isOk());
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentClassByPresident, [Expected] = List with 1 Student Class")
+    @Test
+    void getStudentClassByPresident() throws Exception {
+        List<StudentClassDTO> list = singletonList(initStudentClassDTO());
+
+        when(studentClassService.getStudentClassByPresident(anyString())).thenReturn(list);
+
+        mockMvc.perform(get(STUDENT_CLASS + "president-isaac")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(list)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].name", equalTo(NAME)));
+    }
+
 
     @DisplayName("[POST], [Happy Path], [Method] = createNewStudentClass, [Expected] = StudentClassDTO  with matching fields")
     @Test

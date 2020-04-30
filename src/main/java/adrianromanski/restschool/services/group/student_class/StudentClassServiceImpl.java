@@ -39,11 +39,11 @@ public class StudentClassServiceImpl implements StudentClassService {
         this.studentMapper = studentMapper;
     }
 
-    Predicate<StudentDTO> firstNameNotNull = s -> s.getFirstName() != null;
-    Predicate<StudentDTO> lastNameNotNull = s -> s.getLastName() != null;
-    Predicate<StudentClass> presidentNotNull = studentClass -> studentClass.getPresident() != null;
-    Predicate<StudentClassDTO> specNotNull = sc -> sc.getSpecialization() != null;
-    Predicate<StudentClassDTO> nameNotNul = sc -> sc.getName() != null;
+//    Predicate<StudentDTO> firstNameNotNull = s -> s.getFirstName() != null;
+//    Predicate<StudentDTO> lastNameNotNull = s -> s.getLastName() != null;
+//    Predicate<StudentClass> presidentNotNull = studentClass -> studentClass.getPresident() != null;
+//    Predicate<StudentClassDTO> specNotNull = sc -> sc.getSpecialization() != null;
+//    Predicate<StudentClassDTO> nameNotNul = sc -> sc.getName() != null;
 
     Comparator<StudentDTO> studentComparator = Comparator.comparing(StudentDTO::getFirstName)
             .thenComparing(StudentDTO::getLastName);
@@ -78,7 +78,7 @@ public class StudentClassServiceImpl implements StudentClassService {
     public List<StudentClassDTO> getStudentClassByPresident(String president) {
         return studentClassRepository.findAll()
                 .stream()
-                .filter(presidentNotNull)
+//                .filter(presidentNotNull)
                 .filter(studentClass -> studentClass.getPresident().equals(president))
                 .map(studentClassMapper::StudentClassToStudentClassDTO)
                 .collect(Collectors.toList());
@@ -94,7 +94,7 @@ public class StudentClassServiceImpl implements StudentClassService {
                 .findAll()
                 .stream()
                 .map(studentClassMapper::StudentClassToStudentClassDTO)
-                .filter(specNotNull.and(nameNotNul))
+//                .filter(specNotNull.and(nameNotNul))
                 .collect(groupingBy(
                         StudentClassDTO::getSpecialization,
                         groupingBy(
@@ -146,6 +146,8 @@ public class StudentClassServiceImpl implements StudentClassService {
      */
     @Override
     public Map<Gender, List<StudentDTO>> getAllStudentsForClass(Long id) {
+        Predicate<StudentDTO> firstNameNotNull = s -> s.getFirstName() != null;
+        Predicate<StudentDTO> lastNameNotNull = s -> s.getLastName() != null;
         if (studentClassRepository.findById(id).isPresent()) {
             StudentClass studentClass = studentClassRepository.findById(id).get();
             return studentClass.getStudentList()

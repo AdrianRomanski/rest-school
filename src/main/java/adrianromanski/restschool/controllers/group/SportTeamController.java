@@ -1,5 +1,6 @@
 package adrianromanski.restschool.controllers.group;
 
+import adrianromanski.restschool.domain.base_entity.enums.Sport;
 import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
 import adrianromanski.restschool.model.base_entity.group.SportTeamListDTO;
 import adrianromanski.restschool.services.group.sport_team.SportTeamService;
@@ -36,6 +37,41 @@ public class SportTeamController {
         return sportTeamService.getSportTeamById(Long.valueOf(ID));
     }
 
+    @ApiOperation("Returns Sport Team with matching name or else throw ResourceNotFoundException")
+    @GetMapping("name-{name}")
+    @ResponseStatus(HttpStatus.OK)
+    public SportTeamDTO getSportTeamByName(@PathVariable String name) {
+        return sportTeamService.getSportTeamByName(name);
+    }
+
+    @ApiOperation("Returns List of SportTeams with matching president or else throw ResourceNotFoundException")
+    @GetMapping("president-{president}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<SportTeamDTO> getSportTeamByPresident(@PathVariable String president) {
+        return sportTeamService.getSportTeamByPresident(president);
+    }
+
+    @ApiOperation("Returns Map where they key is Matching Sport and values Lists of Sport Teams grouped by President")
+    @GetMapping("sport-{sport}")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsForSport(@PathVariable String sport) {
+        return sportTeamService.getTeamsForSport(Sport.valueOf(sport));
+    }
+
+    @ApiOperation("Returns Map where the keys are Sports and values Lists of Sport Teams grouped by President")
+    @GetMapping("sports")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsGroupedBySport() {
+        return sportTeamService.getTeamsGroupedBySport();
+    }
+
+    @ApiOperation("Returns Map where the keys are numbers of Students and values Lists of Sport Teams")
+    @GetMapping("size")
+    @ResponseStatus(HttpStatus.OK)
+    public Map<Integer, List<SportTeamDTO>> getSportTeamsByStudentsSize() {
+        return sportTeamService.getSportTeamsByStudentsSize();
+    }
+    
     @ApiOperation("Create and save new SportTeam based on StudentClassDTO body")
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)

@@ -27,6 +27,7 @@ public class SportTeamServiceImpl implements SportTeamService {
         this.sportTeamMapper = sportTeamMapper;
     }
 
+
     /**
      * @return all Sport Teams
      */
@@ -50,6 +51,7 @@ public class SportTeamServiceImpl implements SportTeamService {
                             .orElseThrow(ResourceNotFoundException::new));
     }
 
+
     /**
      * @return Sport Team with matching name
      * @throws ResourceNotFoundException if not found
@@ -59,6 +61,19 @@ public class SportTeamServiceImpl implements SportTeamService {
         return sportTeamRepository.getSportTeamByName(name)
                             .map(sportTeamMapper::sportTeamToSportTeamDTO)
                             .orElseThrow(ResourceNotFoundException::new);
+    }
+
+
+    /**
+     * @return  List of Sport Teams with matching president
+     */
+    @Override
+    public List<SportTeamDTO> getSportTeamByPresident(String president) {
+        return sportTeamRepository.findAll()
+                .stream()
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .filter(s -> s.getPresident().equals(president))
+                .collect(Collectors.toList());
     }
 
 
@@ -80,7 +95,7 @@ public class SportTeamServiceImpl implements SportTeamService {
     }
 
 
-    /** Trying to unblock CircleCi
+    /**
      * @return Map where the keys are Sports and values Lists of Sport Teams grouped by President
      */
     @Override
@@ -97,8 +112,9 @@ public class SportTeamServiceImpl implements SportTeamService {
                 );
     }
 
+
     /**
-     * @return Map where the keys are sizes of Students and values Lists of Sport Teams
+     * @return Map where the keys are numbers of Students and values Lists of Sport Teams
      */
     @Override
     public Map<Integer, List<SportTeamDTO>> getSportTeamsByStudentsSize() {
@@ -112,18 +128,6 @@ public class SportTeamServiceImpl implements SportTeamService {
 
 
     /**
-     * @return  List of SportTeams with matching president
-     */
-    @Override
-    public List<SportTeamDTO> getSportTeamByPresident(String president) {
-        return sportTeamRepository.findAll()
-                .stream()
-                .map(sportTeamMapper::sportTeamToSportTeamDTO)
-                .filter(s -> s.getPresident().equals(president))
-                .collect(Collectors.toList());
-    }
-
-    /**
      * Converts DTO Object and Save it to Database
      * @return SportTeamDTO object
      */
@@ -133,6 +137,7 @@ public class SportTeamServiceImpl implements SportTeamService {
         log.info("Sport Team with id: " + sportTeamDTO.getId() + " successfully saved");
         return sportTeamDTO;
     }
+
 
     /**
      * Converts DTO Object, Update Sport Team with Matching ID and save it to Database
@@ -151,6 +156,7 @@ public class SportTeamServiceImpl implements SportTeamService {
             throw new ResourceNotFoundException("Sport Team with id: " + id + " not found");
         }
     }
+
 
     /**
      * Delete Sport Team with matching id

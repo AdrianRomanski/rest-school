@@ -64,7 +64,12 @@
 ## <div align="center"> Sport Team </div>
 #### GET
 * __getAllSportTeam__ - Return all Sport Teams
-* __getSportTeamById__ -  Sport Team with matching id
+* __getSportTeamById__ -  Return Sport Team with matching id
+* __getSportTeamByName__ - Return Sport Team with matching name
+* __getSportTeamByPresident__ - Return List of Sport Teams with matching president
+* __getTeamsForSport__ - Return Map where they key is Matching Sport and values Lists of Sport Teams grouped by President
+* __getTeamsGroupedBySport__ - Map where the keys are Sports and values Lists of Sport Teams grouped by President
+* __getSportTeamsByStudentsSize__ - Map where the keys are numbers of Students and values Lists of Sport Teams
 #### POST
 * __createNewSportTeam__ - Converts DTO Object and save it to Database
 #### PUT

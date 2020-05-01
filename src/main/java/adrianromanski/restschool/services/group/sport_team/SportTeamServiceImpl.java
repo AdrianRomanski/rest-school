@@ -1,5 +1,6 @@
 package adrianromanski.restschool.services.group.sport_team;
 
+import adrianromanski.restschool.domain.base_entity.enums.Sport;
 import adrianromanski.restschool.domain.base_entity.group.SportTeam;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.SportTeamMapper;
@@ -9,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @Service
@@ -31,7 +35,7 @@ public class SportTeamServiceImpl implements SportTeamService {
         return sportTeamRepository.findAll()
                             .stream()
                             .map(sportTeamMapper::sportTeamToSportTeamDTO)
-                            .collect(Collectors.toList());
+                            .collect(toList());
     }
 
 
@@ -44,6 +48,79 @@ public class SportTeamServiceImpl implements SportTeamService {
         return sportTeamMapper.sportTeamToSportTeamDTO(sportTeamRepository
                             .findById(id)
                             .orElseThrow(ResourceNotFoundException::new));
+    }
+
+    /**
+     * @return Sport Team with matching name
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public SportTeamDTO getSportTeamByName(String name) {
+        return sportTeamRepository.getSportTeamByName(name)
+                            .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                            .orElseThrow(ResourceNotFoundException::new);
+    }
+
+
+    /**
+     * @return Map where they key is Matching Sport and values Lists of Sport Teams grouped by President
+     */
+    @Override
+    public Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsForSport(Sport sport) {
+        return  sportTeamRepository.findAll()
+                .stream()
+                .filter(s -> s.getSport().equals(sport))
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .collect(groupingBy(
+                        SportTeamDTO::getSport,
+                        groupingBy(
+                                SportTeamDTO::getPresident
+                        )
+                ));
+    }
+
+
+    /**
+     * @return Map where the keys are Sports and values Lists of Sport Teams grouped by President
+     */
+    @Override
+    public Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsGroupedBySport() {
+        return sportTeamRepository.findAll()
+                .stream()
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .collect(groupingBy(
+                        SportTeamDTO::getSport,
+                        groupingBy(
+                                SportTeamDTO::getPresident
+                        )
+                    )
+                );
+    }
+
+    /**
+     * @return Map where the keys are sizes of Students and values Lists of Sport Teams
+     */
+    @Override
+    public Map<Integer, List<SportTeamDTO>> getSportTeamsByStudentsSize() {
+        return sportTeamRepository.findAll()
+                .stream()
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .collect(groupingBy(
+                        SportTeamDTO::getStudentsSize
+                ));
+    }
+
+
+    /**
+     * @return  List of SportTeams with matching president
+     */
+    @Override
+    public List<SportTeamDTO> getSportTeamByPresident(String president) {
+        return sportTeamRepository.findAll()
+                .stream()
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .filter(s -> s.getPresident().equals(president))
+                .collect(Collectors.toList());
     }
 
     /**

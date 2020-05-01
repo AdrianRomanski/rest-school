@@ -1,9 +1,8 @@
 package adrianromanski.restschool.bootstrap;
 
-import adrianromanski.restschool.domain.base_entity.enums.MaleName;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.ExamResult;
+import adrianromanski.restschool.domain.base_entity.group.SportTeam;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.domain.base_entity.person.Student;
@@ -12,6 +11,7 @@ import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.repositories.base_entity.SubjectRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.event.ExamResultRepository;
+import adrianromanski.restschool.repositories.group.SportTeamRepository;
 import adrianromanski.restschool.repositories.group.StudentClassRepository;
 import adrianromanski.restschool.repositories.person.GuardianRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
@@ -32,6 +32,7 @@ import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
 import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Sport.FOOTBALL;
 
 @Component
 @Slf4j
@@ -44,10 +45,11 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final TeacherRepository teacherRepository;
     private final StudentClassRepository studentClassRepository;
     private final GuardianRepository guardianRepository;
+    private final SportTeamRepository sportTeamRepository;
 
     public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository,
-                                                           ExamResultRepository examResultRepository, TeacherRepository teacherRepository,
-                                                           StudentClassRepository studentClassRepository, GuardianRepository guardianRepository) {
+                           ExamResultRepository examResultRepository, TeacherRepository teacherRepository,
+                           StudentClassRepository studentClassRepository, GuardianRepository guardianRepository, SportTeamRepository sportTeamRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.examRepository = examRepository;
@@ -55,6 +57,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         this.teacherRepository = teacherRepository;
         this.studentClassRepository = studentClassRepository;
         this.guardianRepository = guardianRepository;
+        this.sportTeamRepository = sportTeamRepository;
     }
 
     @Override
@@ -69,6 +72,12 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         StudentClass physicsClass = StudentClass.builder().name("Last year Physics")
                                                 .president(MASON.get()).specialization(PHYSICS).build();
+
+
+        // Init Sport Team
+        SportTeam footballTeam = SportTeam.builder().name("Shiny Asteroids").president(LIAM.get()).sport(FOOTBALL).build();
+        SportTeam footballTeam2 = SportTeam.builder().name("Dark Asteroids").president(LIAM.get()).sport(FOOTBALL).build();
+
 
         // Init Subjects
         Subject math = Subject.builder().name(MATHEMATICS).value(10L).build();
@@ -91,6 +100,13 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         // Init List of Subjects
         List<Subject> subjects = Arrays.asList(math, biology, physics);
+
+        // Assign Students to Sport Teams
+        footballTeam.getStudents().addAll(students);
+//        footballTeam2.getStudents().add(jacob);
+
+        // Assign Sport Team to Students
+        students.forEach(student -> student.setSportTeam(footballTeam));
 
         // Assign Subjects to Students
         jacob.getSubjects().addAll(subjects);
@@ -243,6 +259,10 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         studentClassRepository.save(mathClass);
         studentClassRepository.save(biologyClass);
 
+        // SportTeams
+        sportTeamRepository.save(footballTeam);
+        sportTeamRepository.save(footballTeam2);
+
         // Logging to console
         log.info("Saved: " + studentRepository.count() + " Students");
         log.info("Saved: " + guardianRepository.count() + " Guardians");
@@ -251,5 +271,6 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         log.info("Saved: " + examRepository.count() + " Exams");
         log.info("Saved: " + examResultRepository.count() + " Exam Results");
         log.info("Saved: " + studentClassRepository.count() + " Student Classes");
+        log.info("Saved: " + sportTeamRepository.count() + " Sport Teams");
     }
 }

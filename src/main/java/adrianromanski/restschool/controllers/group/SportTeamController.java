@@ -8,6 +8,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @Api("Controller for Sport Team")
 @RestController
 @RequestMapping("/sport-teams/")

@@ -37,6 +37,7 @@ import static org.mockito.Mockito.*;
 
 class StudentClassServiceImplTest {
 
+//    Trying to unblock CircleCi
     public static final long ID = 1L;
     public static final String ROOKIES = "Rookies";
 

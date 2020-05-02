@@ -20,7 +20,7 @@ import java.util.List;
 
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;

@@ -31,7 +31,7 @@ import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
 import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
 import static adrianromanski.restschool.domain.base_entity.enums.Sport.FOOTBALL;
 
 @Component
@@ -65,13 +65,13 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         // Init Class
         StudentClass biologyClass = StudentClass.builder().name("First year Biology")
-                                                .president(GABRIEL.get()).specialization(BIOLOGY).build();
+                                                .president(GABRIEL.get()).subject(BIOLOGY).build();
 
         StudentClass mathClass =  StudentClass.builder().name("Second year Mathematics")
-                                                .president(OLIVER.get()).specialization(MATHEMATICS).build();
+                                                .president(OLIVER.get()).subject(MATHEMATICS).build();
 
         StudentClass physicsClass = StudentClass.builder().name("Last year Physics")
-                                                .president(MASON.get()).specialization(PHYSICS).build();
+                                                .president(MASON.get()).subject(PHYSICS).build();
 
 
         // Init Sport Team
@@ -138,15 +138,15 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         //Init Teacher
         Teacher isaac_biology = Teacher.builder().firstName(ISAAC.get()).lastName(JOHNSON.get())
-                                        .gender(MALE).specialization(BIOLOGY)
+                                        .gender(MALE).subject(BIOLOGY)
                                         .dateOfBirth(LocalDate.of(1980, 10, 3)).firstDay(LocalDate.of(2018, 10, 3)).build();
 
         Teacher benjamin_math = Teacher.builder().firstName(ISAAC.get()).lastName(PEREZ.get())
-                                        .gender(MALE).specialization(MATHEMATICS)
+                                        .gender(MALE).subject(MATHEMATICS)
                                         .dateOfBirth(LocalDate.of(1970, 10, 3)).firstDay(LocalDate.of(2012, 10, 3)).build();
 
         Teacher logan_physics = Teacher.builder().firstName(LOGAN.get()).lastName(RODRIGUEZ.get())
-                                        .gender(MALE).specialization(PHYSICS)
+                                        .gender(MALE).subject(PHYSICS)
                                         .dateOfBirth(LocalDate.of(1960, 10, 3)).firstDay(LocalDate.of(2013, 5, 3)).build();
 
         // Assign Teacher to Classes

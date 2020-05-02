@@ -1,8 +1,7 @@
 package adrianromanski.restschool.services.group.student_class;
 
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 
@@ -18,9 +17,9 @@ public interface StudentClassService {
 
     List<StudentClassDTO> getStudentClassByPresident(String president);
 
-    Map<Specialization, Map<String, List<StudentClassDTO>>> getStudentClassesGroupedBySpecialization();
+    Map<Subjects, Map<String, List<StudentClassDTO>>> getStudentClassesGroupedBySpecialization();
 
-    List<StudentClassDTO> getAllStudentClassForSpecialization(Specialization specialization);
+    List<StudentClassDTO> getAllStudentClassForSpecialization(Subjects subjects);
 
     List<StudentClassDTO> getLargestStudentClass();
 

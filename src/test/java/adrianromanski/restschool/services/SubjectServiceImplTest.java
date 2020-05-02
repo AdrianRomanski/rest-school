@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;

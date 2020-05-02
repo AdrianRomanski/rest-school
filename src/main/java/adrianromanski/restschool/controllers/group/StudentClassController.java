@@ -1,14 +1,10 @@
 package adrianromanski.restschool.controllers.group;
 
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.group.StudentClassListDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,7 +42,7 @@ public class StudentClassController {
     @ApiOperation("Return Map where the keys are Specializations and values maps containing Student Classes grouped by name")
     @GetMapping("specializations")
     @ResponseStatus(HttpStatus.OK)
-    public Map<Specialization, Map<String, List<StudentClassDTO>>> getStudentClassesBySpecialization() {
+    public Map<Subjects, Map<String, List<StudentClassDTO>>> getStudentClassesBySpecialization() {
         return studentClassService.getStudentClassesGroupedBySpecialization();
     }
 
@@ -54,7 +50,7 @@ public class StudentClassController {
     @GetMapping("specialization/{specialization}")
     @ResponseStatus(HttpStatus.OK)
     public List<StudentClassDTO> getAllStudentClassForSpecialization(@PathVariable String specialization) {
-        return studentClassService.getAllStudentClassForSpecialization(Specialization.valueOf(specialization));
+        return studentClassService.getAllStudentClassForSpecialization(Subjects.valueOf(specialization));
     }
 
     @ApiOperation("Returns an Student Class Object based on ID or else throw ResourceNotFoundException")

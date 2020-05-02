@@ -1,6 +1,5 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.base_entity.enums.LastName;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 
 import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExamMapperTest {

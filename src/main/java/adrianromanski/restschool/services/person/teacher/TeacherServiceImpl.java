@@ -1,6 +1,6 @@
 package adrianromanski.restschool.services.person.teacher;
 
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
@@ -36,7 +36,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .map(teacherMapper::teacherToTeacherDTO)
                 .sorted(Comparator
                         .comparing(
-                                TeacherDTO::getSpecialization)
+                                TeacherDTO::getSubject)
                         .thenComparing(
                                 TeacherDTO::getYearsOfExperience
                         )
@@ -70,13 +70,13 @@ public class TeacherServiceImpl implements TeacherService {
      * @return Map where the keys are Specializations and values List of Teachers
      */
     @Override
-    public Map<Specialization, List<TeacherDTO>> getTeachersBySpecialization() {
+    public Map<Subjects, List<TeacherDTO>> getTeachersBySpecialization() {
         return teacherRepository.findAll()
                 .stream()
                 .map(teacherMapper::teacherToTeacherDTO)
                 .collect(
                         Collectors.groupingBy(
-                                TeacherDTO::getSpecialization
+                                TeacherDTO::getSubject
                         )
                 );
     }

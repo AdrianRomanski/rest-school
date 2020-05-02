@@ -1,13 +1,10 @@
 package adrianromanski.restschool.services.person.teacher;
 
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 
 public interface TeacherService {
@@ -18,7 +15,7 @@ public interface TeacherService {
 
     TeacherDTO getTeacherByID(Long id);
 
-    Map<Specialization, List<TeacherDTO>> getTeachersBySpecialization();
+    Map<Subjects, List<TeacherDTO>> getTeachersBySpecialization();
 
     Map<Long, List<TeacherDTO>> getTeachersByYearsOfExperience();
 

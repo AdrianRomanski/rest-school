@@ -1,24 +1,20 @@
 package adrianromanski.restschool.services.group.student_class;
 
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.StudentClassMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.repositories.group.StudentClassRepository;
-import adrianromanski.restschool.repositories.person.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -89,14 +85,14 @@ public class StudentClassServiceImpl implements StudentClassService {
      * @return Map where the keys are Specializations and values maps containing Student Classes grouped by name
      */
     @Override
-    public Map<Specialization, Map<String, List<StudentClassDTO>>> getStudentClassesGroupedBySpecialization() {
+    public Map<Subjects, Map<String, List<StudentClassDTO>>> getStudentClassesGroupedBySpecialization() {
         return studentClassRepository
                 .findAll()
                 .stream()
                 .map(studentClassMapper::StudentClassToStudentClassDTO)
 //                .filter(specNotNull.and(nameNotNul))
                 .collect(groupingBy(
-                        StudentClassDTO::getSpecialization,
+                        StudentClassDTO::getSubject,
                         groupingBy(
                                 StudentClassDTO::getName)
                 ));
@@ -106,10 +102,10 @@ public class StudentClassServiceImpl implements StudentClassService {
      * @return a list of Student Classes with matching specialization
      */
     @Override
-    public List<StudentClassDTO> getAllStudentClassForSpecialization(Specialization specialization) {
+    public List<StudentClassDTO> getAllStudentClassForSpecialization(Subjects subject) {
         return studentClassRepository.findAll()
                 .stream()
-                .filter(sc -> sc.getSpecialization() == specialization)
+                .filter(sc -> sc.getSubject() == subject)
                 .map(studentClassMapper::StudentClassToStudentClassDTO)
                 .collect(toList());
     }

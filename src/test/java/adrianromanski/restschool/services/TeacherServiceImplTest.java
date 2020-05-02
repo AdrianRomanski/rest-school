@@ -1,6 +1,6 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
@@ -25,7 +25,7 @@ import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.Gender.*;
 import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,16 +41,16 @@ class TeacherServiceImplTest {
     @Mock
     TeacherRepository teacherRepository;
 
-    Teacher createTeacher(Long id, String firstName, String lastName, Gender gender, Specialization specialization, LocalDate firstDay) {
+    Teacher createTeacher(Long id, String firstName, String lastName, Gender gender, Subjects subjects, LocalDate firstDay) {
         Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).gender(gender).
-                                        firstDay(firstDay).specialization(specialization).build();
+                                        firstDay(firstDay).subject(subjects).build();
         teacher.setId(id);
         return teacher;
     }
 
     TeacherDTO createEthanDTO() {
         TeacherDTO teacherDTO = TeacherDTO.builder().firstName(ETHAN.get()).lastName(COOPER.get()).gender(MALE).
-                                        specialization(CHEMISTRY).build();
+                                        subject(CHEMISTRY).build();
         teacherDTO.setId(ID);
         return teacherDTO;
     }
@@ -121,7 +121,7 @@ class TeacherServiceImplTest {
 
         when(teacherRepository.findAll()).thenReturn(teachers);
 
-        Map<Specialization, List<TeacherDTO>> map = teacherService.getTeachersBySpecialization();
+        Map<Subjects, List<TeacherDTO>> map = teacherService.getTeachersBySpecialization();
 
         assertEquals(map.size(), 3);
         assertTrue(map.containsKey(BIOLOGY));

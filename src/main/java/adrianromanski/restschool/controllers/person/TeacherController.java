@@ -1,6 +1,6 @@
 package adrianromanski.restschool.controllers.person;
 
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherListDTO;
 import adrianromanski.restschool.services.person.teacher.TeacherService;
@@ -47,7 +47,7 @@ public class TeacherController {
     @ApiOperation("Returns a Map where the keys are Specializations and values List of Teachers")
     @GetMapping("/specializations")
     @ResponseStatus(HttpStatus.OK)
-    public Map<Specialization, List<TeacherDTO>> getTeachersBySpecialization() {
+    public Map<Subjects, List<TeacherDTO>> getTeachersBySpecialization() {
         return teacherService.getTeachersBySpecialization();
     }
 

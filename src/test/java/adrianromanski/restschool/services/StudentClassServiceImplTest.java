@@ -1,8 +1,7 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.MaleName;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
@@ -26,8 +25,8 @@ import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
 import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.BIOLOGY;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.PHYSICS;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.BIOLOGY;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.PHYSICS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,8 +51,8 @@ class StudentClassServiceImplTest {
         studentClassService = new StudentClassServiceImpl(studentClassRepository, StudentClassMapper.INSTANCE, StudentMapper.INSTANCE);
     }
 
-    private StudentClass createStudentClass(String name, String president, Specialization specialization, Long id) {
-        StudentClass studentClass = StudentClass.builder().name(name).president(president).specialization(specialization).build();
+    private StudentClass createStudentClass(String name, String president, Subjects subject, Long id) {
+        StudentClass studentClass = StudentClass.builder().name(name).president(president).subject(subject).build();
         studentClass.setId(id);
         return studentClass;
     }
@@ -93,7 +92,7 @@ class StudentClassServiceImplTest {
     private List<StudentClass> createList() { return Arrays.asList(createRookies(), createGeeks(), createNerds()); }
 
     private StudentClassDTO createRookiesDTO() {
-        StudentClassDTO studentClassDTO = StudentClassDTO.builder().name(ROOKIES).president(ETHAN.get()).specialization(BIOLOGY).build();
+        StudentClassDTO studentClassDTO = StudentClassDTO.builder().name(ROOKIES).president(ETHAN.get()).subject(BIOLOGY).build();
         studentClassDTO.setId(ID);
         return studentClassDTO;
     }
@@ -142,7 +141,7 @@ class StudentClassServiceImplTest {
 
         when(studentClassRepository.findAll()).thenReturn(studentClasses);
 
-        Map<Specialization, Map<String, List<StudentClassDTO>>> returnMap = studentClassService.getStudentClassesGroupedBySpecialization();
+        Map<Subjects, Map<String, List<StudentClassDTO>>> returnMap = studentClassService.getStudentClassesGroupedBySpecialization();
 
         assertTrue(returnMap.containsKey(PHYSICS)); // 2 Classes with Physics
         assertTrue(returnMap.containsKey(BIOLOGY));

@@ -1,12 +1,11 @@
 package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.Subject;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.mapper.base_entity.SubjectMapper;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import org.junit.jupiter.api.Test;
 
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SubjectMapperTest {

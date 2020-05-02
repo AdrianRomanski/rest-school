@@ -1,6 +1,6 @@
 package adrianromanski.restschool.services.event.exam;
 
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.event.ExamMapper;
@@ -84,11 +84,11 @@ public class ExamServiceImpl implements ExamService {
      * @return Map where the Key is matching Subject and values List of Exams
      */
     @Override
-    public Map<String, List<ExamDTO>> getExamsForSubject(Specialization specialization) {
+    public Map<String, List<ExamDTO>> getExamsForSubject(Subjects subjects) {
         return examRepository.findAll()
                 .stream()
                 .map(examMapper::examToExamDTO)
-                .filter(e -> e.getSubjectDTO().getName().equals(specialization))
+                .filter(e -> e.getSubjectDTO().getName().equals(subjects))
                 .collect(
                         groupingBy(
                                 GROUPING_BY_SUBJECT

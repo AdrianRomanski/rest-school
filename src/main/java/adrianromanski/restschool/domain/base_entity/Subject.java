@@ -1,6 +1,6 @@
 package adrianromanski.restschool.domain.base_entity;
 
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -16,11 +16,11 @@ import java.util.Set;
 @NoArgsConstructor
 public class Subject extends BaseEntity {
 
-    private Specialization name;
+    private Subjects name;
     private Long value;
 
     @Builder
-    public Subject(Specialization name, Long value) {
+    public Subject(Subjects name, Long value) {
         this.name = name;
         this.value = value;
     }

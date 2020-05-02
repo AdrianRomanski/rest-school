@@ -3,7 +3,7 @@ package adrianromanski.restschool.controllers;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.group.StudentClassController;
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
@@ -22,7 +22,7 @@ import java.util.*;
 
 import static adrianromanski.restschool.domain.base_entity.enums.Gender.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.BIOLOGY;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.BIOLOGY;
 import static java.util.Collections.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -104,7 +104,7 @@ class StudentClassControllerTest extends AbstractRestControllerTest {
     @DisplayName("[GET], [Happy Path], [Method] = getStudentClassesGroupedBySpecialization, [Expected] = Map contains 1 key with 2 students")
     @Test
     void getStudentClassesBySpecialization() throws Exception {
-        Map<Specialization, Map<String, List<StudentClassDTO>>> map = new HashMap<>();
+        Map<Subjects, Map<String, List<StudentClassDTO>>> map = new HashMap<>();
         Map<String, List<StudentClassDTO>> insideMap = new HashMap<>();
         insideMap.put("Rookies", initStudentClassList());
         map.put(BIOLOGY, insideMap);

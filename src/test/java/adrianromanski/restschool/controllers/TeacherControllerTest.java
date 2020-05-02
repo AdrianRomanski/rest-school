@@ -3,8 +3,7 @@
     import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
     import adrianromanski.restschool.controllers.person.TeacherController;
     import adrianromanski.restschool.domain.base_entity.enums.Gender;
-    import adrianromanski.restschool.domain.base_entity.enums.Specialization;
-    import adrianromanski.restschool.domain.base_entity.person.Teacher;
+    import adrianromanski.restschool.domain.base_entity.enums.Subjects;
     import adrianromanski.restschool.exceptions.ResourceNotFoundException;
     import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
     import adrianromanski.restschool.services.person.teacher.TeacherService;
@@ -18,7 +17,6 @@
     import org.springframework.test.web.servlet.MockMvc;
     import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-    import java.time.LocalDate;
     import java.util.*;
 
     import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
@@ -28,7 +26,7 @@
     import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
     import static adrianromanski.restschool.domain.base_entity.enums.MaleName.BENJAMIN;
     import static adrianromanski.restschool.domain.base_entity.enums.MaleName.ETHAN;
-    import static adrianromanski.restschool.domain.base_entity.enums.Specialization.*;
+    import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
     import static org.hamcrest.Matchers.equalTo;
     import static org.hamcrest.Matchers.hasSize;
 
@@ -59,10 +57,10 @@
                     .build();
         }
 
-        TeacherDTO createTeacherDTO(Long id, String firstName, String lastName, Gender gender, Specialization specialization) {
+        TeacherDTO createTeacherDTO(Long id, String firstName, String lastName, Gender gender, Subjects subject) {
             TeacherDTO teacherDTO = TeacherDTO.builder().firstName(firstName).lastName(lastName).gender(gender).build();
             teacherDTO.setId(id);
-            teacherDTO.setSpecialization(specialization);
+            teacherDTO.setSubject(subject);
             return teacherDTO;
         }
 
@@ -128,7 +126,7 @@
         @DisplayName("[GET], [Happy Path], [Method] = getTeachersBySpecialization, [Expected] = Map<Biology(2), Math(1), Chemistry(3)>")
         @Test
         void getTeachersBySpecialization() throws Exception {
-            Map<Specialization, List<TeacherDTO>> map = new HashMap<>();
+            Map<Subjects, List<TeacherDTO>> map = new HashMap<>();
             map.putIfAbsent(BIOLOGY, Arrays.asList(createBenjamin(), createAria()));
             map.putIfAbsent(PHYSICS, Collections.singletonList(createBenjamin()));
             map.putIfAbsent(CHEMISTRY, Arrays.asList(createAria(), createEthan(), createBenjamin()));

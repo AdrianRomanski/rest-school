@@ -1,7 +1,6 @@
 package adrianromanski.restschool.services.event.exam;
 
-import adrianromanski.restschool.domain.base_entity.Subject;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface ExamService  {
 
     List<ExamDTO> getAllExamsForTeacher(String firstName, String lastName);
 
-    Map<String, List<ExamDTO>> getExamsForSubject(Specialization specialization);
+    Map<String, List<ExamDTO>> getExamsForSubject(Subjects subjects);
 
     Map<String, Map<String, List<ExamDTO>>> getAllExamsBySubjectsAndTeachers();
 

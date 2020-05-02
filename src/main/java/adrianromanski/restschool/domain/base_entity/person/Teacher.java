@@ -1,6 +1,6 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
+import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.Payment;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
@@ -18,15 +18,15 @@ import java.util.List;
 @Entity
 public class Teacher extends Person {
 
-    private Specialization specialization;
+    private Subjects subject;
     private Long yearsOfExperience;
     private LocalDate firstDay;
 
     @Builder
-    public Teacher(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age, Specialization specialization, LocalDate firstDay) {
+    public Teacher(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age, Subjects subject, LocalDate firstDay) {
         super(firstName, lastName, gender, dateOfBirth, age);
         this.firstDay = firstDay;
-        this.specialization = specialization;
+        this.subject = subject;
     }
 
     @ToString.Exclude

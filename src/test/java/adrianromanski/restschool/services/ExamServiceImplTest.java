@@ -1,9 +1,6 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.Subject;
-import adrianromanski.restschool.domain.base_entity.enums.LastName;
-import adrianromanski.restschool.domain.base_entity.enums.MaleName;
-import adrianromanski.restschool.domain.base_entity.enums.Specialization;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
@@ -27,8 +24,8 @@ import java.util.Optional;
 
 import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
 import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.BIOLOGY;
-import static adrianromanski.restschool.domain.base_entity.enums.Specialization.MATHEMATICS;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.BIOLOGY;
+import static adrianromanski.restschool.domain.base_entity.enums.Subjects.MATHEMATICS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;

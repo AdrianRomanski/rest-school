@@ -6,6 +6,7 @@ import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.services.event.exam.ExamService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class ExamControllerTest {
 
+    public static final long ID = 1L;
+    public static final String EXAMS = "/exams/";
     private final String NAME = "Final Math Exam";
 
     @Mock
@@ -49,28 +52,25 @@ class ExamControllerTest {
     }
 
     ExamDTO initMath() {
-        ExamDTO examDTO = new ExamDTO();
-        examDTO.setName(NAME);
-        examDTO.setMaxPoints(100L);
-        examDTO.setId(1L);
+        ExamDTO examDTO = ExamDTO.builder().name(NAME).maxPoints(100L).build();
+        examDTO.setId(ID);
         return examDTO;
     }
 
     ExamDTO initBiology() {
-        ExamDTO examDTO = new ExamDTO();
-        examDTO.setName("Final Biology");
-        examDTO.setMaxPoints(60L);
+        ExamDTO examDTO = ExamDTO.builder().name("Final Biology").maxPoints(60L).build();
         examDTO.setId(2L);
         return examDTO;
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getAllExams, [Expected] = List containing 2 Exams")
     @Test
     void getAllExams() throws Exception {
         List<ExamDTO> examDTOList = Arrays.asList(initMath(), initBiology());
 
         when(examService.getAllExams()).thenReturn(examDTOList);
 
-        mockMvc.perform(get("/exams/")
+        mockMvc.perform(get(EXAMS)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(examDTOList)))
@@ -78,17 +78,31 @@ class ExamControllerTest {
                 .andExpect(jsonPath("$.examDTOList", hasSize(2)));
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getExamById, [Expected] = ExamDTO with matching fields")
+    @Test
+    void getExamById() throws Exception {
+        ExamDTO examDTO = initMath();
+
+        when(examService.getExamById(ID)).thenReturn(examDTO);
+
+        mockMvc.perform(get(EXAMS + ID)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(examDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", equalTo(NAME)))
+                .andExpect(jsonPath("$.maxPoints", equalTo(100)))
+                .andExpect(jsonPath("$.id", equalTo(1)));
+    }
+
+    @DisplayName("[POST], [Happy Path], [Method] = createNewExam, [Expected] = ExamDTO with matching fields")
     @Test
     void createNewExam() throws Exception {
         ExamDTO examDTO = initMath();
 
-        ExamDTO returnDTO = new ExamDTO();
-        returnDTO.setMaxPoints(examDTO.getMaxPoints());
-        returnDTO.setName(examDTO.getName());
+        when(examService.createNewExam(any(ExamDTO.class))).thenReturn(examDTO);
 
-        when(examService.createNewExam(examDTO)).thenReturn(returnDTO);
-
-        mockMvc.perform(post("/exams/")
+        mockMvc.perform(post(EXAMS)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(examDTO)))
@@ -97,60 +111,41 @@ class ExamControllerTest {
                 .andExpect(jsonPath("$.maxPoints", equalTo(100)));
     }
 
+    @DisplayName("[PUT], [Happy Path], [Method] = updateExam, [Expected] = ExamDTO with updated fields")
     @Test
     void updateExam() throws Exception {
         ExamDTO examDTO = initMath();
+        examDTO.setName("A simple exam"); //Updating name
 
-        ExamDTO returnDTO = new ExamDTO();
-        returnDTO.setMaxPoints(examDTO.getMaxPoints());
-        returnDTO.setName("A simple exam"); //Updating name
-        returnDTO.setId(examDTO.getId());
+        when(examService.updateExam(anyLong(), any(ExamDTO.class))).thenReturn(examDTO);
 
-        when(examService.updateExam(examDTO.getId(), examDTO)).thenReturn(returnDTO);
-
-        mockMvc.perform(put("/exams/" + examDTO.getId())
+        mockMvc.perform(put(EXAMS + examDTO.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(examDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo("A simple exam")))
+                .andExpect(jsonPath("$.name", equalTo("A simple exam"))) // Updated name
                 .andExpect(jsonPath("$.maxPoints", equalTo(100)))
                 .andExpect(jsonPath("$.id", equalTo(1)));
     }
 
-    @Test
-    void getExamById() throws Exception {
-        ExamDTO examDTO = initMath();
-
-        when(examService.getExamById(examDTO.getId())).thenReturn(examDTO);
-
-        mockMvc.perform(get("/exams/" + examDTO.getId())
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(examDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo(NAME)))
-                .andExpect(jsonPath("$.maxPoints", equalTo(100)))
-                .andExpect(jsonPath("$.id", equalTo(1)));
-    }
-
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteExamById, [Expected] = Service deleting object")
     @Test
     void deleteExamById() throws Exception {
-        mockMvc.perform(delete("/exams/1")
+        mockMvc.perform(delete(EXAMS + ID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(examService).deleteExamById(anyLong());
-
     }
 
-
+    @DisplayName("[GET, PUT, DELETE], [UnHappy Path], [Reason] = Exam with id 222 not found")
     @Test
     public void testNotFoundException() throws Exception {
 
         when(examService.getExamById(anyLong())).thenThrow(ResourceNotFoundException.class);
 
-        mockMvc.perform(get("/exams/222")
+        mockMvc.perform(get(EXAMS + 222)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
     }

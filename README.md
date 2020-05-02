@@ -81,6 +81,13 @@
 #### GET
 * __getAllExams__ - Return all Exams
 * __getExamById__ -  Return Exam with matching id
+* __getExamByName__ -  Return Exam with matching name
+* __getAllExamsForTeacher__ -  Return List of Exams for Teacher with matching firstName and lastName
+* __getExamsForSubject__ -  Return Map where the Key is matching Subject and values List of Exams
+* __getAllExamsBySubjectsAndTeachers__ -  Map where the Keys are Subjects and values Maps
+where they Keys are Teachers and values List of exams
+* __getAllExamsByStudentsAndSubjects__ -  Map where the Keys are Number of Students and
+values Maps where they Keys are Subjects and values List of exams
 #### POST
 * __createNewExam__ - Converts DTO Object and save it to Database
 #### PUT

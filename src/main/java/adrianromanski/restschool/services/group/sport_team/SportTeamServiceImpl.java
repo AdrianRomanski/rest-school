@@ -153,6 +153,7 @@ public class SportTeamServiceImpl implements SportTeamService {
             log.info("Sport Team with id: " + id + " successfully updated");
             return sportTeamMapper.sportTeamToSportTeamDTO(updated);
         } else {
+            log.debug("Sport Team id: " + id + " not found");
             throw new ResourceNotFoundException("Sport Team with id: " + id + " not found");
         }
     }

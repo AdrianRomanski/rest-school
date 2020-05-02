@@ -43,7 +43,6 @@ public class Exam extends Event {
     @ManyToOne
     private Teacher teacher;
 
-
     public void addResult(ExamResult examResult) {
         this.results.add(examResult);
     }

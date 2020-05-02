@@ -76,3 +76,14 @@
 * __updateSportTeam__ - Converts DTO Object, update Sport Team with matching id and save it to database
 #### DELETE
 * __deleteStudentClassById__ - Delete Sport Team with matching id
+
+## <div align="center"> Exam </div>
+#### GET
+* __getAllExams__ - Return all Exams
+* __getExamById__ -  Return Exam with matching id
+#### POST
+* __createNewExam__ - Converts DTO Object and save it to Database
+#### PUT
+* __updateExam__ - Converts DTO Object, update Exam with matching id and save it to database
+#### DELETE
+* __deleteExamById__ - Delete Exam with matching id

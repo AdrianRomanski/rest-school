@@ -15,8 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
 
@@ -33,6 +36,7 @@ class ExamResultControllerTest {
     public static final String NAME = "Biology Exam Result";
     public static final long ID = 2L;
     public static final String EXAM_RESULTS = "/exam-results/";
+    public static final LocalDate NOW = LocalDate.now();
     @Mock
     ExamResultService examResultService;
 
@@ -92,6 +96,104 @@ class ExamResultControllerTest {
                 .content(asJsonString(biology)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllPassedExamResults")
+    @Test
+    void getAllPassedExamResults() throws Exception {
+        List<ExamResultDTO> exams = Arrays.asList(initBiologyExam(), initMathExam());
+
+        when(examResultService.getAllPassedExamResults()).thenReturn(exams);
+
+        mockMvc.perform(get(EXAM_RESULTS + "passed")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(exams)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllNotPassedExamResults")
+    @Test
+    void getAllNotPassedExamResults() throws Exception {
+        List<ExamResultDTO> exams = Arrays.asList(initBiologyExam(), initMathExam());
+
+        when(examResultService.getAllNotPassedExamResults()).thenReturn(exams);
+
+        mockMvc.perform(get(EXAM_RESULTS + "failed")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(exams)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllPassedForSubject")
+    @Test
+    void getAllPassedForSubject() throws Exception {
+        List<ExamResultDTO> exams = Arrays.asList(initBiologyExam(), initMathExam());
+
+        when(examResultService.getAllPassedForSubject(anyString())).thenReturn(exams);
+
+        mockMvc.perform(get(EXAM_RESULTS + "subject-BIOLOGY/passed")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(exams)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllNotPassedForSubject")
+    @Test
+    void getAllNotPassedForSubject() throws Exception {
+        List<ExamResultDTO> exams = Arrays.asList(initBiologyExam(), initMathExam());
+
+        when(examResultService.getAllNotPassedForSubject(anyString())).thenReturn(exams);
+
+        mockMvc.perform(get(EXAM_RESULTS + "subject-BIOLOGY/failed")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(exams)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getResultsGroupedByGradeAndName")
+    @Test
+    void getResultsGroupedByGradeAndName() throws Exception {
+        Map<String, Map<String, List<ExamResultDTO>>> map = new HashMap<>();
+        Map<String, List<ExamResultDTO>> nestedMap = new HashMap<>();
+
+        nestedMap.put("Walter", Arrays.asList(new ExamResultDTO(), new ExamResultDTO()));
+        map.put("A", nestedMap);
+
+        when(examResultService.getResultsGroupedByGradeAndName()).thenReturn(map);
+
+        mockMvc.perform(get(EXAM_RESULTS + "groupedBy/grade-name")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(map)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.A.Walter", hasSize(2)));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getResultGroupedByDateAndGrade")
+    @Test
+    void getResultGroupedByDateAndGrade() throws Exception {
+        Map<LocalDate, Map<String, List<ExamResultDTO>>> map = new HashMap<>();
+        Map<String, List<ExamResultDTO>> nestedMap = new HashMap<>();
+
+        nestedMap.put("A", Arrays.asList(new ExamResultDTO(), new ExamResultDTO()));
+        map.put(NOW, nestedMap);
+
+        when(examResultService.getResultGroupedByDateAndGrade()).thenReturn(map);
+
+        mockMvc.perform(get(EXAM_RESULTS + "groupedBy/date-grade")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(map)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$." + NOW + ".A", hasSize(2)));
     }
 
     @DisplayName("[POST], [Happy Path], [Method] = createExamResult")

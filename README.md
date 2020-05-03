@@ -99,9 +99,16 @@ values Maps where they Keys are Subjects and values List of exams
 #### GET
 * __getAllExamResults__ - Return all Exam Results
 * __getExamResultByID__ - Return Exam Result with matching id
+* __getAllPassedExamResults__ - Return all Exam Result with Grade higher than F
+* __getAllNotPassedExamResults__ - Return all Exam Result with Grade F
+* __getAllPassedForSubject__ - Return all Passed Exams with matching Subject
+* __getAllNotPassedForSubject__ - all Not Failed Exams with matching Subject
+* __getResultsGroupedByGradeAndName__ - Return Exam Results groupedBy -> Grade ->  Name
+* __getResultGroupedByDateAndGrade__ - Return Exam Results groupedBy -> Date -> Grade
 #### POST
 * __createExamResult__ - Save valid object to database
 #### PUT
 * __updateExamResult__ -  update Exam Result with matching id and save it to database
 #### DELETE
 * __deleteExamResultByID__ - Delete Exam Result with matching id
+

@@ -94,3 +94,14 @@ values Maps where they Keys are Subjects and values List of exams
 * __updateExam__ - Converts DTO Object, update Exam with matching id and save it to database
 #### DELETE
 * __deleteExamById__ - Delete Exam with matching id
+
+## <div align="center"> Exam Result </div>
+#### GET
+* __getAllExamResults__ - Return all Exam Results
+* __getExamResultByID__ - Return Exam Result with matching id
+#### POST
+* __createExamResult__ - Save valid object to database
+#### PUT
+* __updateExamResult__ -  update Exam Result with matching id and save it to database
+#### DELETE
+* __deleteExamResultByID__ - Delete Exam Result with matching id

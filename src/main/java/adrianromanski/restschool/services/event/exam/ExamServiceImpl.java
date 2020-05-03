@@ -149,7 +149,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamDTO updateExam(Long id, ExamDTO examDTO) {
         if (examRepository.findById(id).isPresent()) {
-            Exam exam = examRepository.findById(id).get();
+            Exam exam = examMapper.examDTOToExam(examDTO);
             exam.setId(id);
             examRepository.save(exam);
             log.info("Exam with id: " + id + " successfully updated");

@@ -203,8 +203,8 @@ class ExamServiceImplTest {
     @Test
     void updateExamHappyPath() {
         ExamDTO examDTO = initBiologyExamDTO();
+        examDTO.setMaxPoints(50L); // Changing max points
         Exam exam = initBiologyExam();
-        exam.setMaxPoints(50L); // Changing max points
 
         when(examRepository.findById(anyLong())).thenReturn(Optional.of(exam));
         when(examRepository.save(any(Exam.class))).thenReturn(exam);

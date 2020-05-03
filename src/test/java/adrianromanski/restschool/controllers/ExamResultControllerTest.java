@@ -6,6 +6,7 @@ import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
 import adrianromanski.restschool.services.event.exam_result.ExamResultService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -18,7 +19,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-import static org.hamcrest.Matchers.*;
+
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -28,6 +32,7 @@ class ExamResultControllerTest {
 
     public static final String NAME = "Biology Exam Result";
     public static final long ID = 2L;
+    public static final String EXAM_RESULTS = "/exam-results/";
     @Mock
     ExamResultService examResultService;
 
@@ -59,13 +64,14 @@ class ExamResultControllerTest {
         return examResultDTO;
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getAllExams")
     @Test
     void getAllExamResults() throws Exception {
         List<ExamResultDTO> examResultDTOList = Arrays.asList(initBiologyExam(), initMathExam());
 
         when(examResultService.getAllExamResults()).thenReturn(examResultDTOList);
 
-        mockMvc.perform(get("/exam-results/")
+        mockMvc.perform(get(EXAM_RESULTS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(examResultDTOList)))
@@ -73,13 +79,14 @@ class ExamResultControllerTest {
                 .andExpect(jsonPath("$.examResultDTOList", hasSize(2)));
     }
 
+    @DisplayName("[GET], [Happy Path], [Method] = getExamResultByID")
     @Test
     void getExamResultByID() throws Exception {
         ExamResultDTO biology = initBiologyExam();
 
         when(examResultService.getExamResultByID(anyLong())).thenReturn(biology);
 
-        mockMvc.perform(get("/exam-results/" + ID)
+        mockMvc.perform(get(EXAM_RESULTS + ID)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(biology)))
@@ -87,35 +94,29 @@ class ExamResultControllerTest {
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
     }
 
+    @DisplayName("[POST], [Happy Path], [Method] = createExamResult")
     @Test
     void createExamResult() throws Exception {
         ExamResultDTO biology = initBiologyExam();
 
-        ExamResultDTO returnBiology = new ExamResultDTO();
-        returnBiology.setName(biology.getName());
-        returnBiology.setId(biology.getId());
+        when(examResultService.createExamResult(any(ExamResultDTO.class))).thenReturn(biology);
 
-        when(examResultService.createExamResult(biology)).thenReturn(returnBiology);
-
-        mockMvc.perform(post("/exam-results/")
+        mockMvc.perform(post(EXAM_RESULTS)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(returnBiology)))
+                .content(asJsonString(biology)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
     }
 
+    @DisplayName("[PUT], [Happy Path], [Method] = createExamResult")
     @Test
     void updateExamResult() throws Exception {
         ExamResultDTO biology = initBiologyExam();
 
-        ExamResultDTO returnBiology = new ExamResultDTO();
-        returnBiology.setName(biology.getName());
-        returnBiology.setId(biology.getId());
+        when(examResultService.updateExamResult(anyLong(), any(ExamResultDTO.class))).thenReturn(biology);
 
-        when(examResultService.updateExamResult(ID, biology)).thenReturn(returnBiology);
-
-        mockMvc.perform(put("/exam-results/" + ID)
+        mockMvc.perform(put(EXAM_RESULTS + ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(biology)))
@@ -123,19 +124,19 @@ class ExamResultControllerTest {
                 .andExpect(jsonPath("$.name", equalTo(NAME)));
     }
 
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteExamResultByID")
     @Test
     void deleteExamResultByID() throws Exception {
-
-        mockMvc.perform(delete("/exam-results/" + ID)
+        mockMvc.perform(delete(EXAM_RESULTS + ID)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(examResultService).deleteExamResultByID(ID);
     }
 
+    @DisplayName("[DELETE, GET, PUT], [Unhappy PAth], [Exception] = ResourceNotFoundException")
     @Test
     public void testNotFoundException() throws Exception {
-
         when(examResultService.getExamResultByID(anyLong())).thenThrow(ResourceNotFoundException.class);
 
         mockMvc.perform(get("/exam-results/222")

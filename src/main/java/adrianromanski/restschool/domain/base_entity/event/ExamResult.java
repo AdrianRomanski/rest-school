@@ -18,7 +18,7 @@ public class ExamResult extends Event {
     @Builder
     public ExamResult(String name, LocalDate date, float score, Exam exam) {
         super(name, date);
-        this.score = getScore();
+        this.score = score;
         this.exam = exam;
     }
 

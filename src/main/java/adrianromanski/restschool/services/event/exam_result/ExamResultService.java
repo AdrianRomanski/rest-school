@@ -1,10 +1,10 @@
 package adrianromanski.restschool.services.event.exam_result;
 
-
-
 import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface ExamResultService {
 
@@ -12,27 +12,25 @@ public interface ExamResultService {
 
     ExamResultDTO getExamResultByID(Long id);
 
+    List<ExamResultDTO> getAllPassedExamResults();
+
+    List<ExamResultDTO> getAllNotPassedExamResults();
+
+    List<ExamResultDTO> getAllPassedForSubject(String subjectName);
+
+    List<ExamResultDTO> getAllNotPassedForSubject(String subjectName);
+
+    Map<String, Map<String, List<ExamResultDTO>>> getResultsGroupedByGradeAndName();
+
+    Map<LocalDate, Map<String, List<ExamResultDTO>>> getResultGroupedByDateAndGrade();
+
     ExamResultDTO createExamResult(ExamResultDTO examResultDTO);
 
     ExamResultDTO updateExamResult(Long id, ExamResultDTO examResultDTO);
 
     void deleteExamResultByID(Long id);
 
-//    List<ExamResultDTO> getAllExamResultsForStudent(String firstName, String lastName);
-//
-//    List<ExamResultDTO> getAllExamResultsForSubject(String subjectName);
-//
-//    List<ExamResultDTO> getAllPassedExamResults();
-//
-//    List<ExamResultDTO> getAllNotPassedExamResults();
-//
-//    List<ExamResultDTO> getAllNotPassedForStudent(String firstName, String lastName);
-//
-//    List<ExamResultDTO> getAllPassedForStudent(String firstName, String lastName);
-//
-//    List<ExamResultDTO> getAllPassedForSubject(String subjectName);
-//
-//    List<ExamResultDTO> getAllNotPassedForSubject(String subjectName);
+
 
 
 

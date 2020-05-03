@@ -3,13 +3,19 @@ package adrianromanski.restschool.services.event.exam_result;
 import adrianromanski.restschool.domain.base_entity.event.ExamResult;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.event.ExamResultMapper;
+import adrianromanski.restschool.model.base_entity.event.EventDTO;
 import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
 import adrianromanski.restschool.repositories.event.ExamResultRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
+
+
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @Service
@@ -32,7 +38,7 @@ public class ExamResultServiceImpl implements ExamResultService {
         return examResultRepository.findAll()
                 .stream()
                 .map(examResultMapper::examResultToExamResultDTO)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
 
@@ -46,6 +52,98 @@ public class ExamResultServiceImpl implements ExamResultService {
         return examResultRepository.findById(id)
                 .map(examResultMapper::examResultToExamResultDTO)
                 .orElseThrow(ResourceNotFoundException::new);
+    }
+
+
+    /**
+     * @return All Exam Result with Grade higher than F
+     */
+    @Override
+    public List<ExamResultDTO> getAllPassedExamResults() {
+        return examResultRepository.findAll()
+                .stream()
+                .filter(e -> !e.getGrade().equals("F"))
+                .map(examResultMapper::examResultToExamResultDTO)
+                .collect(toList());
+    }
+
+    /**
+     * @return All Exam Result with Grade F
+     */
+    @Override
+    public List<ExamResultDTO> getAllNotPassedExamResults() {
+        return examResultRepository.findAll()
+                .stream()
+                .filter(e -> e.getGrade().equals("F"))
+                .map(examResultMapper::examResultToExamResultDTO)
+                .collect(toList());
+    }
+
+    /**
+     * @param subjectName of ExamResult
+     * @return all Passed Exams with matching Subject
+     */
+    @Override
+    public List<ExamResultDTO> getAllPassedForSubject(String subjectName) {
+        return examResultRepository.findAll()
+                .stream()
+                .filter(e -> e.getGrade().equals("F"))
+                .filter(e -> e.getExam().getSubject().getName().get().equals(subjectName))
+                .map(examResultMapper::examResultToExamResultDTO)
+                .collect(toList());
+    }
+
+    /**
+     * @param subjectName of ExamResult
+     * @return all Not Passed Exams with matching Subject
+     */
+    @Override
+    public List<ExamResultDTO> getAllNotPassedForSubject(String subjectName) {
+        return examResultRepository.findAll()
+                .stream()
+                .filter(e -> !e.getGrade().equals("F"))
+                .filter(e -> e.getExam().getSubject().getName().get().equals(subjectName))
+                .map(examResultMapper::examResultToExamResultDTO)
+                .collect(toList());
+    }
+
+
+    /**
+     * @return Exam Results grouped by -> Grade -> Exam Name
+     */
+    @Override
+    public Map<String, Map<String, List<ExamResultDTO>>> getResultsGroupedByGradeAndName() {
+        return examResultRepository.findAll()
+                .stream()
+                .map(examResultMapper::examResultToExamResultDTO)
+                .collect(
+                        groupingBy(
+                                ExamResultDTO::getGrade,
+                                groupingBy(
+                                        EventDTO::getName
+                                )
+                        )
+                );
+    }
+
+    /**
+     * @return Exam Results grouped by -> Date -> Grade
+     */
+    @Override
+    public Map<LocalDate, Map<String, List<ExamResultDTO>>> getResultGroupedByDateAndGrade() {
+        return examResultRepository.findAll()
+                .stream()
+                .filter(examResult -> examResult.getExam().getTeacher() != null)
+                .map(examResultMapper::examResultToExamResultDTO)
+                .collect(
+                        groupingBy(
+                                ExamResultDTO::getDate,
+                                groupingBy(
+                                        ExamResultDTO::getGrade
+                            )
+                        )
+            );
+
     }
 
 

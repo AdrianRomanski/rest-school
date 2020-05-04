@@ -181,20 +181,6 @@ class SubjectControllerTest {
                 .andExpect(jsonPath("$.subjects", hasSize(1)));
     }
 
-    @Test
-    void getMostPopularSubject() throws Exception {
-
-        SubjectDTO biology = initBiology();
-
-        when(subjectService.getMostPopularSubject()).thenReturn(biology);
-
-        mockMvc.perform(get("/subjects/most-popular")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(asJsonString(biology)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", equalTo(BIOLOGY.toString())));
-    }
 
     @Test
     void deleteStudent() throws Exception {

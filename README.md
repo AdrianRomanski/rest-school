@@ -112,3 +112,16 @@ values Maps where they Keys are Subjects and values List of exams
 #### DELETE
 * __deleteExamResultByID__ - Delete Exam Result with matching id
 
+## <div align="center"> Subject </div>
+#### GET
+* __getAllSubjects__ - Return all Subjects
+* __getSubjectByID__ - Return Subject with matching id
+* __getSubjectByName__ - Return Subject with matching name
+* __getSubjectsWithFullValue__ - List of Subjects with full point value
+* __getSubjectsWithLowestValue__ - List of Subjects with lowest point value
+#### POST
+* __createNewSubject__ - Save valid object to database
+#### PUT
+* __updateSubject__ -  Update Subject with matching id and save it to database
+#### DELETE
+* __deleteSubjectByID__ - Delete Subject with matching id

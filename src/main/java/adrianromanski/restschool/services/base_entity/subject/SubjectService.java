@@ -20,7 +20,5 @@ public interface SubjectService {
 
     List<SubjectDTO> getSubjectsWithLowestValue();
 
-    SubjectDTO getMostPopularSubject();
-
     void deleteSubjectByID(Long id);
 }

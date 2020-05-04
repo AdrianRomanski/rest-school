@@ -8,12 +8,14 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api("Controller for Subjects")
 @RestController
 @RequestMapping("/subjects/")
 public class SubjectController {
 
-    private SubjectService subjectService;
+    private final SubjectService  subjectService;
 
     public SubjectController(SubjectService subjectService) { this.subjectService = subjectService;}
 
@@ -64,13 +66,6 @@ public class SubjectController {
     @ResponseStatus(HttpStatus.OK)
     public SubjectListDTO getSubjectsWithLowestValue() {
         return new SubjectListDTO(subjectService.getSubjectsWithLowestValue());
-    }
-
-    @ApiOperation("Returns a most popular Subject taken by Students")
-    @GetMapping("most-popular")
-    @ResponseStatus(HttpStatus.OK)
-    public SubjectDTO getMostPopularSubject() {
-        return subjectService.getMostPopularSubject();
     }
 
     @ApiOperation("Delete a subject based on ID")

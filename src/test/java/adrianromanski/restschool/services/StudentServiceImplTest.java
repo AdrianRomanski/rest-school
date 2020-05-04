@@ -76,7 +76,7 @@ class StudentServiceImplTest {
         return Arrays.asList(createEthan(), createSebastian(), createCharlotte());
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
+    @DisplayName("[Happy Path], [Method] = getAllStudents")
     @Test
     void getAllStudents() {
         List<Student> students = getStudents();
@@ -88,7 +88,7 @@ class StudentServiceImplTest {
         assertEquals(3, studentDTOS.size());
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllFemaleStudents, [Expected] = List containing 1 Student")
+    @DisplayName("[Happy Path], [Method] = getAllFemaleStudents")
     @Test
     void getAllFemaleStudents() {
         List<Student> students = getStudents();
@@ -100,7 +100,7 @@ class StudentServiceImplTest {
         assertEquals(1, studentDTOS.size());
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllMaleStudents, [Expected] = List containing 2 Students")
+    @DisplayName("[Happy Path], [Method] = getAllMaleStudents")
     @Test
     void getAllMaleStudents() {
         List<Student> students = getStudents();
@@ -112,7 +112,7 @@ class StudentServiceImplTest {
         assertEquals(2, studentDTOS.size());
     }
 
-    @DisplayName("[Happy Path], [Method] = getStudentByFirstAndLastName, [Expected] = StudentDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getStudentByFirstAndLastName")
     @Test
     void getStudentByFirstAndLastName() {
         Student student = createEthan();
@@ -127,7 +127,7 @@ class StudentServiceImplTest {
         assertEquals(ID, studentDTO.getId());
     }
 
-    @DisplayName("[Happy Path], [Method] = getStudentById, [Expected] = StudentDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getStudentById")
     @Test
     void getStudentById() {
         Student student = createEthan();
@@ -142,7 +142,7 @@ class StudentServiceImplTest {
         assertEquals(ID, studentDTO.getId());
     }
 
-    @DisplayName("[Happy Path], [Method] = createNewStudent, [Expected] = StudentDTO  with matching fields")
+    @DisplayName("[Happy Path], [Method] = createNewStudent")
     @Test
     void createNewStudent() throws Exception {
         StudentDTO studentDTO = createEthanDTO();
@@ -158,7 +158,7 @@ class StudentServiceImplTest {
         assertEquals(ID, returnDTO.getId());
     }
 
-    @DisplayName("[Happy Path], [Method] = updateStudent, [Expected] = StudentDTO with updated fields")
+    @DisplayName("[Happy Path], [Method] = updateStudent")
     @Test
     void updateStudentHappyPath() {
         StudentDTO studentDTO = createEthanDTO();
@@ -185,7 +185,7 @@ class StudentServiceImplTest {
             assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = deleteStudentByID, [Expected] = studentRepository deleting student")
+    @DisplayName("[Happy Path], [Method] = deleteStudentByID")
     @Test
     void deleteStudentByID() {
         Student student =  createEthan();

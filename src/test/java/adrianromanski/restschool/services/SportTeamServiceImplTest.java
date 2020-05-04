@@ -69,7 +69,7 @@ class SportTeamServiceImplTest {
         sportTeamService = new SportTeamServiceImpl(sportTeamRepository, SportTeamMapper.INSTANCE);
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllSportTeam, [Expected] = List containing 3 Sport Teams")
+    @DisplayName("[Happy Path], [Method] = getAllSportTeam")
     @Test
     void getAllSportTeam() {
         List<SportTeam> sportTeamList = createSportList();
@@ -81,7 +81,7 @@ class SportTeamServiceImplTest {
         assertEquals(returnDTO.size(), 3);
     }
 
-    @DisplayName("[Happy Path], [Method] = getSportTeamById, [Expected] = SportTeamDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getSportTeamById")
     @Test
     void getSportTeamById() {
         SportTeam sportTeam = createFootball();
@@ -95,7 +95,7 @@ class SportTeamServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getSportTeamByName, [Expected] = SportTeamDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getSportTeamByName")
     @Test
     void getSportTeamByName() {
         SportTeam sportTeam = createFootball();
@@ -109,7 +109,7 @@ class SportTeamServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllTeamsForSport, [Expected] = Map with FOOTBALL key and 2 SportTeams")
+    @DisplayName("[Happy Path], [Method] = getAllTeamsForSport")
     @Test
     void getAllTeamsForSport() {
         List<SportTeam> sportTeams = createSportList();
@@ -123,7 +123,7 @@ class SportTeamServiceImplTest {
         assertEquals(returnDTO.get(FOOTBALL).get(ETHAN.get()).size(), 2); // Checking if the List contains 2 Football Teams
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllTeamsGroupedBySport, [Expected] = Map with 2 keys FOOTBALL, BASKETBALL")
+    @DisplayName("[Happy Path], [Method] = getAllTeamsGroupedBySport")
     @Test
     void getTeamsGroupedBySport() {
         List<SportTeam> sportTeams = createSportList();
@@ -139,7 +139,7 @@ class SportTeamServiceImplTest {
         assertEquals(returnDTO.get(BASKETBALL).get(ISAAC.get()).size(), 1);
     }
 
-    @DisplayName("[Happy Path], [Method] = getSportTeamsByStudentsSize, [Expected] = Map with 2 keys '2', '0'")
+    @DisplayName("[Happy Path], [Method] = getSportTeamsByStudentsSize")
     @Test
     void getSportTeamsByStudentsSize() {
         List<SportTeam> sportTeams = createSportList();
@@ -155,7 +155,7 @@ class SportTeamServiceImplTest {
         assertEquals(returnDTO.get(0).size(), 2); // two teams without any students
     }
 
-    @DisplayName("[Happy Path], [Method] = getSportTeamByPresident, [Expected] = List with 2 sport Teams")
+    @DisplayName("[Happy Path], [Method] = getSportTeamByPresident")
     @Test
     void getSportTeamByPresident() {
         List<SportTeam> sportTeams = createSportList();
@@ -170,7 +170,7 @@ class SportTeamServiceImplTest {
     }
 
 
-    @DisplayName("[Happy Path], [Method] = createNewSportTeam, [Expected] = sportTeamDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = createNewSportTeam")
     @Test
     void createNewSportTeam() {
         SportTeam sportTeam = createFootball();
@@ -185,7 +185,7 @@ class SportTeamServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = updateStudentClass, [Expected] = SportTeamDTO with updated fields")
+    @DisplayName("[Happy Path], [Method] = updateStudentClass")
     @Test
     void updateSportTeamHappyPath() {
         SportTeam sportTeam = createFootball();
@@ -211,7 +211,7 @@ class SportTeamServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = deleteSportTeamById, [Expected] = sportTeamRepository deleting")
+    @DisplayName("[Happy Path], [Method] = deleteSportTeamById")
     @Test
     void deleteSportTeamById() {
        SportTeam sportTeam = createFootball();

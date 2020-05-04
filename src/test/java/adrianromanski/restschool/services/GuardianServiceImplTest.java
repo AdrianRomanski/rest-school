@@ -92,7 +92,7 @@ class GuardianServiceImplTest {
     }
 
 
-    @DisplayName("[Happy Path], [Method] = getAllGuardians, [Expected] = List containing 3 Guardians")
+    @DisplayName("[Happy Path], [Method] = getAllGuardians")
     @Test
     void getAllLegalGuardians() {
         List<Guardian> legalGuardians = Arrays.asList(createEthan(), createEthan(), createEthan());
@@ -104,7 +104,7 @@ class GuardianServiceImplTest {
         assertEquals(legalGuardians.size(), legalGuardiansDTO.size());
     }
 
-    @DisplayName("[Happy Path], [Method] = getGuardianByID, [Expected] = GuardianDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getGuardianByID")
     @Test
     void getGuardianByID() {
         Guardian legalGuardian = createEthan();
@@ -120,7 +120,7 @@ class GuardianServiceImplTest {
         assertEquals(legalGuardianDTO.getId(), ID);
 
     }
-    @DisplayName("[Happy Path], [Method] = getGuardianByFirstAndLastName, [Expected] = GuardianDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getGuardianByFirstAndLastName")
     @Test
     void getLegalGuardianByFirstAndLastName() {
         Guardian legalGuardian = createEthan();
@@ -137,7 +137,7 @@ class GuardianServiceImplTest {
         assertEquals(legalGuardianDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getGuardiansByAge, [Expected] = Map<27, List<2 x GuardianDTO>>")
+    @DisplayName("[Happy Path], [Method] = getGuardiansByAge")
     @Test
     void getGuardiansByAge() {
         List<Guardian> guardians = Arrays.asList(createEthan(), createEthan());
@@ -150,7 +150,7 @@ class GuardianServiceImplTest {
         assertTrue(guardiansByAge.containsKey(27L));
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllStudentsForGuardian, [Expected] = List<2 x StudentDTO>")
+    @DisplayName("[Happy Path], [Method] = getAllStudentsForGuardian")
     @Test
     void getAllStudentsForGuardian() {
         Guardian guardian = createEthan();
@@ -164,7 +164,7 @@ class GuardianServiceImplTest {
         assertEquals(studentsDTO.get(1).getFirstName(), CHARLOTTE.get());
     }
 
-    @DisplayName("[Happy Path], [Method] = createNewGuardian, [Expected] = GuardianDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = createNewGuardian")
     @Test
     void createNewLegalGuardian() {
         Guardian guardian = createEthan();
@@ -183,7 +183,7 @@ class GuardianServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = updateTeacher, [Expected] = TeacherDTO with updated fields")
+    @DisplayName("[Happy Path], [Method] = updateTeacher")
     @Test
     void updateLegalGuardianHappyPath() {
         Guardian guardian = createEthan();
@@ -213,7 +213,7 @@ class GuardianServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = deleteGuardianByID, [Expected] = guardianRepository deleting student")
+    @DisplayName("[Happy Path], [Method] = deleteGuardianByID")
     @Test
     void deleteLegalGuardianByIDHappyPath() {
         Guardian guardian = createEthan();

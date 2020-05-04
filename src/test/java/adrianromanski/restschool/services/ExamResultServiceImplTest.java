@@ -221,7 +221,7 @@ class ExamResultServiceImplTest {
         assertEquals(returnDTO.getScore(), SCORE);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = updateExamResult")
+    @DisplayName("[Unhappy Path], [Method] = updateExamResult, [Reason] = Student Class with id 222 not found")
     @Test
     void updateExamResultUnHappyPath() {
         ExamResultDTO examResultDTO = initExamResultDTO();
@@ -243,7 +243,7 @@ class ExamResultServiceImplTest {
         verify(examResultRepository, times(1)).deleteById(anyLong());
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteExamResultByID")
+    @DisplayName("[Unhappy Path], [Method] = deleteExamResultByID, [Reason] = Student Class with id 222 not found")
     @Test
     void deleteExamResultByIDUnHappyPath() {
 

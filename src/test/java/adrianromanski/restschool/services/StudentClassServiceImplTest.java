@@ -97,7 +97,7 @@ class StudentClassServiceImplTest {
         return studentClassDTO;
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllStudentClasses, [Expected] = List containing 3 Student Classes")
+    @DisplayName("[Happy Path], [Method] = getAllStudentClasses")
     @Test
     void getAllStudentClasses() {
         List<StudentClass> studentClasses = createList();
@@ -109,7 +109,7 @@ class StudentClassServiceImplTest {
         assertEquals(studentClassDTOS.size(), 3);
     }
 
-    @DisplayName("[Happy Path], [Method] = getStudentClassByID, [Expected] = StudentClassDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getStudentClassByID")
     @Test
     void getStudentClassByID() {
         StudentClass studentClass = createRookies();
@@ -122,7 +122,7 @@ class StudentClassServiceImplTest {
         assertEquals(studentClassDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getStudentClassByPresident, [Expected] = StudentClassDTO with matching president")
+    @DisplayName("[Happy Path], [Method] = getStudentClassByPresident")
     @Test
     void getStudentClassByPresident() {
         List<StudentClass> studentClasses = createList();
@@ -134,7 +134,7 @@ class StudentClassServiceImplTest {
         assertEquals(returnDTO.size(), 1);
     }
 
-    @DisplayName("[Happy Path], [Method] = getStudentClassesGroupedBySpecialization, [Expected] = Map contains 2 keys")
+    @DisplayName("[Happy Path], [Method] = getStudentClassesGroupedBySpecialization")
     @Test
     void getStudentClassesGroupedBySpecialization() {
         List<StudentClass> studentClasses = createList();
@@ -147,7 +147,7 @@ class StudentClassServiceImplTest {
         assertTrue(returnMap.containsKey(BIOLOGY));
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllStudentClassForSpecialization, [Expected] = List with 2 Classes")
+    @DisplayName("[Happy Path], [Method] = getAllStudentClassForSpecialization")
     @Test
     void getAllStudentClassForSpecialization() {
         List<StudentClass> studentClasses = createList();
@@ -158,7 +158,7 @@ class StudentClassServiceImplTest {
 
         assertEquals(returnList.size(), 2);
     }
-    @DisplayName("[Happy Path], [Method] = getLargestStudentClass, [Expected] = List with Rookies (2 Students)")
+    @DisplayName("[Happy Path], [Method] = getLargestStudentClass")
     @Test
     void getLargestStudentClass() {
         List<StudentClass> studentClasses = createList();
@@ -170,7 +170,7 @@ class StudentClassServiceImplTest {
         assertEquals(returnList.get(0).getName(), ROOKIES);
     }
 
-    @DisplayName("[Happy Path], [Method] = getLargestStudentClass, [Expected] = List with Nerds (0 Students)")
+    @DisplayName("[Happy Path], [Method] = getLargestStudentClass")
     @Test
     void getSmallestStudentClass() {
         List<StudentClass> studentClasses = createList();
@@ -181,7 +181,7 @@ class StudentClassServiceImplTest {
 
         assertEquals(returnList.get(0).getName(), "Nerds");
     }
-    @DisplayName("[Happy Path], [Method] = getAllStudentsForClass, [Expected] = Map with 2 keys every key with one entry")
+    @DisplayName("[Happy Path], [Method] = getAllStudentsForClass")
     @Test
     void getAllStudentsForClassHappyPath() {
         StudentClass studentClass = createRookies();
@@ -205,7 +205,7 @@ class StudentClassServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = createNewStudentClass, [Expected] = StudentClassDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = createNewStudentClass")
     @Test
     void createNewStudentClass() {
        StudentClassDTO studentClassDTO = createRookiesDTO();
@@ -219,7 +219,7 @@ class StudentClassServiceImplTest {
        assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = updateStudentClass, [Expected] = StudentClassDTO with updated fields")
+    @DisplayName("[Happy Path], [Method] = updateStudentClass")
     @Test
     void updateStudentClassHappyPath() {
         StudentClassDTO studentClassDTO = createRookiesDTO();
@@ -244,7 +244,7 @@ class StudentClassServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = deleteStudentClassById, [Expected] = studentClassRepository deleting")
+    @DisplayName("[Happy Path], [Method] = deleteStudentClassById")
     @Test
     void deleteStudentClassByIdHappyPath() {
         StudentClass studentClass = createRookies();

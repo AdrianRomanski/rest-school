@@ -80,7 +80,8 @@ class ExamServiceImplTest {
         return Arrays.asList(initBiologyExam(), initBiologyExam(), initMathExam());
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllExams, [Expected] = List containing 3 Exams")
+
+    @DisplayName("[Happy Path], [Method] = getAllExams")
     @Test
     void getAllExams() {
         List<Exam> exams = getExamList();
@@ -93,7 +94,7 @@ class ExamServiceImplTest {
     }
 
 
-    @DisplayName("[Happy Path], [Method] = getExamById, [Expected] = ExamDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getExamById")
     @Test
     void getExamById() {
         Exam exam = initBiologyExam();
@@ -108,7 +109,7 @@ class ExamServiceImplTest {
     }
 
 
-    @DisplayName("[Happy Path], [Method] = getExamByName, [Expected] = ExamDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getExamByName")
     @Test
     void getExamByName() {
         Exam exam = initBiologyExam();
@@ -123,7 +124,7 @@ class ExamServiceImplTest {
     }
 
 
-    @DisplayName("[Happy Path], [Method] = getAllExamsForTeacher, [Expected] = List with 2 exams")
+    @DisplayName("[Happy Path], [Method] = getAllExamsForTeacher")
     @Test
     void getAllExamsForTeacher() {
         List<Exam> exams = getExamList(); // 1st Teacher with 2 Exams, 2nd with 1 Exam
@@ -136,7 +137,7 @@ class ExamServiceImplTest {
     }
 
 
-    @DisplayName("[Happy Path], [Method] = getExamsForSubject, [Expected] = Map with a key BIOLOGY and 2 Values")
+    @DisplayName("[Happy Path], [Method] = getExamsForSubject")
     @Test
     void getExamsForSubject() {
         List<Exam> exams = getExamList(); // 2 Biology, 1 Math
@@ -150,7 +151,7 @@ class ExamServiceImplTest {
         assertEquals(returnMap.size(), 1);
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllExamsBySubjectsAndTeachers, [Expected] = Map with 2 keys BIOLOGY and MATHEMATICS")
+    @DisplayName("[Happy Path], [Method] = getAllExamsBySubjectsAndTeachers")
     @Test
     void getAllExamsBySubjectsAndTeachers() {
         List<Exam> exams = getExamList(); // 2 Biology - 1 Teacher, 1 Math  - 1 Teacher
@@ -168,7 +169,7 @@ class ExamServiceImplTest {
         assertEquals(returnMap.get(MATHEMATICS.name()).get(SMITH.get() + " " + SEBASTIAN.get()).size(), 1); // 1 Exam of  Math
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllExamsByStudentsAndSubjects, [Expected] = Map with 2 keys - '2', '3'")
+    @DisplayName("[Happy Path], [Method] = getAllExamsByStudentsAndSubjects")
     @Test
     void getAllExamsByStudentsAndSubjects() {
         List<Exam> exams = getExamList(); // 1st key - 2 Students, 2nd key - 3 students
@@ -184,7 +185,7 @@ class ExamServiceImplTest {
     }
 
 
-    @DisplayName("[Happy Path], [Method] = createNewExam, [Expected] = ExamDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = createNewExam")
     @Test
     void createNewExam() {
         ExamDTO examDTO = initBiologyExamDTO();
@@ -199,7 +200,7 @@ class ExamServiceImplTest {
         assertEquals(returnDTO.getMaxPoints(), POINTS);
     }
 
-    @DisplayName("[Happy Path], [Method] = updateExam, [Expected] = ExamDTO with updated fields")
+    @DisplayName("[Happy Path], [Method] = updateExam")
     @Test
     void updateExamHappyPath() {
         ExamDTO examDTO = initBiologyExamDTO();
@@ -226,7 +227,7 @@ class ExamServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = deleteExamById, [Expected] = Repository deleting object")
+    @DisplayName("[Happy Path], [Method] = deleteExamById")
     @Test
     void deleteExamByIdHappyPath() {
         Exam exam = initBiologyExam();

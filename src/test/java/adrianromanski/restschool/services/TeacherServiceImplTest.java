@@ -74,7 +74,7 @@ class TeacherServiceImplTest {
         teacherService = new TeacherServiceImpl(teacherRepository, TeacherMapper.INSTANCE);
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllTeachers, [Expected] = List containing 3 Teachers")
+    @DisplayName("[Happy Path], [Method] = getAllTeachers")
     @Test
     void getAllTeachers() {
         List<Teacher> teachers = Arrays.asList(createEthan(), createBenjamin(), createAria());
@@ -86,7 +86,7 @@ class TeacherServiceImplTest {
         assertEquals(returnTeachers.size(), teachers.size());
      }
 
-    @DisplayName("[Happy Path], [Method] = getTeacherByFirstNameAndLastName, [Expected] = TeacherDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getTeacherByFirstNameAndLastName")
     @Test
     void getTeacherByFirstNameAndLastName() {
         Teacher teacher = createEthan();
@@ -100,7 +100,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getTeacherByID, [Expected] = TeacherDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = getTeacherByID")
     @Test
     void getTeacherByID() {
         Teacher teacher = createEthan();
@@ -114,7 +114,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getTeachersBySpecialization, [Expected] = Map<Biology(1), Math(1), Chemistry(1)>\"")
+    @DisplayName("[Happy Path], [Method] = getTeachersBySpecialization")
     @Test
     void getTeachersBySpecialization() {
         List<Teacher> teachers = Arrays.asList(createEthan(), createBenjamin(), createAria());
@@ -129,7 +129,7 @@ class TeacherServiceImplTest {
         assertTrue(map.containsKey(CHEMISTRY));
     }
 
-    @DisplayName("[Happy Path], [Method] = getTeachersByYearsOfExperience, [Expected] = Map<1 Year(1), 2 Years(2)>")
+    @DisplayName("[Happy Path], [Method] = getTeachersByYearsOfExperience")
     @Test
     void getTeachersByYearsOfExperience() {
         List<Teacher> teachers = Arrays.asList(createEthan(), createBenjamin(), createAria());
@@ -143,7 +143,7 @@ class TeacherServiceImplTest {
         assertTrue(map.containsKey(2L));
     }
 
-    @DisplayName("[Happy Path], [Method] = createNewTeacher, [Expected] = TeacherDTO with matching fields")
+    @DisplayName("[Happy Path], [Method] = createNewTeacher")
     @Test
     void createNewTeacher() {
         TeacherDTO teacherDTO = createEthanDTO();
@@ -158,7 +158,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getLastName(), COOPER.get());
     }
 
-    @DisplayName("[Happy Path], [Method] = updateTeacher, [Expected] = TeacherDTO with updated fields")
+    @DisplayName("[Happy Path], [Method] = updateTeacher")
     @Test
     void updateTeacher() {
         TeacherDTO teacherDTO = createEthanDTO();
@@ -184,7 +184,7 @@ class TeacherServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = deleteTeacherById, [Expected] = teacherRepository deleting student")
+    @DisplayName("[Happy Path], [Method] = deleteTeacherById")
     @Test
     void deleteTeacherByIdHappyPath() {
         Teacher teacher = createEthan();

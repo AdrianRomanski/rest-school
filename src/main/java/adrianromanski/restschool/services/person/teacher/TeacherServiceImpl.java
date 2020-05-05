@@ -121,7 +121,8 @@ public class TeacherServiceImpl implements TeacherService {
             Exam exam = examMapper.examDTOToExam(examDTO);
             teacher.getExams().add(exam);   // Adding Exam to Teacher
             teacher.getStudentClass().getStudentList().forEach(s -> s.getExams().add(exam)); // Adding Exams to Students
-            exam.getStudents().addAll(teacher.getStudentClass().getStudentList()); // Adding Students to Exam
+            exam.setStudents(teacher.getStudentClass().getStudentList()); // Adding Students to Exam
+            exam.setTeacher(teacher); // Adding Teacher to Exam
             return examMapper.examToExamDTO(exam);
         } else {
             throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
@@ -130,7 +131,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     /**
-     * Adding Correction Exam to one Student with matching id
+     * Adding Correction Exam to Student with matching id
      * @throws ResourceNotFoundException if teacher not found
      * @throws ResourceNotFoundException if student not found
      */
@@ -159,6 +160,11 @@ public class TeacherServiceImpl implements TeacherService {
         }
     }
 
+
+    /**
+     * Adding new Student to the Class
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public StudentDTO addNewStudentToClass(Long teacherID, StudentDTO studentDTO) {
         if(teacherRepository.findById(teacherID).isPresent()) {

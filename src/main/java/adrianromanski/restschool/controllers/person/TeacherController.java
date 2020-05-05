@@ -1,6 +1,8 @@
 package adrianromanski.restschool.controllers.person;
 
 import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherListDTO;
 import adrianromanski.restschool.services.person.teacher.TeacherService;
@@ -56,6 +58,28 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.OK)
     public Map<Long, List<TeacherDTO>> getTeachersByYearsOfExperience() {
         return teacherService.getTeachersByYearsOfExperience();
+    }
+
+    @ApiOperation("Adding Exam to every Student in the Class")
+    @PostMapping("/teacher-{id}/addExam")
+    @ResponseStatus(HttpStatus.OK)
+    ExamDTO addExamForClass(@PathVariable String id, @RequestBody ExamDTO examDTO) {
+        return teacherService.addExamForClass(Long.valueOf(id), examDTO);
+    }
+
+    @ApiOperation("Adding Correction Exam to Student with matching id")
+    @PostMapping("/teacher-{teacherID}/student-{studentID}/addExam")
+    @ResponseStatus(HttpStatus.OK)
+    ExamDTO addCorrectionExamForStudent(@PathVariable String teacherID, @PathVariable String studentID,
+                                        @RequestBody ExamDTO examDTO) {
+        return teacherService.addCorrectionExamForStudent(Long.valueOf(teacherID), Long.valueOf(studentID), examDTO);
+    }
+
+    @ApiOperation("Adding new Student to the Class")
+    @PostMapping("/teacher-{id}/addStudent")
+    @ResponseStatus(HttpStatus.OK)
+    StudentDTO addNewStudentToClass(@PathVariable String id, @RequestBody StudentDTO studentDTO) {
+        return teacherService.addNewStudentToClass(Long.valueOf(id), studentDTO);
     }
 
     @ApiOperation("Create and save new Teacher based on TeacherDTO body")

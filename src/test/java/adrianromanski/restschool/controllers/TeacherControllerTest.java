@@ -5,6 +5,8 @@
     import adrianromanski.restschool.domain.base_entity.enums.Gender;
     import adrianromanski.restschool.domain.base_entity.enums.Subjects;
     import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+    import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+    import adrianromanski.restschool.model.base_entity.person.StudentDTO;
     import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
     import adrianromanski.restschool.services.person.teacher.TeacherService;
     import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +41,7 @@
 
         public static final String TEACHERS = "/teachers/";
         public static final long ID = 1L;
+        public static final String NAME = "Final Math";
 
         MockMvc mockMvc;
 
@@ -76,7 +79,9 @@
             return createTeacherDTO(3L, ARIA.get(), WILLIAMS.get(), FEMALE, PHYSICS);
         }
 
-        @DisplayName("[GET], [Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
+        private ExamDTO createExamDTO() { return ExamDTO.builder().name(NAME).build(); }
+
+        @DisplayName("[GET], [Happy Path], [Method] = getAllStudents")
         @Test
         void getAllTeachers() throws Exception {
             List<TeacherDTO> teacherDTOList = Arrays.asList(createEthan(), createBenjamin(), createAria());
@@ -91,7 +96,7 @@
                     .andExpect(jsonPath("$.teachers", hasSize(3)));
         }
 
-        @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName, [Expected] = StudentDTO with matching fields")
+        @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName")
         @Test
         void getTeacherByFirstNameAndLastName() throws Exception {
             TeacherDTO teacherDTO = createEthan();
@@ -107,7 +112,7 @@
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
-        @DisplayName("[GET], [Happy Path], [Method] = getStudentById, [Expected] = StudentDTO with matching fields")
+        @DisplayName("[GET], [Happy Path], [Method] = getStudentById")
         @Test
         void getTeacherByID() throws Exception {
             TeacherDTO teacherDTO = createEthan();
@@ -123,7 +128,7 @@
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
-        @DisplayName("[GET], [Happy Path], [Method] = getTeachersBySpecialization, [Expected] = Map<Biology(2), Math(1), Chemistry(3)>")
+        @DisplayName("[GET], [Happy Path], [Method] = getTeachersBySpecialization")
         @Test
         void getTeachersBySpecialization() throws Exception {
             Map<Subjects, List<TeacherDTO>> map = new HashMap<>();
@@ -144,7 +149,7 @@
 
         }
 
-        @DisplayName("[GET], [Happy Path], [Method] = getTeachersByYearsOfExperience, [Expected] = Map<5 Years(1), 12 Years(2)>")
+        @DisplayName("[GET], [Happy Path], [Method] = getTeachersByYearsOfExperience")
         @Test
         void getTeachersByYearsOfExperience() throws Exception {
             Map<Long, List<TeacherDTO>> map = new HashMap<>();
@@ -162,7 +167,53 @@
                     .andExpect(jsonPath("$.12", hasSize(2)));
         }
 
-        @DisplayName("[POST], [Happy Path], [Method] = createNewTeacher, [Expected] = TeacherDTO  with matching fields")
+        @DisplayName("[POST], [Happy Path], [Method] = addExamForClass")
+        @Test
+        void addExamForClass() throws Exception {
+            ExamDTO examDTO = createExamDTO();
+
+            when(teacherService.addExamForClass(anyLong(), any(ExamDTO.class))).thenReturn(examDTO);
+
+            mockMvc.perform(post(TEACHERS + "teacher-1/addExam")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(examDTO)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.name", equalTo(NAME)));
+        }
+
+
+        @DisplayName("[POST], [Happy Path], [Method] = addCorrectionExamForStudent")
+        @Test
+        void addCorrectionExamForStudent() throws Exception {
+            ExamDTO examDTO = createExamDTO();
+
+            when(teacherService.addCorrectionExamForStudent(anyLong(), anyLong(), any(ExamDTO.class))).thenReturn(examDTO);
+
+            mockMvc.perform(post(TEACHERS + "/teacher-1/student-1/addExam")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(examDTO)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.name", equalTo(NAME)));
+        }
+
+        @DisplayName("[POST], [Happy Path], [Method] = addNewStudentToClass")
+        @Test
+        void addNewStudentToClass() throws Exception {
+            StudentDTO studentDTO = StudentDTO.builder().firstName(ETHAN.get()).build();
+
+            when(teacherService.addNewStudentToClass(anyLong(), any(StudentDTO.class))).thenReturn(studentDTO);
+
+            mockMvc.perform(post(TEACHERS + "/teacher-1/addStudent")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(studentDTO)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())));
+        }
+
+        @DisplayName("[POST], [Happy Path], [Method] = createNewTeacher")
         @Test
         void createNewTeacher() throws Exception {
             TeacherDTO teacherDTO = createEthan();
@@ -178,7 +229,7 @@
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
-        @DisplayName("[PUT], [Happy Path], [Method] = updateTeacher, [Expected] = TeacherDTO with updated fields")
+        @DisplayName("[PUT], [Happy Path], [Method] = updateTeacher")
         @Test
         void updateTeacher() throws Exception {
             TeacherDTO teacherDTO = createEthan();
@@ -195,7 +246,7 @@
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
-        @DisplayName("[DELETE], [Happy Path], [Method] = deleteTeacherById, [Expected] = teacherService deleting student")
+        @DisplayName("[DELETE], [Happy Path], [Method] = deleteTeacherById")
         @Test
         void deleteTeacherById() throws Exception {
             mockMvc.perform(delete(TEACHERS + ID)

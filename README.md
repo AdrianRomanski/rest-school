@@ -24,6 +24,9 @@
 * __getTeachersBySpecialization__ - Return Map where the keys are Specializations and values - List of Teachers
 * __getTeachersByYearsOfExperience__ - Return Map where the keys are Years of Experience and values - List of Teachers
 #### POST
+* __addExamForClass__ - Adding Exam to every Student in the Class
+* __addCorrectionExamForStudent__ - Adding Correction Exam to Student with matching id
+* __addNewStudentToClass__ - Adding new Student to the Class
 * __createNewTeacher__ - Converts DTO Object and save it to Database
 #### PUT
 * __updateStudent__ - Converts DTO Object, update Teacher with matching id and save it to database

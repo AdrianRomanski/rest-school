@@ -1,10 +1,17 @@
 package adrianromanski.restschool.services.person.teacher;
 
 import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+import adrianromanski.restschool.domain.base_entity.event.Exam;
+import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.mapper.event.ExamMapper;
+import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
+import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,11 +26,18 @@ import static java.util.stream.Collectors.toList;
 public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
     private final TeacherMapper teacherMapper;
+    private final ExamMapper examMapper;
+    private final StudentMapper studentMapper;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository, TeacherMapper teacherMapper) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, StudentRepository studentRepository,
+                              TeacherMapper teacherMapper, ExamMapper examMapper, StudentMapper studentMapper) {
         this.teacherRepository = teacherRepository;
+        this.studentRepository = studentRepository;
         this.teacherMapper = teacherMapper;
+        this.examMapper = examMapper;
+        this.studentMapper = studentMapper;
     }
 
     /**
@@ -95,6 +109,68 @@ public class TeacherServiceImpl implements TeacherService {
                         )
                 );
     }
+
+    /**
+     * Adding Exam to every Student in the Class
+     * @throws ResourceNotFoundException if teacher not found
+     */
+    @Override
+    public ExamDTO addExamForClass(Long teacherID, ExamDTO examDTO) {
+        if(teacherRepository.findById(teacherID).isPresent()) {
+            Teacher teacher = teacherRepository.findById(teacherID).get();
+            Exam exam = examMapper.examDTOToExam(examDTO);
+            teacher.getExams().add(exam);   // Adding Exam to Teacher
+            teacher.getStudentClass().getStudentList().forEach(s -> s.getExams().add(exam)); // Adding Exams to Students
+            exam.getStudents().addAll(teacher.getStudentClass().getStudentList()); // Adding Students to Exam
+            return examMapper.examToExamDTO(exam);
+        } else {
+            throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
+        }
+    }
+
+
+    /**
+     * Adding Correction Exam to one Student with matching id
+     * @throws ResourceNotFoundException if teacher not found
+     * @throws ResourceNotFoundException if student not found
+     */
+    @Override
+    public ExamDTO addCorrectionExamForStudent(Long teacherID, Long studentID, ExamDTO examDTO) {
+        if (teacherRepository.findById(teacherID).isPresent()) {
+            Teacher teacher = teacherRepository.findById(teacherID).get();
+            log.info("Teacher with id: " + teacherID + " founded");
+            Exam exam = examMapper.examDTOToExam(examDTO);
+            if(studentRepository.findById(studentID).isPresent()) {
+                Student student = studentRepository.findById(studentID).get();
+                log.info("Student with id: " + studentID + " founded");
+                teacher.getExams().add(exam); // Adding Exam to Teacher
+                student.getExams().add(exam); // Adding Exam to Student
+                exam.getStudents().add(student); // Adding Students to Exam
+                exam.setTeacher(teacher); // Adding Teacher to Exam
+                log.info("Correction Exam successfully added to Student with id: " + studentID);
+                return examMapper.examToExamDTO(exam);
+            } else {
+                log.debug("Student with id: " + studentID + " not found");
+                throw new ResourceNotFoundException("Student with id: " + studentID + " not found");
+            }
+        } else {
+            log.debug("Teacher with id: " + studentID + " not found");
+            throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
+        }
+    }
+
+    @Override
+    public StudentDTO addNewStudentToClass(Long teacherID, StudentDTO studentDTO) {
+        if(teacherRepository.findById(teacherID).isPresent()) {
+            Teacher teacher = teacherRepository.findById(teacherID).get();
+            Student student = studentMapper.studentDTOToStudent(studentDTO);
+            student.setStudentClass(teacher.getStudentClass()); // Adding StudentClass to Student
+            teacher.getStudentClass().getStudentList().add(student); // Adding Student to StudentClass
+            return studentMapper.studentToStudentDTO(student);
+        }
+        throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
+    }
+
 
     /**
      * Converts DTO Object and Save it to Database

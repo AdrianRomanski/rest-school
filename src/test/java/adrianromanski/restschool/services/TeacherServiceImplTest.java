@@ -1,11 +1,19 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.mapper.event.ExamMapper;
+import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
+import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
+import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
 import adrianromanski.restschool.services.person.teacher.TeacherService;
 import adrianromanski.restschool.services.person.teacher.TeacherServiceImpl;
@@ -35,11 +43,15 @@ import static org.mockito.Mockito.*;
 class TeacherServiceImplTest {
 
     public static final long ID = 1L;
+    public static final String STUDENT_CLASS_NAME = "Rookies";
 
     TeacherService teacherService;
 
     @Mock
     TeacherRepository teacherRepository;
+
+    @Mock
+    StudentRepository studentRepository;
 
     Teacher createTeacher(Long id, String firstName, String lastName, Gender gender, Subjects subjects, LocalDate firstDay) {
         Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).gender(gender).
@@ -56,7 +68,12 @@ class TeacherServiceImplTest {
     }
 
     Teacher createEthan() {
-        return createTeacher(ID, ETHAN.get(), COOPER.get(), MALE, CHEMISTRY, LocalDate.of(2018, 10, 3));
+        Teacher teacher = createTeacher(ID, ETHAN.get(), COOPER.get(), MALE, CHEMISTRY, LocalDate.of(2018, 10, 3));
+        StudentClass studentClass = StudentClass.builder().subject(CHEMISTRY).president(ETHAN.get()).name(STUDENT_CLASS_NAME).build();
+        studentClass.getStudentList().addAll(Arrays.asList(Student.builder().firstName(SEBASTIAN.get()).build(), Student.builder().firstName(DANIEL.get()).build()));
+        teacher.setStudentClass(studentClass);
+        studentClass.setTeacher(teacher);
+        return teacher;
     }
 
     Teacher createBenjamin() {
@@ -67,11 +84,16 @@ class TeacherServiceImplTest {
         return createTeacher(3L, ARIA.get(), WILLIAMS.get(), FEMALE, PHYSICS, LocalDate.of(2017, 10, 3));
     }
 
+    private ExamDTO createExam() {
+        return ExamDTO.builder().maxPoints(100L).name("Ethan Exam").build();
+    }
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        teacherService = new TeacherServiceImpl(teacherRepository, TeacherMapper.INSTANCE);
+        teacherService = new TeacherServiceImpl(teacherRepository, studentRepository,
+                                                TeacherMapper.INSTANCE, ExamMapper.INSTANCE, StudentMapper.INSTANCE);
     }
 
     @DisplayName("[Happy Path], [Method] = getAllTeachers")
@@ -142,6 +164,96 @@ class TeacherServiceImplTest {
         assertTrue(map.containsKey(1L));
         assertTrue(map.containsKey(2L));
     }
+
+    @DisplayName("[Happy Path], [Method] = addExamForClass")
+    @Test
+    void addExamForClass() {
+        Teacher teacher = createEthan();
+
+        ExamDTO examDTO = createExam();
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        ExamDTO returnDTO = teacherService.addExamForClass(1L, examDTO);
+
+        assertEquals(returnDTO.getStudentsDTO().size(), 2);
+    }
+
+    @DisplayName("[Unhappy Path], [Method] = addExamForClass")
+    @Test
+    void addExamForClassUnhappy() {
+        ExamDTO examDTO = createExam();
+
+        Throwable ex = catchThrowable(() -> teacherService.addExamForClass(222L,examDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Happy Path], [Method] = addCorrectionExamForStudent")
+    @Test
+    void addCorrectionExamForStudentHappyPath() {
+        Teacher teacher = createEthan();
+        Student student = Student.builder().firstName(SEBASTIAN.get()).build();
+        ExamDTO examDTO = createExam();
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        ExamDTO returnDTO = teacherService.addCorrectionExamForStudent(1L, 1L, examDTO);
+
+        assertEquals(returnDTO.getStudentsDTO().size(), 1);
+        assertEquals(returnDTO.getTeacherDTO().getFirstName(), ETHAN.get());
+    }
+
+    @DisplayName("[UnHappy Path], [Method] = addCorrectionExamForStudent, [Reason] = Teacher not found")
+    @Test
+    void addCorrectionExamForStudentUnHappyPathTeacher() {
+        ExamDTO examDTO = createExam();
+
+        Throwable ex = catchThrowable(() -> teacherService.addCorrectionExamForStudent(22L, 22L, examDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[UnHappy Path], [Method] = addCorrectionExamForStudent, [Reason] = Student not found")
+    @Test
+    void addCorrectionExamForStudentUnHappyPathStudent() {
+        ExamDTO examDTO = createExam();
+        Teacher teacher = createEthan();
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+        Throwable ex = catchThrowable(() -> teacherService.addCorrectionExamForStudent(22L, -5L, examDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Happy Path], [Method] = addNewStudentToClass")
+    @Test
+    void addNewStudentToClassHappyPath() {
+        StudentDTO studentDTO = createStudentDTO();
+        Teacher teacher = createEthan();
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        StudentDTO returnDTO = teacherService.addNewStudentToClass(1L,studentDTO);
+
+        assertEquals(returnDTO.getStudentClassDTO().getName(), STUDENT_CLASS_NAME);
+    }
+
+    @DisplayName("[Unhappy Path], [Method] = addNewStudentToClass")
+    @Test
+    void addNewStudentToClassUnhappyPath() {
+        StudentDTO studentDTO = createStudentDTO();
+
+        Throwable ex = catchThrowable(() -> teacherService.addNewStudentToClass(1L, studentDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    private StudentDTO createStudentDTO() {
+        return StudentDTO.builder().firstName(ETHAN.get()).build();
+    }
+
 
     @DisplayName("[Happy Path], [Method] = createNewTeacher")
     @Test

@@ -11,15 +11,18 @@ import adrianromanski.restschool.mapper.person.TeacherMapper;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
+
 
 @Slf4j
 @Service
@@ -27,14 +30,16 @@ public class TeacherServiceImpl implements TeacherService {
 
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
+    private final ExamRepository examRepository;
     private final TeacherMapper teacherMapper;
     private final ExamMapper examMapper;
     private final StudentMapper studentMapper;
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository, StudentRepository studentRepository,
+    public TeacherServiceImpl(TeacherRepository teacherRepository, StudentRepository studentRepository, ExamRepository examRepository,
                               TeacherMapper teacherMapper, ExamMapper examMapper, StudentMapper studentMapper) {
         this.teacherRepository = teacherRepository;
         this.studentRepository = studentRepository;
+        this.examRepository = examRepository;
         this.teacherMapper = teacherMapper;
         this.examMapper = examMapper;
         this.studentMapper = studentMapper;
@@ -123,8 +128,13 @@ public class TeacherServiceImpl implements TeacherService {
             teacher.getStudentClass().getStudentList().forEach(s -> s.getExams().add(exam)); // Adding Exams to Students
             exam.setStudents(teacher.getStudentClass().getStudentList()); // Adding Students to Exam
             exam.setTeacher(teacher); // Adding Teacher to Exam
+            teacherRepository.save(teacher);
+            log.info("Teacher with id: " + teacherID + " saved to repository");
+            examRepository.save(exam);
+            log.info("Exam with id: " + exam.getId() + " saved to repository");
             return examMapper.examToExamDTO(exam);
         } else {
+            log.debug("Teacher with id: " + teacherID + " not found");
             throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
         }
     }
@@ -148,14 +158,19 @@ public class TeacherServiceImpl implements TeacherService {
                 student.getExams().add(exam); // Adding Exam to Student
                 exam.getStudents().add(student); // Adding Students to Exam
                 exam.setTeacher(teacher); // Adding Teacher to Exam
-                log.info("Correction Exam successfully added to Student with id: " + studentID);
+                studentRepository.save(student);
+                log.info("Student with id: " + studentID + " saved to repository");
+                teacherRepository.save(teacher);
+                log.info("Teacher with id: " + teacherID + " saved to repository");
+                examRepository.save(exam);
+                log.info("Exam with id: " + exam.getId() + " saved to repository");
                 return examMapper.examToExamDTO(exam);
             } else {
                 log.debug("Student with id: " + studentID + " not found");
                 throw new ResourceNotFoundException("Student with id: " + studentID + " not found");
             }
         } else {
-            log.debug("Teacher with id: " + studentID + " not found");
+            log.debug("Teacher with id: " + teacherID + " not found");
             throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
         }
     }
@@ -172,8 +187,13 @@ public class TeacherServiceImpl implements TeacherService {
             Student student = studentMapper.studentDTOToStudent(studentDTO);
             student.setStudentClass(teacher.getStudentClass()); // Adding StudentClass to Student
             teacher.getStudentClass().getStudentList().add(student); // Adding Student to StudentClass
+            studentRepository.save(student);
+            log.info("Student with id: " + student.getId() + " saved to repository");
+            teacherRepository.save(teacher);
+            log.info("Teacher with id: " + teacherID + " saved to repository");
             return studentMapper.studentToStudentDTO(student);
         }
+        log.debug("Teacher with id: " + teacherID + " not found");
         throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
     }
 
@@ -187,6 +207,50 @@ public class TeacherServiceImpl implements TeacherService {
         teacherRepository.save(teacherMapper.teacherDTOToTeacher(teacherDTO));
         log.info("Teacher with id: " + teacherDTO.getId() + " successfully saved");
         return teacherDTO;
+    }
+
+
+    /**
+     * Moving exam from one day to another
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public ExamDTO moveExamToAnotherDay(Long teacherID, Integer examID, LocalDate localDate) {
+        if(teacherRepository.findById(teacherID).isPresent()) {
+            Teacher teacher = teacherRepository.findById(teacherID).get();
+            teacher.getExams().get(examID).setDate(localDate); //  Changing date
+            teacherRepository.save(teacher);
+            log.info("Teacher with id: " + teacherID + " saved to repository");
+            return examMapper.examToExamDTO(teacher.getExams().get(examID));
+        } else {
+            log.debug("Teacher with id: " + teacherID + " not found");
+            throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
+        }
+    }
+
+    /**
+     * Changing class president
+     * @throws ResourceNotFoundException if student not found
+     *  @throws ResourceNotFoundException if teacher not found
+     */
+    @Override
+    public TeacherDTO changeClassPresident(Long teacherID, Long studentID) {
+        if(teacherRepository.findById(teacherID).isPresent()) {
+            Teacher teacher = teacherRepository.findById(teacherID).get();
+            if(studentRepository.findById(studentID).isPresent()) {
+                Student student = studentRepository.findById(studentID).get();
+                teacher.getStudentClass().setPresident(student.getFirstName() + " " + student.getLastName());
+                log.info("New president is Student with id: " + studentID);
+                teacherRepository.save(teacher);
+                return teacherMapper.teacherToTeacherDTO(teacher);
+            } else {
+                log.debug("Student with id: " + studentID + " not found");
+                throw new ResourceNotFoundException("Student with id: " + studentID + " not found");
+            }
+        } else {
+            log.debug("Teacher with id: " + teacherID + " not found");
+            throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
+        }
     }
 
     /**
@@ -219,6 +283,28 @@ public class TeacherServiceImpl implements TeacherService {
         } else {
             log.debug("Teacher with id: " + id + " not found");
             throw new ResourceNotFoundException("Teacher with id: " + id + " not found");
+        }
+    }
+
+
+    /**
+     * Removes a Student from the Class - it does not delete the Student from database
+     * I will transform it later to some kind of punishment for bad behaviour
+     */
+    @Override
+    public void removeStudentFromClass(Long teacherID, Long studentID) {
+        if(teacherRepository.findById(teacherID).isPresent()) {
+            Teacher teacher = teacherRepository.findById(teacherID).get();
+            if(studentRepository.findById(studentID).isPresent()) {
+                teacher.getStudentClass().getStudentList().remove(studentRepository.findById(studentID).get());
+                log.info("Student with id: " + studentID + " removed from the class");
+            } else {
+                log.debug("Student with id: " + studentID + " not found");
+                throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
+            }
+        } else {
+            log.debug("Teacher with id: " + teacherID + " not found");
+            throw new ResourceNotFoundException("Teacher with id: " + teacherID + " not found");
         }
     }
 }

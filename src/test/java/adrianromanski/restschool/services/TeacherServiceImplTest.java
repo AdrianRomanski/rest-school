@@ -1,6 +1,7 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
@@ -10,9 +11,9 @@ import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
 import adrianromanski.restschool.services.person.teacher.TeacherService;
@@ -44,6 +45,7 @@ class TeacherServiceImplTest {
 
     public static final long ID = 1L;
     public static final String STUDENT_CLASS_NAME = "Rookies";
+    public static final LocalDate NOW = LocalDate.now();
 
     TeacherService teacherService;
 
@@ -52,6 +54,9 @@ class TeacherServiceImplTest {
 
     @Mock
     StudentRepository studentRepository;
+
+    @Mock
+    ExamRepository examRepository;
 
     Teacher createTeacher(Long id, String firstName, String lastName, Gender gender, Subjects subjects, LocalDate firstDay) {
         Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).gender(gender).
@@ -92,8 +97,8 @@ class TeacherServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        teacherService = new TeacherServiceImpl(teacherRepository, studentRepository,
-                                                TeacherMapper.INSTANCE, ExamMapper.INSTANCE, StudentMapper.INSTANCE);
+        teacherService = new TeacherServiceImpl(teacherRepository, studentRepository, examRepository,
+                                            TeacherMapper.INSTANCE, ExamMapper.INSTANCE, StudentMapper.INSTANCE);
     }
 
     @DisplayName("[Happy Path], [Method] = getAllTeachers")
@@ -270,6 +275,68 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getLastName(), COOPER.get());
     }
 
+    @DisplayName("[Happy Path], [Method] = moveExamToAnotherDay")
+    @Test
+    void moveExamToAnotherDayHappyPath() {
+        Exam exam = Exam.builder().date(NOW).build();
+        exam.setId(1L);
+        Teacher teacher = createEthan();
+        teacher.getExams().add(exam);
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        ExamDTO returnDTO = teacherService.moveExamToAnotherDay(teacher.getId(), 0, LocalDate.of(2020, 10,10));
+
+        assertEquals(returnDTO.getDate(), LocalDate.of(2020, 10,10));
+    }
+
+    @DisplayName("[Unhappy Path], [Method] = moveExamToAnotherDay")
+    @Test
+    void moveExamToAnotherDayUnhappyPath() {
+
+          Throwable ex = catchThrowable(() -> teacherService.moveExamToAnotherDay(0L, 1, LocalDate.of(2020, 10,10)));
+
+          assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Happy Path], [Method] = changeClassPresident")
+    @Test
+    void changeClassPresidentHappyPath() {
+         Teacher teacher = createEthan();
+         Student student = Student.builder().firstName(ISAAC.get()).lastName(HENDERSON.get()).build();
+
+         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+         TeacherDTO returnDTO = teacherService.changeClassPresident(1L, 1L);
+
+         assertEquals(returnDTO.getStudentClassDTO().getPresident(), "Isaac Henderson");
+    }
+
+    @DisplayName("[Unhappy Path], [Method] = changeClassPresident")
+    @Test
+    void changeClassPresidentUnhappyPathTeacher()  {
+
+        Throwable ex = catchThrowable(() -> teacherService.changeClassPresident(1L, 1L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Unhappy Path], [Method] = changeClassPresident")
+    @Test
+    void changeClassPresidentUnhappyPathStudent() {
+        Teacher teacher = createEthan();
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        Throwable ex = catchThrowable(() -> teacherService.changeClassPresident(1L, 1L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+
+
     @DisplayName("[Happy Path], [Method] = updateTeacher")
     @Test
     void updateTeacher() {
@@ -313,6 +380,42 @@ class TeacherServiceImplTest {
     void deleteTeacherByIDUnHappyPath() {
 
         Throwable ex = catchThrowable(() -> teacherService.deleteTeacherById(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Happy Path], [Method] = removeStudentFromClass")
+    @Test
+    void removeStudentFromClass() {
+      Teacher teacher = createEthan();  // This one comes with Student Class that have 2 students
+      Student student = Student.builder().firstName(ISAAC.get()).lastName(HENDERSON.get()).build();
+      teacher.getStudentClass().getStudentList().add(student);
+
+      when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+      when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+      teacherService.removeStudentFromClass(1L, 1L);
+
+      assertEquals(teacher.getStudentClass().getStudentList().size(), 2);   // That's why im excepting 2 here
+    }
+
+    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById, [Reason] = Teacher with id 1 not found")
+    @Test
+    void removeStudentFromClassUnHappyPathTeacher()  {
+
+        Throwable ex = catchThrowable(() -> teacherService.removeStudentFromClass(1L, 1L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById, [Reason] = Student with id 1 not found")
+    @Test
+    void removeStudentFromClassUnHappyPathStudent() {
+        Teacher teacher = createEthan();
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        Throwable ex = catchThrowable(() -> teacherService.removeStudentFromClass(1L, 1L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }

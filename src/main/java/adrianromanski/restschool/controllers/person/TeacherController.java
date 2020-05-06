@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -89,11 +90,25 @@ public class TeacherController {
         return teacherService.createNewTeacher(teacherDTO);
     }
 
+    @ApiOperation("Changing class president")
+    @PutMapping("teacher-{teacherID}/student-{studentID}/changeClassPresident")
+    @ResponseStatus(HttpStatus.OK)
+    public TeacherDTO changeClassPresident(@PathVariable String teacherID, @PathVariable String studentID) {
+        return teacherService.changeClassPresident(Long.valueOf(teacherID), Long.valueOf(studentID));
+    }
+
     @ApiOperation("Update an existing Teacher with matching ID or create a new one")
     @PutMapping("{ID}")
     @ResponseStatus(HttpStatus.OK)
     public TeacherDTO updateTeacher(@PathVariable String ID, @RequestBody TeacherDTO teacherDTO) {
         return teacherService.updateTeacher(Long.valueOf(ID), teacherDTO);
+    }
+
+    @ApiOperation("Removes a Student from the Class")
+    @DeleteMapping("teacher-{teacherID}/student-{studentID}/removeFromTheClass")
+    @ResponseStatus(HttpStatus.OK)
+    public void removeStudentFromClass(@PathVariable String teacherID, @PathVariable String studentID) {
+        teacherService.removeStudentFromClass(Long.valueOf(teacherID), Long.valueOf(studentID));
     }
 
     @ApiOperation("Delete a Teacher based on ID")

@@ -126,7 +126,7 @@ public class TeacherServiceImpl implements TeacherService {
         Teacher teacher = teacherRepository
                 .findById(teacherID)
                 .orElseThrow(() -> new ResourceNotFoundException("Teacher with id: " + teacherID + NOT_FOUND));
-        Exam exam = examMapper.examDTOToExam(examDTO);
+            Exam exam = examMapper.examDTOToExam(examDTO);
             teacher.getExams().add(exam);   // Adding Exam to Teacher
             teacher.getStudentClass().getStudentList().forEach(s -> s.getExams().add(exam)); // Adding Exams to Students
             exam.setStudents(teacher.getStudentClass().getStudentList()); // Adding Students to Exam

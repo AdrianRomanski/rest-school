@@ -29,9 +29,13 @@
 * __addNewStudentToClass__ - Adding new Student to the Class
 * __createNewTeacher__ - Converts DTO Object and save it to Database
 #### PUT
+* __moveExamToAnotherDay__ - Moving exam from one day to another
+* __changeClassPresident__ - Changing class president
 * __updateStudent__ - Converts DTO Object, update Teacher with matching id and save it to database
+
 #### DELETE
 * __deleteTeacherById__ - Delete Teacher with matching id
+* __removeStudentFromClass__ - Removes Student from the Class
 
 ## <div align="center"> Guardian </div>
 #### GET

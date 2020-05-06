@@ -19,6 +19,7 @@
     import org.springframework.test.web.servlet.MockMvc;
     import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+    import java.time.LocalDate;
     import java.util.*;
 
     import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
@@ -229,6 +230,20 @@
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
+        @DisplayName("[PUT], [Happy Path], [Method] = changeClassPresident")
+        @Test
+        void changeClassPresident() throws Exception {
+            TeacherDTO teacherDTO = createEthan();
+
+            when(teacherService.changeClassPresident(anyLong(), anyLong())).thenReturn(teacherDTO);
+
+            mockMvc.perform(put(TEACHERS + "teacher-1/student-1/changeClassPresident")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(teacherDTO)))
+                    .andExpect(status().isOk());
+        }
+
         @DisplayName("[PUT], [Happy Path], [Method] = updateTeacher")
         @Test
         void updateTeacher() throws Exception {
@@ -244,6 +259,16 @@
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.firstName", equalTo("Updated")))
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
+        }
+
+        @DisplayName("[DELETE], [Happy Path], [Method] = removeStudentFromClass")
+        @Test
+        void removeStudentFromClass() throws Exception {
+            mockMvc.perform(delete(TEACHERS + "teacher-1/student-1/removeFromTheClass")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+
+            verify(teacherService).removeStudentFromClass(ID, ID);
         }
 
         @DisplayName("[DELETE], [Happy Path], [Method] = deleteTeacherById")

@@ -371,8 +371,6 @@ class TeacherServiceImplTest {
         when(teacherRepository.findById(ID)).thenReturn(Optional.of(teacher));
 
         teacherService.deleteTeacherById(ID);
-
-        verify(teacherRepository, times(1)).deleteById(ID);
    }
 
     @DisplayName("[Unhappy Path], [Method] = deleteTeacherById, [Reason] = Teacher with id 222 not found")

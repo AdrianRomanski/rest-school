@@ -7,7 +7,10 @@ import java.util.List;
 
 public interface StudentService {
 
+    // GET
     List<StudentDTO> getAllStudents();
+
+    StudentDTO getStudentByID(Long id);
 
     List<StudentDTO> getAllFemaleStudents();
 
@@ -15,12 +18,13 @@ public interface StudentService {
 
     StudentDTO getStudentByFirstAndLastName(String firstName, String lastName);
 
+    // POST
     StudentDTO createNewStudent(StudentDTO studentDTO);
 
-    void deleteStudentByID(Long id);
-
+    // PUT
     StudentDTO updateStudent(Long id, StudentDTO studentDTO);
 
-    StudentDTO getStudentByID(Long id);
+    // DELETE
+    void deleteStudentByID(Long id);
 
 }

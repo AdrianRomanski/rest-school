@@ -1,11 +1,11 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
+import adrianromanski.restschool.domain.base_entity.Contact;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.group.SportTeam;
 import adrianromanski.restschool.domain.base_entity.group.StudentClass;
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -35,6 +35,9 @@ public class Student extends Person {
     @JoinTable(name = "student_exams", joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "exam_id"))
     private List<Exam> exams = new ArrayList<>();
+
+    @OneToOne
+    Contact contact;
 
     @ManyToOne
     private Guardian guardian;

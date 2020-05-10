@@ -4,6 +4,7 @@ import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class AddressDTO extends BaseEntityDTO {
 
     private String country;

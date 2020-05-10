@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Address extends BaseEntity {
 

@@ -3,6 +3,7 @@ package adrianromanski.restschool.domain.base_entity;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Email;
 
 @EqualsAndHashCode(exclude = {"address", "student"})
 @Entity
+@NoArgsConstructor
 @Data
 public class Contact extends BaseEntity {
 

@@ -1,6 +1,8 @@
 package adrianromanski.restschool.domain.base_entity;
 
+import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.base_entity.person.Teacher;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,4 +35,10 @@ public class Contact extends BaseEntity {
 
     @OneToOne
     private Student student;
+
+    @OneToOne
+    private Teacher teacher;
+
+    @OneToOne
+    private Guardian guardian;
 }

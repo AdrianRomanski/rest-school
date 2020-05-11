@@ -1,5 +1,6 @@
 package adrianromanski.restschool.domain.base_entity.person;
 
+import adrianromanski.restschool.domain.base_entity.Contact;
 import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.event.Exam;
 import adrianromanski.restschool.domain.base_entity.event.Payment;
@@ -40,6 +41,9 @@ public class Teacher extends Person {
     @ToString.Exclude
     @OneToMany(mappedBy = "teacher")
     private List<Payment> payments = new ArrayList<>();
+
+    @OneToOne
+    private Contact contact;
 
     public Long getYearsOfExperience() {
         if (firstDay != null) {

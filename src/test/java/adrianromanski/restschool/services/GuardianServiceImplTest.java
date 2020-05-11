@@ -37,8 +37,6 @@ import static org.mockito.Mockito.*;
 
 class GuardianServiceImplTest {
 
-    public static final String EMAIL = "WayneEnterprise@Gotham.com";
-    public static final String NUMBER = "543-352-332";
     public static final long ID = 1L;
 
     GuardianService guardianService;
@@ -58,15 +56,13 @@ class GuardianServiceImplTest {
     }
 
     GuardianDTO createEthanDTO() {
-        GuardianDTO guardianDTO = GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get())
-                                                    .email(EMAIL).telephoneNumber(NUMBER).build();
+        GuardianDTO guardianDTO = GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).build();
         guardianDTO.setId(ID);
         return guardianDTO;
     }
 
     Guardian createEthan() {
-        Guardian guardian = Guardian.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).email(EMAIL)
-                                                    .telephoneNumber(NUMBER).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
+        Guardian guardian = Guardian.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
 
         Student sebastian = createSebastian();
         Student charlotte = createCharlotte();
@@ -115,8 +111,6 @@ class GuardianServiceImplTest {
 
         assertEquals(legalGuardianDTO.getFirstName(), ETHAN.get());
         assertEquals(legalGuardianDTO.getLastName(), HENDERSON.get());
-        assertEquals(legalGuardianDTO.getTelephoneNumber(), NUMBER);
-        assertEquals(legalGuardianDTO.getEmail(), EMAIL);
         assertEquals(legalGuardianDTO.getId(), ID);
 
     }
@@ -132,8 +126,6 @@ class GuardianServiceImplTest {
 
         assertEquals(legalGuardianDTO.getFirstName(), ETHAN.get());
         assertEquals(legalGuardianDTO.getLastName(), HENDERSON.get());
-        assertEquals(legalGuardianDTO.getTelephoneNumber(), NUMBER);
-        assertEquals(legalGuardianDTO.getEmail(), EMAIL);
         assertEquals(legalGuardianDTO.getId(), ID);
     }
 
@@ -178,8 +170,6 @@ class GuardianServiceImplTest {
 
         assertEquals(returnDTO.getFirstName(), ETHAN.get());
         assertEquals(returnDTO.getLastName(), HENDERSON.get());
-        assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
-        assertEquals(returnDTO.getEmail(), EMAIL);
         assertEquals(returnDTO.getId(), ID);
     }
 
@@ -198,8 +188,6 @@ class GuardianServiceImplTest {
 
         assertEquals(returnDTO.getFirstName(), "Updated");
         assertEquals(returnDTO.getLastName(), HENDERSON.get());
-        assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
-        assertEquals(returnDTO.getEmail(), EMAIL);
         assertEquals(returnDTO.getId(), ID);
     }
 

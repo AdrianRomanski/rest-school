@@ -2,6 +2,7 @@ package adrianromanski.restschool.model.base_entity.person;
 
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+import adrianromanski.restschool.model.base_entity.ContactDTO;
 import adrianromanski.restschool.model.base_entity.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
 import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
@@ -29,6 +30,8 @@ public class TeacherDTO extends PersonDTO {
         this.firstDay = firstDay;
         this.subject = subject;
     }
+
+    private ContactDTO contactDTO;
 
     @JsonIgnore
     private List<ExamDTO> examsDTO = new ArrayList<>();

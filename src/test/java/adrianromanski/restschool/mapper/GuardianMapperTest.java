@@ -11,8 +11,6 @@ class GuardianMapperTest {
 
     public static final String FIRST_NAME = "Bruce";
     public static final String LAST_NAME = "Wayne";
-    public static final String EMAIL = "WayneEnterprise@Gotham.com";
-    public static final String NUMBER = "543-352-332";
     public static final long ID = 1L;
     GuardianMapper guardianMapper = GuardianMapper.INSTANCE;
 
@@ -21,8 +19,6 @@ class GuardianMapperTest {
         Guardian guardian = new Guardian();
         guardian.setFirstName(FIRST_NAME);
         guardian.setLastName(LAST_NAME);
-        guardian.setEmail(EMAIL);
-        guardian.setTelephoneNumber(NUMBER);
         guardian.setId(ID);
 
 
@@ -30,8 +26,6 @@ class GuardianMapperTest {
 
         assertEquals(guardianDTO.getFirstName(), FIRST_NAME);
         assertEquals(guardianDTO.getLastName(), LAST_NAME);
-        assertEquals(guardianDTO.getEmail(), EMAIL);
-        assertEquals(guardianDTO.getTelephoneNumber(), NUMBER);
         assertEquals(guardianDTO.getId(), ID);
     }
 
@@ -40,8 +34,6 @@ class GuardianMapperTest {
         GuardianDTO guardianDTO = new GuardianDTO();
         guardianDTO.setFirstName(FIRST_NAME);
         guardianDTO.setLastName(LAST_NAME);
-        guardianDTO.setEmail(EMAIL);
-        guardianDTO.setTelephoneNumber(NUMBER);
         guardianDTO.setId(ID);
 
 
@@ -49,8 +41,6 @@ class GuardianMapperTest {
 
         assertEquals(guardian.getFirstName(), FIRST_NAME);
         assertEquals(guardian.getLastName(), LAST_NAME);
-        assertEquals(guardian.getEmail(), EMAIL);
-        assertEquals(guardian.getTelephoneNumber(), NUMBER);
         assertEquals(guardian.getId(), ID);
     }
 }

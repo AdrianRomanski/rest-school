@@ -1,7 +1,10 @@
 package adrianromanski.restschool.model.base_entity;
 
 
+import adrianromanski.restschool.domain.base_entity.person.Guardian;
+import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,12 +20,12 @@ public class ContactDTO extends BaseEntityDTO {
     private String email;
     private AddressDTO addressDTO;
     private StudentDTO studentDTO;
+    private TeacherDTO teacherDTO;
+    private GuardianDTO guardianDTO;
 
     @Builder
-    public ContactDTO(String telephoneNumber, String email, AddressDTO addressDTO, StudentDTO studentDTO) {
+    public ContactDTO(String telephoneNumber, String email) {
         this.telephoneNumber = telephoneNumber;
         this.email = email;
-        this.addressDTO = addressDTO;
-        this.studentDTO = studentDTO;
     }
 }

@@ -37,8 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class GuardianControllerTest {
 
-    public static final String EMAIL = "WayneEnterprise@Gotham.com";
-    public static final String NUMBER = "543-352-332";
+
     public static final long ID = 1L;
     public static final String GUARDIANS = "/guardians/";
 
@@ -60,8 +59,7 @@ class GuardianControllerTest {
     }
 
     GuardianDTO createEthan() {
-        return GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).email(EMAIL)
-                .telephoneNumber(NUMBER).build();
+        return GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).build();
     }
 
 
@@ -92,9 +90,7 @@ class GuardianControllerTest {
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
-                .andExpect(jsonPath("$.email", equalTo(EMAIL)))
-                .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
     @DisplayName("[GET], [Happy Path], [Method] = getGuardiansByAge, [Expected] = Map with 3 Keys (27,24,22)")
@@ -146,9 +142,7 @@ class GuardianControllerTest {
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
-                .andExpect(jsonPath("$.email", equalTo(EMAIL)))
-                .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
     @DisplayName("[POST], [Happy Path], [Method] = createNewGuardian, [Expected] = GuardianDTO with matching fields")
@@ -164,9 +158,7 @@ class GuardianControllerTest {
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
-                .andExpect(jsonPath("$.email", equalTo(EMAIL)))
-                .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
     @DisplayName("[PUT], [Happy Path], [Method] = updateGuardian, [Expected] = GuardianDTO with updated fields")
@@ -174,7 +166,7 @@ class GuardianControllerTest {
     void updateGuardian() throws Exception {
 
         GuardianDTO guardianDTO = createEthan();
-        guardianDTO.setEmail("HotHotEmail@BruceWayne.com");
+
 
         when(guardianService.updateGuardian(any(GuardianDTO.class), anyLong())).thenReturn(guardianDTO);
 
@@ -184,9 +176,7 @@ class GuardianControllerTest {
                 .content(asJsonString(guardianDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())))
-                .andExpect(jsonPath("$.email", equalTo("HotHotEmail@BruceWayne.com")))
-                .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
     @DisplayName("[DELETE], [Happy Path], [Method] = deleteGuardianByID, [Expected] = guardianService deleting student")

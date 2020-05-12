@@ -1,6 +1,9 @@
 package adrianromanski.restschool.services.person.student;
 
 
+import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.model.base_entity.AddressDTO;
+import adrianromanski.restschool.model.base_entity.ContactDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 
 import java.util.List;
@@ -20,6 +23,10 @@ public interface StudentService {
 
     // POST
     StudentDTO createNewStudent(StudentDTO studentDTO);
+
+    ContactDTO addContactToStudent(ContactDTO contactDTO, Long StudentID);
+
+    AddressDTO addAddressToStudent(AddressDTO addressDTO, Long contactID, Long studentID);
 
     // PUT
     StudentDTO updateStudent(Long id, StudentDTO studentDTO);

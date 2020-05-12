@@ -26,7 +26,7 @@ public interface StudentService {
 
     ContactDTO addContactToStudent(ContactDTO contactDTO, Long StudentID);
 
-    AddressDTO addAddressToStudent(AddressDTO addressDTO, Long contactID, Long studentID);
+    AddressDTO addAddressToStudent(AddressDTO addressDTO, Long studentID, Long contactID);
 
     // PUT
     StudentDTO updateStudent(Long id, StudentDTO studentDTO);

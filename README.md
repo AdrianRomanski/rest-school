@@ -10,9 +10,11 @@
 * __getStudentByFirstAndLastName__ - Return Student with matching firstName and lastName
 * __getStudentByID__ - Return Student with matching id
 #### POST
-* __createNewStudent__ - Converts DTO Object and save it to database
+* __createNewStudent__ - Save Student to database
+* __addContactToStudent__ - Adding Contact to Student with matching ID
+* __addAddressToStudent__ - Adding Address to Student with matching ID
 #### PUT
-* __updateStudent__ - Converts DTO Object, update Student with matching id and save it to database
+* __updateStudent__ - Update Student with matching id and save it to database
 #### DELETE
 * __deleteStudentByID__ - Delete Student with matching id
 

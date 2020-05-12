@@ -5,6 +5,8 @@ import adrianromanski.restschool.controllers.person.StudentController;
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.model.base_entity.AddressDTO;
+import adrianromanski.restschool.model.base_entity.ContactDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +45,12 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
     public static final Long ID = 1L;
     public static final String STUDENTS = "/students/";
+    public static final String TELEPHONE_NUMBER = "222-44-22";
+    public static final String EMAIL = "Jimmy@Gmail.com";
+    public static final String COUNTRY = "Poland";
+    public static final String CITY = "Warsaw";
+    public static final String POSTAL_CODE = "22-22";
+    public static final String STREET_NAME = "Happy";
 
     @Mock
     StudentService studentService;
@@ -80,7 +88,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     }
 
 
-    @DisplayName("[GET], [Happy Path], [Method] = getAllStudents, [Expected] = List containing 3 Students")
+    @DisplayName("[GET], [Happy Path], [Method] = getAllStudents")
     @Test
     void getAllStudents() throws Exception {
         List<StudentDTO> students = Arrays.asList(createEthan(), createSebastian(), createCharlotte());
@@ -94,7 +102,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                     .andExpect(jsonPath("$.students", hasSize(3)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getAllFemaleStudents, [Expected] = List containing 1 Student")
+    @DisplayName("[GET], [Happy Path], [Method] = getAllFemaleStudents")
     @Test
     void getAllFemaleStudents() throws Exception {
         List<StudentDTO> students = Collections.singletonList(createCharlotte());
@@ -108,7 +116,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.students", hasSize(1)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getAllMaleStudents, [Expected] = List containing 2 Student")
+    @DisplayName("[GET], [Happy Path], [Method] = getAllMaleStudents")
     @Test
     void getAllMaleStudents() throws Exception {
         List<StudentDTO> students = Arrays.asList(createEthan(), createSebastian());
@@ -122,7 +130,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.students", hasSize(2)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName, [Expected] = StudentDTO with matching fields")
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName")
     @Test
     void getStudentByFirstAndLastName() throws Exception {
         StudentDTO studentDTO = createEthan();
@@ -139,7 +147,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getStudentById, [Expected] = StudentDTO with matching fields")
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentById")
     @Test
     void getStudentByID() throws Exception {
         StudentDTO studentDTO = createEthan();
@@ -155,7 +163,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
     }
 
-    @DisplayName("[POST], [Happy Path], [Method] = createNewStudent, [Expected] = StudentDTO  with matching fields")
+    @DisplayName("[POST], [Happy Path], [Method] = createNewStudent")
     @Test
     void createNewStudent() throws Exception {
         StudentDTO returnDTO = createEthan();
@@ -172,7 +180,41 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
     }
 
-    @DisplayName("[PUT], [Happy Path], [Method] = updateStudent, [Expected] = StudentDTO with updated fields")
+    @DisplayName("[POST], [Happy Path], [Method] = createNewStudent")
+    @Test
+    void addContactToStudent() throws Exception {
+        ContactDTO contactDTO = ContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).email(EMAIL).build();
+
+        when(studentService.addContactToStudent(any(ContactDTO.class), anyLong())).thenReturn(contactDTO);
+
+        mockMvc.perform(post(STUDENTS + "addContact/student-id-1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(contactDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.telephoneNumber", equalTo(TELEPHONE_NUMBER)))
+                .andExpect(jsonPath("$.email", equalTo(EMAIL)));
+    }
+
+    @DisplayName("[POST], [Happy Path], [Method] = addAddressToStudent")
+    @Test
+    void addAddressToStudent() throws Exception {
+        AddressDTO addressDTO = AddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
+
+        when(studentService.addAddressToStudent(any(AddressDTO.class), anyLong(), anyLong())).thenReturn(addressDTO);
+
+        mockMvc.perform(post(STUDENTS + "addAddress/student-id-1/contact-id-1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(addressDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.country", equalTo(COUNTRY)))
+                .andExpect(jsonPath("$.city", equalTo(CITY)))
+                .andExpect(jsonPath("$.postalCode", equalTo(POSTAL_CODE)))
+                .andExpect(jsonPath("$.streetName", equalTo(STREET_NAME)));
+    }
+
+    @DisplayName("[PUT], [Happy Path], [Method] = updateStudent")
     @Test
     void updateStudent() throws Exception {
         StudentDTO returnDTO = createEthan();
@@ -190,7 +232,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
     }
 
-    @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentByID, [Expected] = studentService deleting student")
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentByID")
     @Test
     void deleteStudent() throws Exception {
         mockMvc.perform(delete(STUDENTS + 1)

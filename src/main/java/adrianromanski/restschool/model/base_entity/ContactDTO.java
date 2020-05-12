@@ -1,7 +1,5 @@
 package adrianromanski.restschool.model.base_entity;
 
-
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;

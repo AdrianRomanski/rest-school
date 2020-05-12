@@ -131,7 +131,7 @@ public class StudentServiceImpl implements StudentService{
                 .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + studentID + " not found"));
         Contact contact = contactMapper.contactDTOToContact(contactDTO);
             student.setContact(contact);
-            contactDTO.setStudentDTO(studentMapper.studentToStudentDTO(student));
+            contact.setStudent(student);
         contactRepository.save(contact);
         studentRepository.save(student);
             log.info("Contact successfully added to Student with id:  " + studentID);

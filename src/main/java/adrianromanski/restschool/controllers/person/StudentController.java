@@ -1,5 +1,7 @@
 package adrianromanski.restschool.controllers.person;
 
+import adrianromanski.restschool.model.base_entity.AddressDTO;
+import adrianromanski.restschool.model.base_entity.ContactDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentListDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
@@ -60,6 +62,21 @@ public class StudentController {
     @ResponseStatus(HttpStatus.CREATED)
     public StudentDTO createNewStudent(@RequestBody StudentDTO studentDTO) {
         return studentService.createNewStudent(studentDTO);
+    }
+
+    @ApiOperation("Adding Contact to Student with matching ID or else throw ResourceNotFoundException")
+    @PostMapping("addContact/student-id-{ID}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ContactDTO addContactToStudent(@PathVariable String ID, @RequestBody ContactDTO contactDTO)  {
+        return studentService.addContactToStudent(contactDTO, Long.valueOf(ID));
+    }
+
+    @ApiOperation("Adding Address to Student with matching ID or else throw ResourceNotFoundException")
+    @PostMapping("addAddress/student-id-{studentID}/contact-id-{contactID}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AddressDTO addAddressToStudent(@PathVariable String studentID, @PathVariable String contactID,
+                                          @RequestBody AddressDTO addressDTO)  {
+        return studentService.addAddressToStudent(addressDTO, Long.valueOf(studentID), Long.valueOf(contactID));
     }
 
     @ApiOperation("Update an existing Student with matching ID or else throw ResourceNotFoundException")

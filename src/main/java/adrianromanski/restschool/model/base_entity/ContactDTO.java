@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @NoArgsConstructor
 @Getter
@@ -14,6 +15,7 @@ import javax.validation.constraints.NotNull;
 public class ContactDTO extends BaseEntityDTO {
 
     @NotNull
+    @Size(min = 6, max = 12)
     private String telephoneNumber;
 
     @NotNull

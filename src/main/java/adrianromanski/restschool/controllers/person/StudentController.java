@@ -10,6 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @Api("Controller for Students")
 @RestController
 @RequestMapping("/students/")
@@ -84,6 +86,20 @@ public class StudentController {
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@PathVariable String ID, @RequestBody StudentDTO studentDTO) {
         return studentService.updateStudent(Long.valueOf(ID), studentDTO);
+    }
+
+    @PutMapping("updateContact/student-{studentID}/contact-{contactID}")
+    @ResponseStatus(HttpStatus.OK)
+    public ContactDTO updateContact(@RequestBody @Valid ContactDTO contactDTO,
+                                    @PathVariable  Long studentID, @PathVariable Long contactID) {
+        return studentService.updateContact(contactDTO, studentID, contactID);
+    }
+
+    @PutMapping("updateAddress/student-{studentID}/contact-{contactID}/address-{addressID}")
+    @ResponseStatus(HttpStatus.OK)
+    public AddressDTO updateAddress(@RequestBody @Valid AddressDTO addressDTO,
+                                    @PathVariable  Long studentID, @PathVariable Long contactID, @PathVariable Long addressID) {
+        return studentService.updateAddress(addressDTO, studentID, contactID, addressID);
     }
 
     @ApiOperation("Delete a student with matching ID or else throw ResourceNotFoundException")

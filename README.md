@@ -15,6 +15,8 @@
 * __addAddressToStudent__ - Adding Address to Student with matching ID
 #### PUT
 * __updateStudent__ - Update Student with matching id and save it to database
+* __updateContact__ - Update Contact with matching id and save it to database
+* __updateAddress__ - Update Address with matching id and save it to database
 #### DELETE
 * __deleteStudentByID__ - Delete Student with matching id
 

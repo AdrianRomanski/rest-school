@@ -232,6 +232,41 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
     }
 
+
+    @DisplayName("[PUT], [Happy Path], [Method] = updateContact")
+    @Test
+    void updateContact() throws Exception {
+        ContactDTO contactDTO = ContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).email(EMAIL).build();
+
+        when(studentService.updateContact(any(ContactDTO.class), anyLong(), anyLong())).thenReturn(contactDTO);
+
+        mockMvc.perform(put(STUDENTS + "updateContact/student-1/contact-1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(contactDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.telephoneNumber", equalTo(TELEPHONE_NUMBER)))
+                .andExpect(jsonPath("$.email", equalTo(EMAIL)));
+    }
+
+    @DisplayName("[PUT], [Happy Path], [Method] = updateAddress")
+    @Test
+    void updateAddress() throws Exception {
+        AddressDTO addressDTO = AddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
+
+        when(studentService.updateAddress(any(AddressDTO.class), anyLong(), anyLong(), anyLong())).thenReturn(addressDTO);
+
+        mockMvc.perform(put(STUDENTS + "updateAddress/student-1/contact-1/address-1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(addressDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.country", equalTo(COUNTRY)))
+                .andExpect(jsonPath("$.city", equalTo(CITY)))
+                .andExpect(jsonPath("$.postalCode", equalTo(POSTAL_CODE)))
+                .andExpect(jsonPath("$.streetName", equalTo(STREET_NAME)));
+    }
+
     @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentByID")
     @Test
     void deleteStudent() throws Exception {

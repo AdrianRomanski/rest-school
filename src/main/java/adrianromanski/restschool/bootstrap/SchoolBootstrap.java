@@ -244,6 +244,12 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         // Saving to repositories
 
+        // Contact
+        contactRepository.save(contact);
+
+        // Address
+        addressRepository.save(address);
+
         //Students
         studentRepository.save(jacob);
         studentRepository.save(ethan);
@@ -281,22 +287,19 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         sportTeamRepository.save(footballTeam);
         sportTeamRepository.save(footballTeam2);
 
-        // Contact
-        contactRepository.save(contact);
 
-        // Address
-        addressRepository.save(address);
 
         // Logging to console
-        log.info("Saved: " + studentRepository.count() + " Students");
-        log.info("Saved: " + guardianRepository.count() + " Guardians");
-        log.info("Saved: " + teacherRepository.count() + " Teachers");
-        log.info("Saved: " + subjectRepository.count() + " Subjects");
-        log.info("Saved: " + examRepository.count() + " Exams");
-        log.info("Saved: " + examResultRepository.count() + " Exam Results");
-        log.info("Saved: " + studentClassRepository.count() + " Student Classes");
-        log.info("Saved: " + sportTeamRepository.count() + " Sport Teams");
-        log.info("Saved: " + contactRepository.count() + " Contacts");
-        log.info("Saved: " + addressRepository.count() + " Addresses");
+
+//        log.info("Saved: " + guardianRepository.count() + " Guardians");
+//        log.info("Saved: " + teacherRepository.count() + " Teachers");
+//        log.info("Saved: " + subjectRepository.count() + " Subjects");
+//        log.info("Saved: " + examRepository.count() + " Exams");
+//        log.info("Saved: " + examResultRepository.count() + " Exam Results");
+//        log.info("Saved: " + studentClassRepository.count() + " Student Classes");
+//        log.info("Saved: " + sportTeamRepository.count() + " Sport Teams");
+//        log.info("Saved: " + contactRepository.count() + " Contacts");
+//        log.info("Saved: " + addressRepository.count() + " Addresses");
+//        log.info("Saved: " + studentRepository.count() + " Students");
     }
 }

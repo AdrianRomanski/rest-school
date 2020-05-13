@@ -181,6 +181,51 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /**
+     *  Update Contact with Matching ID and save it to Database
+     * @return ContactDTO object if successfully updated
+     * @throws ResourceNotFoundException if not found student or contact
+     */
+    @Override
+    public ContactDTO updateContact(ContactDTO contactDTO, Long studentID, Long contactID) {
+        Student student = studentRepository.findById(studentID)
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + studentID + " not found"));
+        contactRepository.findById(contactID)
+                .orElseThrow(() -> new ResourceNotFoundException("Contact with id: " + contactID + " not found"));
+        Contact updatedContact = contactMapper.contactDTOToContact(contactDTO);
+            updatedContact.setId(contactID);
+            student.setContact(updatedContact);
+            updatedContact.setStudent(student);
+        studentRepository.save(student);
+        contactRepository.save(updatedContact);
+            log.info("Contact with id: " + contactID + " successfully updated");
+        return contactMapper.contactToContactDTO(updatedContact);
+    }
+
+    /**
+     *  Update Address with Matching ID and save it to Database
+     * @return AddressDTO object if successfully updated
+     * @throws ResourceNotFoundException if not found student, contact or address
+     */
+    @Override
+    public AddressDTO updateAddress(AddressDTO addressDTO, Long studentID, Long contactID, Long addressID) {
+        Student student = studentRepository.findById(studentID)
+                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + studentID + " not found"));
+        Contact contact = contactRepository.findById(contactID)
+                .orElseThrow(() -> new ResourceNotFoundException("Contact with id: " + contactID + " not found"));
+        addressRepository.findById(addressID)
+                .orElseThrow(() -> new ResourceNotFoundException("Address with id: " + addressID + " not found"));
+        Address updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
+            updatedAddress.setId(addressID);
+            contact.setAddress(updatedAddress);
+            student.setContact(contact);
+        studentRepository.save(student);
+        contactRepository.save(contact);
+        addressRepository.save(updatedAddress);
+            log.info("Address with id: " + addressID + " successfully updated");
+        return addressMapper.addressToAddressDTO(updatedAddress);
+    }
+
+    /**
      * Delete Student with matching id
      * @throws ResourceNotFoundException if not found
      */

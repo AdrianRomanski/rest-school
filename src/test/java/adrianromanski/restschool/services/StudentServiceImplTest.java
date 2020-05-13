@@ -282,6 +282,49 @@ class StudentServiceImplTest {
             assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+    @DisplayName("[Happy Path], [Method] = updateContact")
+    @Test
+    void updateContact() {
+        ContactDTO contactDTO = ContactDTO.builder().email(EMAIL).telephoneNumber(NUMBER).build();
+        Contact contact = Contact.builder().email(EMAIL).telephoneNumber(NUMBER).build();
+        Student student = createEthan();
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(contactRepository.findById(anyLong())).thenReturn(Optional.of(contact));
+
+        ContactDTO returnDTO = studentService.updateContact(contactDTO, ID, ID);
+
+        assertEquals(returnDTO.getEmail(), EMAIL);
+
+        verify(studentRepository).save(any(Student.class));
+        verify(contactRepository).save(any(Contact.class));
+    }
+
+    @DisplayName("[Happy Path], [Method] = updateAddress")
+    @Test
+    void updateAddress() {
+        AddressDTO addressDTO = AddressDTO.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build();
+        Address address = Address.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build();
+        Contact contact = Contact.builder().email(EMAIL).telephoneNumber(NUMBER).build();
+        Student student = createEthan();
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+        when(contactRepository.findById(anyLong())).thenReturn(Optional.of(contact));
+        when(addressRepository.findById(anyLong())).thenReturn(Optional.of(address));
+
+        AddressDTO returnDTO = studentService.updateAddress(addressDTO,ID,ID,ID);
+
+        assertEquals(returnDTO.getCountry(), POLAND);
+        assertEquals(returnDTO.getCity(), WARSAW);
+        assertEquals(returnDTO.getPostalCode(), POSTAL_CODE);
+        assertEquals(returnDTO.getStreetName(), SESAME);
+
+        verify(studentRepository).save(any(Student.class));
+        verify(contactRepository).save(any(Contact.class));
+        verify(addressRepository).save(any(Address.class));
+    }
+
+
     @DisplayName("[Happy Path], [Method] = deleteStudentByID")
     @Test
     void deleteStudentByID() {

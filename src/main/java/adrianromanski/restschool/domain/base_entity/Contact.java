@@ -3,15 +3,14 @@ package adrianromanski.restschool.domain.base_entity;
 import adrianromanski.restschool.domain.base_entity.person.Guardian;
 import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.domain.base_entity.person.Teacher;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+
 
 @EqualsAndHashCode(exclude = {"address", "student"})
 @Entity
@@ -19,8 +18,10 @@ import javax.validation.constraints.Email;
 @Data
 public class Contact extends BaseEntity {
 
+    @NotNull
     private String telephoneNumber;
 
+    @NotNull
     @Email
     private String email;
 

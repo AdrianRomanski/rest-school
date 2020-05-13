@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.validation.constraints.Email;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -140,7 +141,7 @@ class StudentServiceImplTest {
 
         when(studentRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(student));
 
-        StudentDTO studentDTO = studentService.getStudentByFirstAndLastName(ETHAN.get(), COOPER.get());
+        StudentDTO studentDTO = studentService.getStudentByName(ETHAN.get(), COOPER.get());
 
         assertEquals(ETHAN.get(), studentDTO.getFirstName());
         assertEquals(COOPER.get(), studentDTO.getLastName());
@@ -346,4 +347,29 @@ class StudentServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+    @DisplayName("[Happy Path], [Method] = deleteStudentContact")
+    @Test
+    void deleteStudentContact() {
+        Contact contact = Contact.builder().telephoneNumber(NUMBER).email(EMAIL).build();
+
+        when(contactRepository.findByStudentId(ID)).thenReturn(Optional.of(contact));
+
+        studentService.deleteStudentContact(ID);
+
+        verify(contactRepository, times(1)).delete(contact);
+    }
+
+    @DisplayName("[Happy Path], [Method] = deleteStudentAddress")
+    @Test
+    void deleteStudentAddress() {
+        Contact contact = Contact.builder().telephoneNumber(NUMBER).email(EMAIL).build();
+        Address address = Address.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build();
+        contact.setAddress(address);
+
+        when(contactRepository.findById(ID)).thenReturn(Optional.of(contact));
+
+        studentService.deleteStudentAddress(ID);
+
+        verify(addressRepository, times(1)).delete(address);
+    }
 }

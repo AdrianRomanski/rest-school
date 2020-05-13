@@ -13,13 +13,13 @@ public interface StudentService {
     // GET
     List<StudentDTO> getAllStudents();
 
-    StudentDTO getStudentByID(Long id);
+    StudentDTO getStudentByID(Long studentID);
 
     List<StudentDTO> getAllFemaleStudents();
 
     List<StudentDTO> getAllMaleStudents();
 
-    StudentDTO getStudentByFirstAndLastName(String firstName, String lastName);
+    StudentDTO getStudentByName(String firstName, String lastName);
 
     // POST
     StudentDTO createNewStudent(StudentDTO studentDTO);
@@ -36,6 +36,10 @@ public interface StudentService {
     AddressDTO updateAddress(AddressDTO addressDTO, Long studentID, Long contactID, Long addressID);
 
     // DELETE
-    void deleteStudentByID(Long id);
+    void deleteStudentByID(Long studentID);
+
+    void deleteStudentContact(Long studentID);
+
+    void deleteStudentAddress(Long contactID);
 
 }

@@ -245,7 +245,7 @@ public class TeacherServiceImpl implements TeacherService {
             Teacher updatedTeacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
             updatedTeacher.setId(id);
             teacherRepository.save(updatedTeacher);
-                log.info("Student with id:" + id + SAVED_TO_REPOSITORY);
+                log.info("Teacher with id:" + id + SAVED_TO_REPOSITORY);
             return teacherMapper.teacherToTeacherDTO(updatedTeacher);
     }
 

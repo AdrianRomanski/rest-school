@@ -91,10 +91,10 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public StudentDTO getStudentByFirstAndLastName(String firstName, String lastName) {
+    public StudentDTO getStudentByName(String firstName, String lastName) {
         return studentMapper.studentToStudentDTO(studentRepository
                                 .findByFirstNameAndLastName(firstName, lastName)
-                                .orElseThrow(ResourceNotFoundException::new)); // To do better Exceptions
+                                .orElseThrow(() -> new ResourceNotFoundException(firstName, lastName, Student.class)));
     }
 
     /**
@@ -102,10 +102,10 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public StudentDTO getStudentByID(Long id) {
+    public StudentDTO getStudentByID(Long studentID) {
         return studentMapper.studentToStudentDTO(studentRepository
-                                .findById(id)
-                                .orElseThrow(ResourceNotFoundException::new)); // To do better Exceptions
+                                .findById(studentID)
+                                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class)));
     }
 
     /**
@@ -128,7 +128,7 @@ public class StudentServiceImpl implements StudentService{
     public ContactDTO addContactToStudent(ContactDTO contactDTO, Long studentID) {
         Student student = studentRepository
                 .findById(studentID)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + studentID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         Contact contact = contactMapper.contactDTOToContact(contactDTO);
             student.setContact(contact);
             contact.setStudent(student);
@@ -148,10 +148,10 @@ public class StudentServiceImpl implements StudentService{
     public AddressDTO addAddressToStudent(AddressDTO addressDTO, Long contactID, Long studentID) {
         Student student = studentRepository
                 .findById(studentID)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + studentID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         Contact contact = contactRepository
                 .findById(contactID)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact with id: " + contactID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
         Address address = addressMapper.addressDTOToAddress(addressDTO);
             contact.setAddress(address);
             student.setContact(contact);
@@ -169,15 +169,14 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
-           studentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + id + " not found")); // I should log debug
+    public StudentDTO updateStudent(Long studentID, StudentDTO studentDTO) {
+           studentRepository.findById(studentID)
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
            Student updatedStudent = studentMapper.studentDTOToStudent(studentDTO);
-               updatedStudent.setId(id);
+               updatedStudent.setId(studentID);
            studentRepository.save(updatedStudent);
-               log.info("Student with id:" + id +  " successfully updated");
+               log.info("Student with id:" + studentID +  " successfully updated");
            return studentMapper.studentToStudentDTO(updatedStudent);
-
     }
 
     /**
@@ -188,9 +187,9 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public ContactDTO updateContact(ContactDTO contactDTO, Long studentID, Long contactID) {
         Student student = studentRepository.findById(studentID)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + studentID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         contactRepository.findById(contactID)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact with id: " + contactID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
         Contact updatedContact = contactMapper.contactDTOToContact(contactDTO);
             updatedContact.setId(contactID);
             student.setContact(updatedContact);
@@ -209,11 +208,11 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public AddressDTO updateAddress(AddressDTO addressDTO, Long studentID, Long contactID, Long addressID) {
         Student student = studentRepository.findById(studentID)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + studentID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         Contact contact = contactRepository.findById(contactID)
-                .orElseThrow(() -> new ResourceNotFoundException("Contact with id: " + contactID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
         addressRepository.findById(addressID)
-                .orElseThrow(() -> new ResourceNotFoundException("Address with id: " + addressID + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(addressID, Address.class));
         Address updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
             updatedAddress.setId(addressID);
             contact.setAddress(updatedAddress);
@@ -230,11 +229,41 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public void deleteStudentByID(Long id) {
+    public void deleteStudentByID(Long studentID) {
         Student student = studentRepository
-                .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Student with id: " + id + " not found")); // I should log debug
+                .findById(studentID)
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         studentRepository.delete(student);
-            log.info("Student with id:" + id +  " successfully deleted");
+        log.info("Student with id:" + studentID +  " successfully deleted");
     }
+
+
+    /**
+     * Delete Contact from the Student with matching id
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public void deleteStudentContact(Long studentID) {
+        Contact contact = contactRepository
+                .findByStudentId(studentID)
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
+        contactRepository.delete(contact);
+        log.info("Contact successfully deleted");
+    }
+
+    /**
+     * Delete Address from the Contact with matching id
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public void deleteStudentAddress(Long contactID) {
+        Contact contact = contactRepository
+                .findById(contactID)
+                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
+        Address address = contact.getOptionalOfAddress()
+                .orElseThrow(() -> new ResourceNotFoundException(Address.class));
+        addressRepository.delete(address);
+        log.info("Address successfully deleted");
+    }
+
 }

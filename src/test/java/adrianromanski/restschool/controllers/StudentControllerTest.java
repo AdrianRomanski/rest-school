@@ -3,7 +3,6 @@ package adrianromanski.restschool.controllers;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.StudentController;
 import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
@@ -135,7 +134,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     void getStudentByFirstAndLastName() throws Exception {
         StudentDTO studentDTO = createEthan();
 
-        when(studentService.getStudentByFirstAndLastName(anyString(), anyString())).thenReturn(studentDTO);
+        when(studentService.getStudentByName(anyString(), anyString())).thenReturn(studentDTO);
 
         mockMvc.perform(get(STUDENTS + ETHAN.get() + "/" + COOPER.get())
                 .accept(MediaType.APPLICATION_JSON)

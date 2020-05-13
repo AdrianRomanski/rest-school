@@ -1,5 +1,6 @@
 package adrianromanski.restschool.model.base_entity;
 
+import adrianromanski.restschool.domain.base_entity.Address;
 import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
 import adrianromanski.restschool.model.base_entity.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
@@ -8,6 +9,7 @@ import lombok.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 @NoArgsConstructor
 @Getter

@@ -56,7 +56,7 @@ public class StudentController {
     @GetMapping({"{firstName}/{lastName}"})
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO getStudentByFirstAndLastName(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
-        return studentService.getStudentByFirstAndLastName(firstName, lastName);
+        return studentService.getStudentByName(firstName, lastName);
     }
 
     @ApiOperation("Create and save new Student based on StudentDTO body")

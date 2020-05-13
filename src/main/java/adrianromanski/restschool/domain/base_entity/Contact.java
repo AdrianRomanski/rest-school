@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 
 @EqualsAndHashCode(exclude = {"address", "student"})
@@ -33,6 +34,10 @@ public class Contact extends BaseEntity {
 
     @OneToOne
     private Address address;
+
+    public Optional<Address> getOptionalOfAddress() {
+        return Optional.of(this.address);
+    }
 
     @OneToOne
     private Student student;

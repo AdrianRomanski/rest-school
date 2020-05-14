@@ -19,6 +19,8 @@
 * __updateAddress__ - Update Address with matching id and save it to database
 #### DELETE
 * __deleteStudentByID__ - Delete Student with matching id
+* __deleteStudentContact__ - Delete contact from Student with matching ID
+* __deleteStudentAddress__ - Delete address from Student with matching ID
 
 ## <div align="center"> Teacher </div>
 #### GET

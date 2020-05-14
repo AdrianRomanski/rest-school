@@ -31,7 +31,7 @@ public class StudentController {
     }
 
     @ApiOperation("Returns all Female Students sorted by age -> lastName -> firstName")
-    @GetMapping("/female")
+    @GetMapping("female")
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllFemaleStudents() {
         return new StudentListDTO(studentService.getAllFemaleStudents());
@@ -39,7 +39,7 @@ public class StudentController {
 
 
     @ApiOperation("Returns all Male Students sorted by age -> lastName -> firstName")
-    @GetMapping("/male")
+    @GetMapping("male")
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllMaleStudents() {
         return new StudentListDTO(studentService.getAllMaleStudents());
@@ -108,5 +108,22 @@ public class StudentController {
     public void deleteCustomer(@PathVariable String ID) {
         studentService.deleteStudentByID(Long.valueOf(ID));
     }
+
+
+    @ApiOperation("Delete contact from student with matching ID or else throw ResourceNotFoundException")
+    @DeleteMapping("deleteContact/student-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteStudentContact(@PathVariable String ID) {
+        studentService.deleteStudentContact(Long.valueOf(ID));
+    }
+
+    @ApiOperation("Delete address from student with matching ID or else throw ResourceNotFoundException")
+    @DeleteMapping("deleteAddress/contact-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteStudentAddress(@PathVariable String ID) {
+        studentService.deleteStudentAddress(Long.valueOf(ID));
+    }
+
+
 
 }

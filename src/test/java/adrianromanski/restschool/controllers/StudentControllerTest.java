@@ -276,6 +276,28 @@ class StudentControllerTest  extends AbstractRestControllerTest {
         verify(studentService).deleteStudentByID(anyLong());
     }
 
+
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentContact")
+    @Test
+    void deleteStudentContact() throws Exception {
+        mockMvc.perform(delete(STUDENTS + "deleteContact/student-1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(studentService).deleteStudentContact(anyLong());
+    }
+
+
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentAddress")
+    @Test
+    void deleteStudentAddress() throws Exception {
+        mockMvc.perform(delete(STUDENTS + "deleteAddress/contact-1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(studentService).deleteStudentAddress(anyLong());
+    }
+
     @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Student with id 222 not found")
     @Test
     public void testNotFoundException() throws Exception {

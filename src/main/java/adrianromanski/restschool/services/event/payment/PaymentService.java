@@ -1,6 +1,6 @@
 package adrianromanski.restschool.services.event.payment;
 
-import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
+import adrianromanski.restschool.model.event.PaymentDTO;
 
 import java.util.List;
 

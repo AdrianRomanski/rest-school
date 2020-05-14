@@ -2,11 +2,9 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.GuardianController;
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
-import adrianromanski.restschool.domain.base_entity.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.person.GuardianDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -18,13 +16,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.time.LocalDate;
 import java.util.*;
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.COOPER;
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.HENDERSON;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.ETHAN;
+import static adrianromanski.restschool.domain.enums.LastName.COOPER;
+import static adrianromanski.restschool.domain.enums.LastName.HENDERSON;
+import static adrianromanski.restschool.domain.enums.MaleName.ETHAN;
 import static org.hamcrest.Matchers.*;
 
 import static org.mockito.ArgumentMatchers.any;

@@ -1,9 +1,9 @@
 package adrianromanski.restschool.model.base_entity;
 
 import adrianromanski.restschool.domain.base_entity.BaseEntity;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.event.ExamDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import lombok.*;
 
 import java.util.ArrayList;

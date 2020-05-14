@@ -1,10 +1,10 @@
 package adrianromanski.restschool.services.event.exam;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.domain.base_entity.event.Exam;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.event.ExamMapper;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

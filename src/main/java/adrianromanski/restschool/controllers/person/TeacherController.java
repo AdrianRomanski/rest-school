@@ -1,17 +1,16 @@
 package adrianromanski.restschool.controllers.person;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherListDTO;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.event.ExamDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.model.person.TeacherDTO;
+import adrianromanski.restschool.model.person.TeacherListDTO;
 import adrianromanski.restschool.services.person.teacher.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 

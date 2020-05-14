@@ -1,15 +1,15 @@
 package adrianromanski.restschool.model.base_entity;
 
-import adrianromanski.restschool.domain.base_entity.Address;
-import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.model.person.GuardianDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.model.person.TeacherDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Optional;
+
 
 @NoArgsConstructor
 @Getter
@@ -17,21 +17,30 @@ import java.util.Optional;
 public class ContactDTO extends BaseEntityDTO {
 
     @NotNull
-    @Size(min = 6, max = 12)
+    @Size(min = 8, max = 14)
     private String telephoneNumber;
+
+    @NotNull
+    @Size(min = 8, max = 14)
+    private String emergencyNumber;
 
     @NotNull
     @Email
     private String email;
 
-    private AddressDTO addressDTO;
-    private StudentDTO studentDTO;
-    private TeacherDTO teacherDTO;
-    private GuardianDTO guardianDTO;
-
     @Builder
-    public ContactDTO(String telephoneNumber, String email) {
+    public ContactDTO(String telephoneNumber, String emergencyNumber, String email) {
         this.telephoneNumber = telephoneNumber;
+        this.emergencyNumber = emergencyNumber;
         this.email = email;
     }
+
+    @JsonIgnore
+    private StudentDTO studentDTO;
+
+    @JsonIgnore
+    private TeacherDTO teacherDTO;
+
+    @JsonIgnore
+    private GuardianDTO guardianDTO;
 }

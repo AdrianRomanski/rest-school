@@ -2,7 +2,7 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.base_entity.SubjectController;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import adrianromanski.restschool.services.base_entity.subject.SubjectService;
@@ -22,7 +22,7 @@ import java.util.List;
 
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
+import static adrianromanski.restschool.domain.enums.Subjects.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;

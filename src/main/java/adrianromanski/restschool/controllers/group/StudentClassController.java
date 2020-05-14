@@ -1,10 +1,10 @@
 package adrianromanski.restschool.controllers.group;
 
-import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
-import adrianromanski.restschool.model.base_entity.group.StudentClassListDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.group.StudentClassDTO;
+import adrianromanski.restschool.model.group.StudentClassListDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

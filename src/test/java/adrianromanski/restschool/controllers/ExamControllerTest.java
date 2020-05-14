@@ -2,10 +2,8 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.event.ExamController;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
-import adrianromanski.restschool.domain.base_entity.enums.MaleName;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.services.event.exam.ExamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Subjects.*;
 import static org.hamcrest.Matchers.*;
 
 import static org.mockito.ArgumentMatchers.any;

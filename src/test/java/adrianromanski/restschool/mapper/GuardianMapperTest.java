@@ -1,8 +1,8 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
+import adrianromanski.restschool.domain.person.Guardian;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
-import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
+import adrianromanski.restschool.model.person.GuardianDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,6 +1,6 @@
 package adrianromanski.restschool.repositories.person;
 
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.person.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

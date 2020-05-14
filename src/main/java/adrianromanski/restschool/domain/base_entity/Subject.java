@@ -1,8 +1,8 @@
 package adrianromanski.restschool.domain.base_entity;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.domain.base_entity.event.Exam;
-import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.domain.event.Exam;
+import adrianromanski.restschool.domain.person.Student;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 

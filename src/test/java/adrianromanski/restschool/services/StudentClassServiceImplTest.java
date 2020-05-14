@@ -1,14 +1,14 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
-import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.domain.group.StudentClass;
+import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.StudentClassMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.group.StudentClassDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.group.StudentClassRepository;
 import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import adrianromanski.restschool.services.group.student_class.StudentClassServiceImpl;
@@ -20,13 +20,13 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
-import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.CHARLOTTE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.BIOLOGY;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.PHYSICS;
+import static adrianromanski.restschool.domain.enums.FemaleName.CHARLOTTE;
+import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.enums.LastName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Subjects.BIOLOGY;
+import static adrianromanski.restschool.domain.enums.Subjects.PHYSICS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;

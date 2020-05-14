@@ -1,7 +1,7 @@
 package adrianromanski.restschool.mapper.group;
 
-import adrianromanski.restschool.domain.base_entity.group.SportTeam;
-import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
+import adrianromanski.restschool.domain.group.SportTeam;
+import adrianromanski.restschool.model.group.SportTeamDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

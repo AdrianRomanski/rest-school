@@ -1,10 +1,10 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.base_entity.event.Payment;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.event.Payment;
+import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.mapper.event.PaymentMapper;
-import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.model.event.PaymentDTO;
+import adrianromanski.restschool.model.person.TeacherDTO;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

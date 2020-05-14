@@ -2,14 +2,14 @@ package adrianromanski.restschool.bootstrap;
 
 import adrianromanski.restschool.domain.base_entity.Address;
 import adrianromanski.restschool.domain.base_entity.Contact;
-import adrianromanski.restschool.domain.base_entity.event.Exam;
-import adrianromanski.restschool.domain.base_entity.event.ExamResult;
-import adrianromanski.restschool.domain.base_entity.group.SportTeam;
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
-import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.event.Exam;
+import adrianromanski.restschool.domain.event.ExamResult;
+import adrianromanski.restschool.domain.group.SportTeam;
+import adrianromanski.restschool.domain.group.StudentClass;
+import adrianromanski.restschool.domain.person.Guardian;
+import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
 import adrianromanski.restschool.repositories.base_entity.ContactRepository;
 import adrianromanski.restschool.repositories.base_entity.SubjectRepository;
@@ -30,13 +30,13 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.CHARLOTTE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Sport.FOOTBALL;
+import static adrianromanski.restschool.domain.enums.FemaleName.CHARLOTTE;
+import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.enums.LastName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Subjects.*;
+import static adrianromanski.restschool.domain.enums.Sport.FOOTBALL;
 
 @Component
 @Slf4j
@@ -98,20 +98,21 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
                                     gender(MALE).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
 
         // Contact Jacob
-        Address address = Address.builder().streetName("Sunken Quarter").city("Yalahar").country("Spain").postalCode("241-22").build();
-        Contact contact = new Contact();
-        contact.setAddress(address);
-        contact.setEmail("JacobStar@gmail.com");
-        contact.setTelephoneNumber("22-4421-22");
+        Address address = Address.builder().country("Poland").city("Warsaw").postalCode("22-421").streetName("District 9").build();
+        Contact contact = Contact.builder().email("JacobStar@gmail.com").telephoneNumber("22-4421-22").emergencyNumber("22-4112-22").build();
         contact.setStudent(jacob);
+        address.setStudent(jacob);
         jacob.setContact(contact);
-
+        jacob.setAddress(address);
 
         Student charlotte = Student.builder().firstName(CHARLOTTE.get()).lastName(HENDERSON.get()).
                                     gender(FEMALE).dateOfBirth(LocalDate.of(1994, 10, 4)).build();
 
+
+
         Student ethan = Student.builder().firstName(ETHAN.get()).lastName(PARKER.get()).
                                     gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
+
 
         // Init List of Students
         List<Student> students = Arrays.asList(jacob, charlotte, ethan);

@@ -1,6 +1,6 @@
 package adrianromanski.restschool.repositories.event;
 
-import adrianromanski.restschool.domain.base_entity.event.Payment;
+import adrianromanski.restschool.domain.event.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

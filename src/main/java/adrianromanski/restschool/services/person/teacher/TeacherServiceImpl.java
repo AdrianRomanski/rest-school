@@ -1,16 +1,16 @@
 package adrianromanski.restschool.services.person.teacher;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.domain.base_entity.event.Exam;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.domain.event.Exam;
+import adrianromanski.restschool.domain.person.Student;
+import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.model.event.ExamDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.model.person.TeacherDTO;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;

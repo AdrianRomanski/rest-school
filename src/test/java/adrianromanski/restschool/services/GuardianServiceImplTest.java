@@ -1,13 +1,13 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.enums.Gender;
+import adrianromanski.restschool.domain.person.Guardian;
+import adrianromanski.restschool.domain.person.Student;
+import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.person.GuardianDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.person.GuardianRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
@@ -23,12 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.ARIA;
-import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.CHARLOTTE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.FemaleName.CHARLOTTE;
+import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.enums.LastName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;

@@ -3,7 +3,7 @@ package adrianromanski.restschool.controllers;
 import adrianromanski.restschool.controllers.event.PaymentController;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
+import adrianromanski.restschool.model.event.PaymentDTO;
 import adrianromanski.restschool.services.event.payment.PaymentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;

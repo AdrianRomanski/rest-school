@@ -1,7 +1,7 @@
 package adrianromanski.restschool.mapper.event;
 
-import adrianromanski.restschool.domain.base_entity.event.Payment;
-import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
+import adrianromanski.restschool.domain.event.Payment;
+import adrianromanski.restschool.model.event.PaymentDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

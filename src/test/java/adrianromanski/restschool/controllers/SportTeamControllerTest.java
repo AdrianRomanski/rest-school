@@ -2,9 +2,9 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.group.SportTeamController;
-import adrianromanski.restschool.domain.base_entity.enums.Sport;
+import adrianromanski.restschool.domain.enums.Sport;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
+import adrianromanski.restschool.model.group.SportTeamDTO;
 import adrianromanski.restschool.services.group.sport_team.SportTeamService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Sport.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Sport.*;
 import static org.hamcrest.Matchers.*;
 
 import static org.mockito.ArgumentMatchers.any;

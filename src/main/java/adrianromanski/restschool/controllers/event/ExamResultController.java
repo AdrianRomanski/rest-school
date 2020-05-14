@@ -1,8 +1,7 @@
 package adrianromanski.restschool.controllers.event;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
-import adrianromanski.restschool.model.base_entity.event.ExamResultListDTO;
+import adrianromanski.restschool.model.event.ExamResultDTO;
+import adrianromanski.restschool.model.event.ExamResultListDTO;
 import adrianromanski.restschool.services.event.exam_result.ExamResultService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

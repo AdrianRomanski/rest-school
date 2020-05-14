@@ -1,10 +1,8 @@
 package adrianromanski.restschool.services.group.sport_team;
 
-import adrianromanski.restschool.domain.base_entity.enums.Sport;
-import adrianromanski.restschool.domain.base_entity.group.SportTeam;
-import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
+import adrianromanski.restschool.domain.enums.Sport;
+import adrianromanski.restschool.model.group.SportTeamDTO;
 
-import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 

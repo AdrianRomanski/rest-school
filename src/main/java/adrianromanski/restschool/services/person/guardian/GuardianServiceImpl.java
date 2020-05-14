@@ -1,22 +1,18 @@
 package adrianromanski.restschool.services.person.guardian;
 
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
-import adrianromanski.restschool.domain.base_entity.person.Person;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.person.Guardian;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.model.base_entity.person.PersonDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.person.GuardianDTO;
+import adrianromanski.restschool.model.person.PersonDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.person.GuardianRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;

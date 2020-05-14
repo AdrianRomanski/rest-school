@@ -16,7 +16,6 @@ public interface ContactMapper {
         @Mapping(target = "guardianDTO", source = "guardian"),
         @Mapping(target = "teacherDTO", source = "teacher"),
         @Mapping(target = "studentDTO", source = "student"),
-        @Mapping(target = "addressDTO", source = "address")
     })
     ContactDTO contactToContactDTO(Contact contact);
 
@@ -24,7 +23,6 @@ public interface ContactMapper {
         @Mapping(target = "guardian", source = "guardianDTO"),
         @Mapping(target = "teacher", source = "teacherDTO"),
         @Mapping(target = "student", source = "studentDTO"),
-        @Mapping(target = "address", source = "addressDTO")
     })
     Contact contactDTOToContact(ContactDTO contactDTO);
 }

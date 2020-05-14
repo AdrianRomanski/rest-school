@@ -1,7 +1,6 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.SubjectMapper;
@@ -15,10 +14,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
+import static adrianromanski.restschool.domain.enums.Subjects.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;

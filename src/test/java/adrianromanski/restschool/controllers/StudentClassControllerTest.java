@@ -2,11 +2,11 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.group.StudentClassController;
-import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.group.StudentClassDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.group.student_class.StudentClassService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,9 +20,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.*;
 
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.*;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.BIOLOGY;
+import static adrianromanski.restschool.domain.enums.Gender.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Subjects.BIOLOGY;
 import static java.util.Collections.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;

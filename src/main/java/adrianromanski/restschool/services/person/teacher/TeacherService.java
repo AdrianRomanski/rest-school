@@ -1,9 +1,9 @@
 package adrianromanski.restschool.services.person.teacher;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.event.ExamDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.model.person.TeacherDTO;
 
 import java.time.LocalDate;
 import java.util.List;

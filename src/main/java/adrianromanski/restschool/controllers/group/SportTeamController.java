@@ -1,8 +1,8 @@
 package adrianromanski.restschool.controllers.group;
 
-import adrianromanski.restschool.domain.base_entity.enums.Sport;
-import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
-import adrianromanski.restschool.model.base_entity.group.SportTeamListDTO;
+import adrianromanski.restschool.domain.enums.Sport;
+import adrianromanski.restschool.model.group.SportTeamDTO;
+import adrianromanski.restschool.model.group.SportTeamListDTO;
 import adrianromanski.restschool.services.group.sport_team.SportTeamService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,7 +1,7 @@
 package adrianromanski.restschool.repositories.group;
 
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.group.StudentClass;
+import adrianromanski.restschool.domain.person.Teacher;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

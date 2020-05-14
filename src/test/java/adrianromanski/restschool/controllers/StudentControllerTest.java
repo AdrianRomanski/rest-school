@@ -2,11 +2,11 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.StudentController;
-import adrianromanski.restschool.domain.base_entity.enums.Gender;
+import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,12 +23,12 @@ import java.util.Collections;
 import java.util.List;
 
 
-import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.CHARLOTTE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.ETHAN;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.SEBASTIAN;
+import static adrianromanski.restschool.domain.enums.FemaleName.CHARLOTTE;
+import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.enums.LastName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.ETHAN;
+import static adrianromanski.restschool.domain.enums.MaleName.SEBASTIAN;
 import static org.hamcrest.Matchers.*;
 
 import static org.mockito.ArgumentMatchers.*;
@@ -44,7 +44,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
     public static final Long ID = 1L;
     public static final String STUDENTS = "/students/";
-    public static final String TELEPHONE_NUMBER = "222-44-22";
+    public static final String TELEPHONE_NUMBER = "222-44-22-11";
     public static final String EMAIL = "Jimmy@Gmail.com";
     public static final String COUNTRY = "Poland";
     public static final String CITY = "Warsaw";
@@ -136,7 +136,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
         when(studentService.getStudentByName(anyString(), anyString())).thenReturn(studentDTO);
 
-        mockMvc.perform(get(STUDENTS + ETHAN.get() + "/" + COOPER.get())
+        mockMvc.perform(get(STUDENTS + "getByName/" + ETHAN.get() + "-" + COOPER.get())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(studentDTO)))
@@ -153,7 +153,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
         when(studentService.getStudentByID(anyLong())).thenReturn(studentDTO);
 
-        mockMvc.perform(get(STUDENTS + ID)
+        mockMvc.perform(get(STUDENTS + "getByID/student-1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -169,7 +169,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
         when(studentService.createNewStudent(any(StudentDTO.class))).thenReturn(returnDTO);
 
-        mockMvc.perform(post(STUDENTS)
+        mockMvc.perform(post(STUDENTS + "addStudent")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(returnDTO)))
@@ -186,7 +186,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
         when(studentService.addContactToStudent(any(ContactDTO.class), anyLong())).thenReturn(contactDTO);
 
-        mockMvc.perform(post(STUDENTS + "addContact/student-id-1")
+        mockMvc.perform(post(STUDENTS + "addContact/student-1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(contactDTO)))
@@ -200,9 +200,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     void addAddressToStudent() throws Exception {
         AddressDTO addressDTO = AddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
 
-        when(studentService.addAddressToStudent(any(AddressDTO.class), anyLong(), anyLong())).thenReturn(addressDTO);
+        when(studentService.addAddressToStudent(any(AddressDTO.class), anyLong())).thenReturn(addressDTO);
 
-        mockMvc.perform(post(STUDENTS + "addAddress/student-id-1/contact-id-1")
+        mockMvc.perform(post(STUDENTS + "addAddress/student-1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(addressDTO)))
@@ -221,7 +221,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
 
         when(studentService.updateStudent(anyLong(), any(StudentDTO.class))).thenReturn(returnDTO);
 
-        mockMvc.perform(put(STUDENTS + ID)
+        mockMvc.perform(put(STUDENTS + "updateStudent/student-1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(returnDTO)))
@@ -235,7 +235,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     @DisplayName("[PUT], [Happy Path], [Method] = updateContact")
     @Test
     void updateContact() throws Exception {
-        ContactDTO contactDTO = ContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).email(EMAIL).build();
+        ContactDTO contactDTO = ContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).emergencyNumber(TELEPHONE_NUMBER).email(EMAIL).build();
 
         when(studentService.updateContact(any(ContactDTO.class), anyLong(), anyLong())).thenReturn(contactDTO);
 
@@ -253,9 +253,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     void updateAddress() throws Exception {
         AddressDTO addressDTO = AddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
 
-        when(studentService.updateAddress(any(AddressDTO.class), anyLong(), anyLong(), anyLong())).thenReturn(addressDTO);
+        when(studentService.updateAddress(any(AddressDTO.class), anyLong(), anyLong())).thenReturn(addressDTO);
 
-        mockMvc.perform(put(STUDENTS + "updateAddress/student-1/contact-1/address-1")
+        mockMvc.perform(put(STUDENTS + "updateAddress/student-1/address-1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(addressDTO)))
@@ -269,7 +269,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentByID")
     @Test
     void deleteStudent() throws Exception {
-        mockMvc.perform(delete(STUDENTS + 1)
+        mockMvc.perform(delete(STUDENTS + "deleteStudent/student-1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -291,7 +291,7 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     @DisplayName("[DELETE], [Happy Path], [Method] = deleteStudentAddress")
     @Test
     void deleteStudentAddress() throws Exception {
-        mockMvc.perform(delete(STUDENTS + "deleteAddress/contact-1")
+        mockMvc.perform(delete(STUDENTS + "deleteAddress/student-1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

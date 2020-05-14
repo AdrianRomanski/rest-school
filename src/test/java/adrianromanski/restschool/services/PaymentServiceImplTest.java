@@ -1,8 +1,8 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.event.Payment;
+import adrianromanski.restschool.domain.event.Payment;
 import adrianromanski.restschool.mapper.event.PaymentMapper;
-import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
+import adrianromanski.restschool.model.event.PaymentDTO;
 import adrianromanski.restschool.repositories.event.PaymentRepository;
 import adrianromanski.restschool.services.event.payment.PaymentService;
 import adrianromanski.restschool.services.event.payment.PaymentServiceImpl;

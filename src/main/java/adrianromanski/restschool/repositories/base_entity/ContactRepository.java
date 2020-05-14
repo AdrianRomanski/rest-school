@@ -7,5 +7,4 @@ import java.util.Optional;
 
 public interface ContactRepository extends JpaRepository<Contact, Long> {
 
-    Optional<Contact> findByStudentId(Long studentID);
 }

@@ -1,6 +1,6 @@
 package adrianromanski.restschool.services.event.exam_result;
 
-import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
+import adrianromanski.restschool.model.event.ExamResultDTO;
 
 import java.time.LocalDate;
 import java.util.List;

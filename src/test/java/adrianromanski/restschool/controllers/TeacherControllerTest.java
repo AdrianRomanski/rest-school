@@ -2,12 +2,12 @@
 
     import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
     import adrianromanski.restschool.controllers.person.TeacherController;
-    import adrianromanski.restschool.domain.base_entity.enums.Gender;
-    import adrianromanski.restschool.domain.base_entity.enums.Subjects;
+    import adrianromanski.restschool.domain.enums.Gender;
+    import adrianromanski.restschool.domain.enums.Subjects;
     import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-    import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-    import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-    import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+    import adrianromanski.restschool.model.event.ExamDTO;
+    import adrianromanski.restschool.model.person.StudentDTO;
+    import adrianromanski.restschool.model.person.TeacherDTO;
     import adrianromanski.restschool.services.person.teacher.TeacherService;
     import org.junit.jupiter.api.BeforeEach;
     import org.junit.jupiter.api.DisplayName;
@@ -19,17 +19,16 @@
     import org.springframework.test.web.servlet.MockMvc;
     import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-    import java.time.LocalDate;
     import java.util.*;
 
     import static adrianromanski.restschool.controllers.AbstractRestControllerTest.asJsonString;
-    import static adrianromanski.restschool.domain.base_entity.enums.FemaleName.ARIA;
-    import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
-    import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
-    import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
-    import static adrianromanski.restschool.domain.base_entity.enums.MaleName.BENJAMIN;
-    import static adrianromanski.restschool.domain.base_entity.enums.MaleName.ETHAN;
-    import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
+    import static adrianromanski.restschool.domain.enums.FemaleName.ARIA;
+    import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
+    import static adrianromanski.restschool.domain.enums.Gender.MALE;
+    import static adrianromanski.restschool.domain.enums.LastName.*;
+    import static adrianromanski.restschool.domain.enums.MaleName.BENJAMIN;
+    import static adrianromanski.restschool.domain.enums.MaleName.ETHAN;
+    import static adrianromanski.restschool.domain.enums.Subjects.*;
     import static org.hamcrest.Matchers.equalTo;
     import static org.hamcrest.Matchers.hasSize;
 

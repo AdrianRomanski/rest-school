@@ -1,10 +1,10 @@
 package adrianromanski.restschool.services.group.sport_team;
 
-import adrianromanski.restschool.domain.base_entity.enums.Sport;
-import adrianromanski.restschool.domain.base_entity.group.SportTeam;
+import adrianromanski.restschool.domain.enums.Sport;
+import adrianromanski.restschool.domain.group.SportTeam;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.SportTeamMapper;
-import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
+import adrianromanski.restschool.model.group.SportTeamDTO;
 import adrianromanski.restschool.repositories.group.SportTeamRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

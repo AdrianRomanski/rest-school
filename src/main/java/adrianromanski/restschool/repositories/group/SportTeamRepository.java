@@ -1,6 +1,6 @@
 package adrianromanski.restschool.repositories.group;
 
-import adrianromanski.restschool.domain.base_entity.group.SportTeam;
+import adrianromanski.restschool.domain.group.SportTeam;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

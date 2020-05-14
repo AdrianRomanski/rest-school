@@ -1,15 +1,10 @@
 package adrianromanski.restschool.services.person.guardian;
 
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
-import adrianromanski.restschool.domain.base_entity.person.Person;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
-import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.person.GuardianDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 
 public interface GuardianService {
 

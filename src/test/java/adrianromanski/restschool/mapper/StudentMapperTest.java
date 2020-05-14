@@ -1,13 +1,13 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.enums.Gender.MALE;
 import static org.junit.jupiter.api.Assertions.*;
 
 class StudentMapperTest {

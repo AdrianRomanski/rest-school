@@ -2,14 +2,14 @@ package adrianromanski.restschool.services.person.student;
 
 import adrianromanski.restschool.domain.base_entity.Address;
 import adrianromanski.restschool.domain.base_entity.Contact;
-import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.AddressMapper;
 import adrianromanski.restschool.mapper.base_entity.ContactMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
 import adrianromanski.restschool.repositories.base_entity.ContactRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
@@ -18,10 +18,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.FEMALE;
-import static adrianromanski.restschool.domain.base_entity.enums.Gender.MALE;
+import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
+import static adrianromanski.restschool.domain.enums.Gender.MALE;
 
 @Slf4j
 @Service
@@ -37,6 +39,9 @@ public class StudentServiceImpl implements StudentService{
     public static final Comparator<Student> COMPARATOR = Comparator.comparing(Student::getAge)
                                                                         .thenComparing(Student::getLastName)
                                                                         .thenComparing((Student::getFirstName));
+
+    public static final Function<StudentDTO, String> GROUPED_BY_COUNTRY = s -> s.getAddressDTO().getCountry();
+    public static final Function<StudentDTO, String> GROUPED_BY_CITY = s -> s.getAddressDTO().getCity();
 
     public StudentServiceImpl(StudentMapper studentMapper, ContactMapper contactMapper,
                               AddressMapper addressMapper, StudentRepository studentRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
@@ -58,6 +63,17 @@ public class StudentServiceImpl implements StudentService{
                 .sorted(COMPARATOR)
                 .map(studentMapper::studentToStudentDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * @return Student with matching id
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public StudentDTO getStudentByID(Long studentID) {
+        return studentMapper.studentToStudentDTO(studentRepository
+                .findById(studentID)
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class)));
     }
 
     /**
@@ -98,15 +114,24 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /**
-     * @return Student with matching id
-     * @throws ResourceNotFoundException if not found
+     * @return Students grouped by Country and City
      */
     @Override
-    public StudentDTO getStudentByID(Long studentID) {
-        return studentMapper.studentToStudentDTO(studentRepository
-                                .findById(studentID)
-                                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class)));
+    public Map<String, Map<String, List<StudentDTO>>> getStudentsByLocation() {
+        return studentRepository.findAll()
+                .stream()
+                .map(studentMapper::studentToStudentDTO)
+                .collect(
+                        Collectors.groupingBy(
+                                GROUPED_BY_COUNTRY,
+                                Collectors.groupingBy(
+                                        GROUPED_BY_CITY
+                                )
+                        )
+                );
     }
+
+
 
     /**
      * Saving Student to Database
@@ -142,20 +167,13 @@ public class StudentServiceImpl implements StudentService{
     /**
      * Adding Address to Contact
      * @throws ResourceNotFoundException if Student not found
-     * @throws ResourceNotFoundException if Contact not found
      */
     @Override
-    public AddressDTO addAddressToStudent(AddressDTO addressDTO, Long contactID, Long studentID) {
+    public AddressDTO addAddressToStudent(AddressDTO addressDTO, Long studentID) {
         Student student = studentRepository
                 .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        Contact contact = contactRepository
-                .findById(contactID)
-                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
         Address address = addressMapper.addressDTOToAddress(addressDTO);
-            contact.setAddress(address);
-            student.setContact(contact);
-        contactRepository.save(contact);
         studentRepository.save(student);
         addressRepository.save(address);
             log.info("Address successfully added to Student with id: " + studentID);
@@ -206,19 +224,14 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found student, contact or address
      */
     @Override
-    public AddressDTO updateAddress(AddressDTO addressDTO, Long studentID, Long contactID, Long addressID) {
+    public AddressDTO updateAddress(AddressDTO addressDTO, Long studentID, Long addressID) {
         Student student = studentRepository.findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        Contact contact = contactRepository.findById(contactID)
-                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
         addressRepository.findById(addressID)
                 .orElseThrow(() -> new ResourceNotFoundException(addressID, Address.class));
         Address updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
             updatedAddress.setId(addressID);
-            contact.setAddress(updatedAddress);
-            student.setContact(contact);
         studentRepository.save(student);
-        contactRepository.save(contact);
         addressRepository.save(updatedAddress);
             log.info("Address with id: " + addressID + " successfully updated");
         return addressMapper.addressToAddressDTO(updatedAddress);
@@ -239,31 +252,40 @@ public class StudentServiceImpl implements StudentService{
 
 
     /**
-     * Delete Contact from the Student with matching id
+     * Delete Contact from the Student with matching id and replaces it with default
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public void deleteStudentContact(Long studentID) {
-        Contact contact = contactRepository
-                .findByStudentId(studentID)
+        Student student = studentRepository
+                .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
+        Contact contact = student.getContactOptional().
+                orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class, Contact.class));
+        Contact emptyContact = new Contact();
+            emptyContact.setStudent(student);
+            student.setContact(emptyContact);
         contactRepository.delete(contact);
-        log.info("Contact successfully deleted");
+        studentRepository.save(student);
+        log.info("Contact successfully deleted from the Student with id: " + studentID);
     }
 
     /**
-     * Delete Address from the Contact with matching id
+     * Delete Address from the Contact with matching id and replaces it with default
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public void deleteStudentAddress(Long contactID) {
-        Contact contact = contactRepository
-                .findById(contactID)
-                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
-        Address address = contact.getOptionalOfAddress()
-                .orElseThrow(() -> new ResourceNotFoundException(Address.class));
+    public void deleteStudentAddress(Long studentID) {
+        Student student = studentRepository
+                .findById(studentID)
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
+        Address address = student.getAddressOptional()
+                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class, Address.class));
+        Address emptyAddress = new Address();
+            emptyAddress.setStudent(student);
+            student.setAddress(emptyAddress);
         addressRepository.delete(address);
-        log.info("Address successfully deleted");
+        studentRepository.save(student);
+        log.info("Address successfully deleted from the Student with id: " + studentID);
     }
-
 }

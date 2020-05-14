@@ -1,12 +1,12 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.group.StudentClass;
+import adrianromanski.restschool.domain.person.Student;
+import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.mapper.group.StudentClassMapper;
-import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.model.group.StudentClassDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.model.person.TeacherDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

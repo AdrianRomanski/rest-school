@@ -1,11 +1,11 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.enums.Sport;
-import adrianromanski.restschool.domain.base_entity.group.SportTeam;
-import adrianromanski.restschool.domain.base_entity.person.Student;
+import adrianromanski.restschool.domain.enums.Sport;
+import adrianromanski.restschool.domain.group.SportTeam;
+import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.SportTeamMapper;
-import adrianromanski.restschool.model.base_entity.group.SportTeamDTO;
+import adrianromanski.restschool.model.group.SportTeamDTO;
 import adrianromanski.restschool.repositories.group.SportTeamRepository;
 import adrianromanski.restschool.services.group.sport_team.SportTeamService;
 import adrianromanski.restschool.services.group.sport_team.SportTeamServiceImpl;
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Sport.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Sport.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.*;

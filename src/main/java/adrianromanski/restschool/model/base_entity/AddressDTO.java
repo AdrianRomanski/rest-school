@@ -1,9 +1,12 @@
 package adrianromanski.restschool.model.base_entity;
 
+import adrianromanski.restschool.model.person.StudentDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 
 @Getter
 @Setter
@@ -13,14 +16,17 @@ public class AddressDTO extends BaseEntityDTO {
     @NotNull
     @Size(min = 3, max = 20)
     private String country;
-    @NotNull
+
     @Size(min = 3, max = 20)
+    @NotNull
     private String city;
-    @NotNull
+
     @Size(min = 3, max = 20)
-    private String streetName;
     @NotNull
-    @Size(min = 5, max = 10)
+    private String streetName;
+
+    @Size(min = 3, max = 10)
+    @NotNull
     private String postalCode;
 
     @Builder
@@ -30,4 +36,8 @@ public class AddressDTO extends BaseEntityDTO {
         this.streetName = streetName;
         this.postalCode = postalCode;
     }
+
+    @JsonIgnore
+    private StudentDTO studentDTO;
+
 }

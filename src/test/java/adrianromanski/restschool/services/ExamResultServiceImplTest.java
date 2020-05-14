@@ -1,16 +1,13 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.Subject;
-import adrianromanski.restschool.domain.base_entity.enums.LastName;
-import adrianromanski.restschool.domain.base_entity.enums.MaleName;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.domain.base_entity.event.Exam;
-import adrianromanski.restschool.domain.base_entity.event.ExamResult;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.domain.event.Exam;
+import adrianromanski.restschool.domain.event.ExamResult;
+import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.event.ExamResultMapper;
-import adrianromanski.restschool.model.base_entity.event.ExamResultDTO;
+import adrianromanski.restschool.model.event.ExamResultDTO;
 import adrianromanski.restschool.repositories.event.ExamResultRepository;
 import adrianromanski.restschool.services.event.exam_result.ExamResultService;
 import adrianromanski.restschool.services.event.exam_result.ExamResultServiceImpl;
@@ -26,9 +23,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
+import static adrianromanski.restschool.domain.enums.LastName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Subjects.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.ArgumentMatchers.any;

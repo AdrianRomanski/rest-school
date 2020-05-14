@@ -1,7 +1,7 @@
 package adrianromanski.restschool.controllers.event;
 
-import adrianromanski.restschool.model.base_entity.event.PaymentDTO;
-import adrianromanski.restschool.model.base_entity.event.PaymentListDTO;
+import adrianromanski.restschool.model.event.PaymentDTO;
+import adrianromanski.restschool.model.event.PaymentListDTO;
 import adrianromanski.restschool.services.event.payment.PaymentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

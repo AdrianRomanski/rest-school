@@ -1,7 +1,7 @@
 package adrianromanski.restschool.services.event.exam;
 
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.event.ExamDTO;
 
 import java.util.List;
 import java.util.Map;

@@ -2,8 +2,8 @@ package adrianromanski.restschool.controllers.person;
 
 import adrianromanski.restschool.model.base_entity.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentListDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.model.person.StudentListDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @Api("Controller for Students")
 @RestController
@@ -46,66 +48,68 @@ public class StudentController {
     }
 
     @ApiOperation("Returns an Student with matching ID or else throw ResourceNotFoundException")
-    @GetMapping("{ID}")
+    @GetMapping("/getByID/student-{ID}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO getStudentByID(@PathVariable String ID) {
         return studentService.getStudentByID(Long.valueOf(ID));
     }
 
     @ApiOperation("Returns a Student with matching firstName and lastName or else throw ResourceNotFoundException")
-    @GetMapping({"{firstName}/{lastName}"})
+    @GetMapping("/getByName/{firstName}-{lastName}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO getStudentByFirstAndLastName(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
         return studentService.getStudentByName(firstName, lastName);
     }
 
     @ApiOperation("Create and save new Student based on StudentDTO body")
-    @PostMapping
+    @PostMapping("addStudent")
     @ResponseStatus(HttpStatus.CREATED)
     public StudentDTO createNewStudent(@RequestBody StudentDTO studentDTO) {
         return studentService.createNewStudent(studentDTO);
     }
 
     @ApiOperation("Adding Contact to Student with matching ID or else throw ResourceNotFoundException")
-    @PostMapping("addContact/student-id-{ID}")
+    @PostMapping("addContact/student-{ID}")
     @ResponseStatus(HttpStatus.CREATED)
     public ContactDTO addContactToStudent(@PathVariable String ID, @RequestBody ContactDTO contactDTO)  {
         return studentService.addContactToStudent(contactDTO, Long.valueOf(ID));
     }
 
     @ApiOperation("Adding Address to Student with matching ID or else throw ResourceNotFoundException")
-    @PostMapping("addAddress/student-id-{studentID}/contact-id-{contactID}")
+    @PostMapping("addAddress/student-{studentID}")
     @ResponseStatus(HttpStatus.CREATED)
-    public AddressDTO addAddressToStudent(@PathVariable String studentID, @PathVariable String contactID,
+    public AddressDTO addAddressToStudent(@PathVariable String studentID,
                                           @RequestBody AddressDTO addressDTO)  {
-        return studentService.addAddressToStudent(addressDTO, Long.valueOf(studentID), Long.valueOf(contactID));
+        return studentService.addAddressToStudent(addressDTO, Long.valueOf(studentID));
     }
 
     @ApiOperation("Update an existing Student with matching ID or else throw ResourceNotFoundException")
-    @PutMapping("{ID}")
+    @PutMapping("updateStudent/student-{ID}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO updateStudent(@PathVariable String ID, @RequestBody StudentDTO studentDTO) {
         return studentService.updateStudent(Long.valueOf(ID), studentDTO);
     }
 
+    @ApiOperation("Update Student Contact with matching ID or else throw ResourceNotFoundException")
     @PutMapping("updateContact/student-{studentID}/contact-{contactID}")
     @ResponseStatus(HttpStatus.OK)
     public ContactDTO updateContact(@RequestBody @Valid ContactDTO contactDTO,
-                                    @PathVariable  Long studentID, @PathVariable Long contactID) {
-        return studentService.updateContact(contactDTO, studentID, contactID);
+                                    @PathVariable  String studentID, @PathVariable String contactID) {
+        return studentService.updateContact(contactDTO, Long.valueOf(studentID), Long.valueOf(contactID));
     }
 
-    @PutMapping("updateAddress/student-{studentID}/contact-{contactID}/address-{addressID}")
+    @ApiOperation("Update Student Address with matching ID or else throw ResourceNotFoundException")
+    @PutMapping("updateAddress/student-{studentID}/address-{addressID}")
     @ResponseStatus(HttpStatus.OK)
     public AddressDTO updateAddress(@RequestBody @Valid AddressDTO addressDTO,
-                                    @PathVariable  Long studentID, @PathVariable Long contactID, @PathVariable Long addressID) {
-        return studentService.updateAddress(addressDTO, studentID, contactID, addressID);
+                                    @PathVariable  String studentID, @PathVariable String addressID) {
+        return studentService.updateAddress(addressDTO, Long.valueOf(studentID), Long.valueOf(addressID));
     }
 
     @ApiOperation("Delete a student with matching ID or else throw ResourceNotFoundException")
-    @DeleteMapping("{ID}")
+    @DeleteMapping("deleteStudent/student-{ID}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteCustomer(@PathVariable String ID) {
+    public void deleteStudent(@PathVariable String ID) {
         studentService.deleteStudentByID(Long.valueOf(ID));
     }
 
@@ -118,12 +122,10 @@ public class StudentController {
     }
 
     @ApiOperation("Delete address from student with matching ID or else throw ResourceNotFoundException")
-    @DeleteMapping("deleteAddress/contact-{ID}")
+    @DeleteMapping("deleteAddress/student-{ID}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteStudentAddress(@PathVariable String ID) {
         studentService.deleteStudentAddress(Long.valueOf(ID));
     }
-
-
 
 }

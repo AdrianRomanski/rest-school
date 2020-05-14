@@ -1,11 +1,8 @@
 package adrianromanski.restschool.controllers.person;
 
-import adrianromanski.restschool.domain.base_entity.person.Guardian;
-import adrianromanski.restschool.domain.base_entity.person.Student;
-import adrianromanski.restschool.model.base_entity.person.GuardianDTO;
-import adrianromanski.restschool.model.base_entity.person.GuardianListDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentListDTO;
+import adrianromanski.restschool.model.person.GuardianDTO;
+import adrianromanski.restschool.model.person.GuardianListDTO;
+import adrianromanski.restschool.model.person.StudentListDTO;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,10 +1,10 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.base_entity.event.Exam;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.event.Exam;
+import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
-import adrianromanski.restschool.model.base_entity.person.TeacherDTO;
+import adrianromanski.restschool.model.event.ExamDTO;
+import adrianromanski.restschool.model.person.TeacherDTO;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

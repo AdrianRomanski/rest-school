@@ -1,18 +1,18 @@
 package adrianromanski.restschool.mapper;
 
-import adrianromanski.restschool.domain.base_entity.event.Exam;
+import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.base_entity.Subject;
-import adrianromanski.restschool.domain.base_entity.person.Teacher;
+import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.mapper.event.ExamMapper;
-import adrianromanski.restschool.model.base_entity.event.ExamDTO;
+import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static adrianromanski.restschool.domain.base_entity.enums.LastName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.MaleName.*;
-import static adrianromanski.restschool.domain.base_entity.enums.Subjects.*;
+import static adrianromanski.restschool.domain.enums.LastName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.Subjects.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExamMapperTest {

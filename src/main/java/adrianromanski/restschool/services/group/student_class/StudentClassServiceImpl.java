@@ -1,13 +1,13 @@
 package adrianromanski.restschool.services.group.student_class;
 
-import adrianromanski.restschool.domain.base_entity.enums.Gender;
-import adrianromanski.restschool.domain.base_entity.enums.Subjects;
-import adrianromanski.restschool.domain.base_entity.group.StudentClass;
+import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.domain.group.StudentClass;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.group.StudentClassMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.group.StudentClassDTO;
-import adrianromanski.restschool.model.base_entity.person.StudentDTO;
+import adrianromanski.restschool.model.group.StudentClassDTO;
+import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.group.StudentClassRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

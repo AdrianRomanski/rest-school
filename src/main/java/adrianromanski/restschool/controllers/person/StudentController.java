@@ -25,27 +25,27 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @ApiOperation("Returns an Student with matching ID")
+    @ApiOperation("Returns Student with matching ID")
     @GetMapping("/getByID/student-{ID}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO getStudentByID(@PathVariable String ID) {
         return studentService.getStudentByID(Long.valueOf(ID));
     }
 
-    @ApiOperation("Returns a Student with matching firstName and lastName")
+    @ApiOperation("Returns Student with matching firstName and lastName")
     @GetMapping("/getByName/{firstName}-{lastName}")
     @ResponseStatus(HttpStatus.OK)
     public StudentDTO getStudentByFirstAndLastName(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
         return studentService.getStudentByName(firstName, lastName);
     }
-    @ApiOperation("Returns all Students sorted by age -> lastName -> firstName")
+    @ApiOperation("Returns Students sorted by age -> lastName -> firstName")
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllStudents() {
         return new StudentListDTO(studentService.getAllStudents());
     }
 
-    @ApiOperation("Returns all Female Students sorted by age -> lastName -> firstName")
+    @ApiOperation("Returns Female Students sorted by age -> lastName -> firstName")
     @GetMapping("female")
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllFemaleStudents() {
@@ -53,7 +53,7 @@ public class StudentController {
     }
 
 
-    @ApiOperation("Returns all Male Students sorted by age -> lastName -> firstName")
+    @ApiOperation("Returns Male Students sorted by age -> lastName -> firstName")
     @GetMapping("male")
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllMaleStudents() {

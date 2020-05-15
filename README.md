@@ -1,6 +1,14 @@
-# <div align="center"> REST API High School </div>
+# <div align="center"> REST API High School</div>
 
 ## <div align="center"> [![CircleCI](https://circleci.com/gh/AdrianRomanski/rest-school.svg?style=svg)](https://circleci.com/gh/AdrianRomanski/rest-school) [![codecov](https://codecov.io/gh/AdrianRomanski/rest-school/branch/master/graph/badge.svg)](https://codecov.io/gh/AdrianRomanski/rest-school) </div>
+## <div align="center"> [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)] </div>
+
+## <div align="left"> Running rest-school locally </div>
+
+    git clone git@github.com:AdrianRomanski/rest-school.git
+    cd rest-school
+    ./mvnw package
+    java -jar target/*.jar
 
 ## <div align="center"> Student </div>
 #### GET
@@ -64,7 +72,7 @@
 * __getAllStudentClasses__ - Return all Student Classes
 * __getStudentClassByID__ -  Student Class with matching id
 * __getStudentClassByPresident__ - Return a  List of Student Classes with matching president
-* __getStudentClassesGroupedBySpecialization__ - Return a Map where the keys are Specializations and values maps containing Classes   
+* __getStudentClassesGroupedBySpecialization__ - Return a Map where the keys are Specializations and values maps containing Classes
 * __getAllStudentClassForSpecialization__ - Return a list of Student Classes with matching specialization
 * __getLargestStudentClass__ - Return a list of Student Classes with largest number of students
 * __getSmallestStudentClass__ - Return a list of Student Classes with smallest number of students

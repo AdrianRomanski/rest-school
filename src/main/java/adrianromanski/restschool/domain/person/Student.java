@@ -1,7 +1,7 @@
 package adrianromanski.restschool.domain.person;
 
-import adrianromanski.restschool.domain.base_entity.Address;
 import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.group.SportTeam;
@@ -40,9 +40,9 @@ public class Student extends Person {
 
 
     @OneToOne(cascade={CascadeType.ALL})
-    private Address address;
+    private StudentAddress address;
 
-    public Optional<Address> getAddressOptional() {
+    public Optional<StudentAddress> getAddressOptional() {
         return Optional.ofNullable(this.getAddress());
     }
 

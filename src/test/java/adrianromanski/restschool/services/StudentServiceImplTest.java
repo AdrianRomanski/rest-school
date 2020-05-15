@@ -1,15 +1,17 @@
 package adrianromanski.restschool.services;
 
-import adrianromanski.restschool.domain.base_entity.Address;
+import adrianromanski.restschool.domain.base_entity.address.Address;
 import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.mapper.base_entity.AddressMapper;
+import adrianromanski.restschool.mapper.base_entity.StudentAddressMapper;
 import adrianromanski.restschool.mapper.base_entity.ContactMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.AddressDTO;
+import adrianromanski.restschool.model.base_entity.address.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
 import adrianromanski.restschool.repositories.base_entity.ContactRepository;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -62,15 +65,16 @@ class StudentServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        studentService = new StudentServiceImpl(StudentMapper.INSTANCE, ContactMapper.INSTANCE, AddressMapper.INSTANCE,
+        studentService = new StudentServiceImpl(StudentMapper.INSTANCE, ContactMapper.INSTANCE, StudentAddressMapper.INSTANCE,
                                                 studentRepository, contactRepository, addressRepository);
     }
 
     private Student createStudent(Long id, String firstName, String lastName, Gender gender) {
         Student student = Student.builder().firstName(firstName).lastName(lastName).gender(gender).build();
         student.setId(id);
+        student.setDateOfBirth(LocalDate.of(1992,11,03));
         Contact contact = getContact();
-        Address address = getAddress();
+        StudentAddress address = getAddress();
         student.setContact(contact);
         student.setAddress(address);
         contact.setStudent(student);
@@ -99,9 +103,9 @@ class StudentServiceImplTest {
         return Arrays.asList(createEthan(), createSebastian(), createCharlotte());
     }
 
-    private AddressDTO getAddressDTO() { return AddressDTO.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build(); }
+    private StudentAddressDTO getAddressDTO() { return StudentAddressDTO.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build(); }
 
-    private Address getAddress() { return Address.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build(); }
+    private StudentAddress getAddress() { return StudentAddress.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build(); }
 
     private ContactDTO getContactDTO() { return ContactDTO.builder().email(EMAIL).telephoneNumber(NUMBER).build(); }
 
@@ -176,6 +180,20 @@ class StudentServiceImplTest {
         assertEquals(ID, studentDTO.getId());
     }
 
+    @DisplayName("[Happy Path], [Method] = getStudentsByAge")
+    @Test
+    void getStudentsByAge() {
+        List<Student> students = getStudents();
+
+        when(studentRepository.findAll()).thenReturn(students);
+
+        Map<Long, List<StudentDTO>> returnDTO = studentService.getStudentsByAge();
+
+        assertThat(returnDTO.containsKey(27L));
+        assertEquals(returnDTO.size(), 1);
+        assertEquals(returnDTO.get(27L).size(), 3);
+    }
+
     @DisplayName("[Happy Path], [Method] = getStudentsByLocation")
     @Test
     void getStudentByLocation() {
@@ -242,7 +260,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = addAddressToStudent")
     @Test
     void addAddressToStudentHappyPath() {
-        AddressDTO addressDTO = getAddressDTO();
+        StudentAddressDTO addressDTO = getAddressDTO();
         Address address = getAddress();
         Student student = createEthan();
 
@@ -263,7 +281,7 @@ class StudentServiceImplTest {
     @DisplayName("[Unhappy Path], [Method] = addAddressToStudent, [Reason] = Student not found")
     @Test
     void addAddressToStudentUnHappyPath() {
-        AddressDTO addressDTO = new AddressDTO();
+        StudentAddressDTO addressDTO = new StudentAddressDTO();
 
         Throwable ex = catchThrowable(() -> studentService.addAddressToStudent(addressDTO, ID));
 
@@ -321,8 +339,8 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = updateAddress")
     @Test
     void updateAddress() {
-        AddressDTO addressDTO = getAddressDTO();
-        Address address = getAddress();
+        StudentAddressDTO addressDTO = getAddressDTO();
+        StudentAddress address = getAddress();
         Student student = createEthan();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
@@ -377,7 +395,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = deleteStudentAddress")
     @Test
     void deleteStudentAddress() {
-        Address address = getAddress();
+        StudentAddress address = getAddress();
         Student student = createEthan();
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(student));

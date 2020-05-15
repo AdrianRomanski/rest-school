@@ -1,7 +1,8 @@
 package adrianromanski.restschool.bootstrap;
 
-import adrianromanski.restschool.domain.base_entity.Address;
+import adrianromanski.restschool.domain.base_entity.address.Address;
 import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.event.ExamResult;
 import adrianromanski.restschool.domain.group.SportTeam;
@@ -98,7 +99,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
                                     gender(MALE).dateOfBirth(LocalDate.of(1992, 11, 3)).build();
 
         // Contact Jacob
-        Address address = Address.builder().country("Poland").city("Warsaw").postalCode("22-421").streetName("District 9").build();
+        StudentAddress address = StudentAddress.builder().country("Poland").city("Warsaw").postalCode("22-421").streetName("District 9").build();
         Contact contact = Contact.builder().email("JacobStar@gmail.com").telephoneNumber("22-4421-22").emergencyNumber("22-4112-22").build();
         contact.setStudent(jacob);
         address.setStudent(jacob);

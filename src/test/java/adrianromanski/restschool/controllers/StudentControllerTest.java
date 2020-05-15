@@ -2,10 +2,12 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.StudentController;
+import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.AddressDTO;
+import adrianromanski.restschool.model.base_entity.address.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
 import org.junit.jupiter.api.BeforeEach;
@@ -198,9 +200,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     @DisplayName("[POST], [Happy Path], [Method] = addAddressToStudent")
     @Test
     void addAddressToStudent() throws Exception {
-        AddressDTO addressDTO = AddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
+        StudentAddressDTO addressDTO = StudentAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
 
-        when(studentService.addAddressToStudent(any(AddressDTO.class), anyLong())).thenReturn(addressDTO);
+        when(studentService.addAddressToStudent(any(StudentAddressDTO.class), anyLong())).thenReturn(addressDTO);
 
         mockMvc.perform(post(STUDENTS + "addAddress/student-1")
                 .accept(MediaType.APPLICATION_JSON)
@@ -251,9 +253,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     @DisplayName("[PUT], [Happy Path], [Method] = updateAddress")
     @Test
     void updateAddress() throws Exception {
-        AddressDTO addressDTO = AddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
+        StudentAddressDTO addressDTO = StudentAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
 
-        when(studentService.updateAddress(any(AddressDTO.class), anyLong(), anyLong())).thenReturn(addressDTO);
+        when(studentService.updateAddress(any(StudentAddressDTO.class), anyLong(), anyLong())).thenReturn(addressDTO);
 
         mockMvc.perform(put(STUDENTS + "updateAddress/student-1/address-1")
                 .accept(MediaType.APPLICATION_JSON)

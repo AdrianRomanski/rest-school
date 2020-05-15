@@ -1,7 +1,8 @@
 package adrianromanski.restschool.controllers.person;
 
-import adrianromanski.restschool.model.base_entity.AddressDTO;
+import adrianromanski.restschool.model.base_entity.address.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.StudentListDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
@@ -11,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
 
 @Api("Controller for Students")
 @RestController
@@ -78,8 +77,8 @@ public class StudentController {
     @ApiOperation("Adding Address to Student with matching ID or else throw ResourceNotFoundException")
     @PostMapping("addAddress/student-{studentID}")
     @ResponseStatus(HttpStatus.CREATED)
-    public AddressDTO addAddressToStudent(@PathVariable String studentID,
-                                          @RequestBody AddressDTO addressDTO)  {
+    public StudentAddressDTO addAddressToStudent(@PathVariable String studentID,
+                                                 @RequestBody StudentAddressDTO addressDTO)  {
         return studentService.addAddressToStudent(addressDTO, Long.valueOf(studentID));
     }
 
@@ -101,7 +100,7 @@ public class StudentController {
     @ApiOperation("Update Student Address with matching ID or else throw ResourceNotFoundException")
     @PutMapping("updateAddress/student-{studentID}/address-{addressID}")
     @ResponseStatus(HttpStatus.OK)
-    public AddressDTO updateAddress(@RequestBody @Valid AddressDTO addressDTO,
+    public StudentAddressDTO updateAddress(@RequestBody @Valid StudentAddressDTO addressDTO,
                                     @PathVariable  String studentID, @PathVariable String addressID) {
         return studentService.updateAddress(addressDTO, Long.valueOf(studentID), Long.valueOf(addressID));
     }

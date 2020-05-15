@@ -1,6 +1,6 @@
 package adrianromanski.restschool.repositories.base_entity;
 
-import adrianromanski.restschool.domain.base_entity.Address;
+import adrianromanski.restschool.domain.base_entity.address.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 

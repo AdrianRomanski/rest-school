@@ -22,5 +22,4 @@ public class PersonDTO extends BaseEntityDTO {
     private Gender gender;
     private LocalDate dateOfBirth;
     private Long age;
-
 }

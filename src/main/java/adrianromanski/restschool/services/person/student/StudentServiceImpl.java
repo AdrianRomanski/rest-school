@@ -1,14 +1,16 @@
 package adrianromanski.restschool.services.person.student;
 
-import adrianromanski.restschool.domain.base_entity.Address;
+import adrianromanski.restschool.domain.base_entity.address.Address;
 import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.mapper.base_entity.AddressMapper;
+import adrianromanski.restschool.mapper.base_entity.StudentAddressMapper;
 import adrianromanski.restschool.mapper.base_entity.ContactMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.AddressDTO;
+import adrianromanski.restschool.model.base_entity.address.AddressDTO;
 import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
 import adrianromanski.restschool.repositories.base_entity.ContactRepository;
@@ -20,10 +22,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.enums.Gender.MALE;
+import static java.util.stream.Collectors.*;
 
 @Slf4j
 @Service
@@ -31,7 +33,7 @@ public class StudentServiceImpl implements StudentService{
 
     private final StudentMapper studentMapper;
     private final ContactMapper contactMapper;
-    private final AddressMapper addressMapper;
+    private final StudentAddressMapper studentAddressMapper;
     private final StudentRepository studentRepository;
     private final ContactRepository contactRepository;
     private final AddressRepository addressRepository;
@@ -44,26 +46,15 @@ public class StudentServiceImpl implements StudentService{
     public static final Function<StudentDTO, String> GROUPED_BY_CITY = s -> s.getAddressDTO().getCity();
 
     public StudentServiceImpl(StudentMapper studentMapper, ContactMapper contactMapper,
-                              AddressMapper addressMapper, StudentRepository studentRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
+                              StudentAddressMapper studentAddressMapper, StudentRepository studentRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
         this.studentMapper = studentMapper;
         this.contactMapper = contactMapper;
-        this.addressMapper = addressMapper;
+        this.studentAddressMapper = studentAddressMapper;
         this.studentRepository = studentRepository;
         this.contactRepository = contactRepository;
         this.addressRepository = addressRepository;
     }
 
-    /**
-     * @return all Students sorted by age -> lastName -> firstName
-     */
-    @Override
-    public List<StudentDTO> getAllStudents() {
-        return studentRepository.findAll()
-                .stream()
-                .sorted(COMPARATOR)
-                .map(studentMapper::studentToStudentDTO)
-                .collect(Collectors.toList());
-    }
 
     /**
      * @return Student with matching id
@@ -76,6 +67,31 @@ public class StudentServiceImpl implements StudentService{
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class)));
     }
 
+
+    /**
+     * @return Student with matching firstName and lastName
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public StudentDTO getStudentByName(String firstName, String lastName) {
+        return studentMapper.studentToStudentDTO(studentRepository
+                .findByFirstNameAndLastName(firstName, lastName)
+                .orElseThrow(() -> new ResourceNotFoundException(firstName, lastName, Student.class)));
+    }
+
+
+    /**
+     * @return all Students sorted by age -> lastName -> firstName
+     */
+    @Override
+    public List<StudentDTO> getAllStudents() {
+        return studentRepository.findAll()
+                .stream()
+                .sorted(COMPARATOR)
+                .map(studentMapper::studentToStudentDTO)
+                .collect(toList());
+    }
+
     /**
      * @return  all Female Students sorted by age -> lastName -> firstName
      */
@@ -86,7 +102,7 @@ public class StudentServiceImpl implements StudentService{
                 .sorted(COMPARATOR)
                 .map(studentMapper::studentToStudentDTO)
                 .filter(studentDTO -> studentDTO.getGender().equals(FEMALE))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     /**
@@ -99,19 +115,24 @@ public class StudentServiceImpl implements StudentService{
                 .sorted(COMPARATOR)
                 .map(studentMapper::studentToStudentDTO)
                 .filter(studentDTO -> studentDTO.getGender().equals(MALE))
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     /**
-     * @return Student with matching firstName and lastName
-     * @throws ResourceNotFoundException if not found
+     * @return Students grouped by Age
      */
     @Override
-    public StudentDTO getStudentByName(String firstName, String lastName) {
-        return studentMapper.studentToStudentDTO(studentRepository
-                                .findByFirstNameAndLastName(firstName, lastName)
-                                .orElseThrow(() -> new ResourceNotFoundException(firstName, lastName, Student.class)));
+    public Map<Long, List<StudentDTO>> getStudentsByAge() {
+        return studentRepository.findAll()
+                .stream()
+                .map(studentMapper::studentToStudentDTO)
+                .collect(
+                        groupingBy(
+                                StudentDTO::getAge
+                        )
+                );
     }
+
 
     /**
      * @return Students grouped by Country and City
@@ -122,9 +143,9 @@ public class StudentServiceImpl implements StudentService{
                 .stream()
                 .map(studentMapper::studentToStudentDTO)
                 .collect(
-                        Collectors.groupingBy(
+                        groupingBy(
                                 GROUPED_BY_COUNTRY,
-                                Collectors.groupingBy(
+                                groupingBy(
                                         GROUPED_BY_CITY
                                 )
                         )
@@ -169,11 +190,11 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if Student not found
      */
     @Override
-    public AddressDTO addAddressToStudent(AddressDTO addressDTO, Long studentID) {
+    public StudentAddressDTO addAddressToStudent(StudentAddressDTO addressDTO, Long studentID) {
         Student student = studentRepository
                 .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        Address address = addressMapper.addressDTOToAddress(addressDTO);
+        Address address = studentAddressMapper.addressDTOToAddress(addressDTO);
         studentRepository.save(student);
         addressRepository.save(address);
             log.info("Address successfully added to Student with id: " + studentID);
@@ -224,17 +245,17 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found student, contact or address
      */
     @Override
-    public AddressDTO updateAddress(AddressDTO addressDTO, Long studentID, Long addressID) {
+    public StudentAddressDTO updateAddress(StudentAddressDTO addressDTO, Long studentID, Long addressID) {
         Student student = studentRepository.findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         addressRepository.findById(addressID)
                 .orElseThrow(() -> new ResourceNotFoundException(addressID, Address.class));
-        Address updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
+        StudentAddress updatedAddress = studentAddressMapper.addressDTOToAddress(addressDTO);
             updatedAddress.setId(addressID);
         studentRepository.save(student);
         addressRepository.save(updatedAddress);
             log.info("Address with id: " + addressID + " successfully updated");
-        return addressMapper.addressToAddressDTO(updatedAddress);
+        return studentAddressMapper.addressToAddressDTO(updatedAddress);
     }
 
     /**
@@ -279,9 +300,9 @@ public class StudentServiceImpl implements StudentService{
         Student student = studentRepository
                 .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        Address address = student.getAddressOptional()
+        StudentAddress address = student.getAddressOptional()
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class, Address.class));
-        Address emptyAddress = new Address();
+        StudentAddress emptyAddress = new StudentAddress();
             emptyAddress.setStudent(student);
             student.setAddress(emptyAddress);
         addressRepository.delete(address);

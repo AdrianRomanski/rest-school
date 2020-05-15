@@ -10,7 +10,6 @@ import java.util.Map;
 public interface StudentService {
 
     // GET
-
     StudentDTO getStudentByID(Long studentID);
 
     StudentDTO getStudentByName(String firstName, String lastName);

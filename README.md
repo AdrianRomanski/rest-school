@@ -4,11 +4,13 @@
 
 ## <div align="center"> Student </div>
 #### GET
-* __getAllStudents__ - Return all Students sorted by age -> lastName -> firstName
-* __getAllFemaleStudents__ - Return all Female Students sorted by age -> lastName -> firstName
-* __getAllMaleStudents__ - Return all Male Students sorted by age -> lastName -> firstName
-* __getStudentByFirstAndLastName__ - Return Student with matching firstName and lastName
 * __getStudentByID__ - Return Student with matching id
+* __getStudentByFirstAndLastName__ - Return Student with matching firstName and lastName
+* __getAllStudents__ - Return Students sorted by age -> lastName -> firstName
+* __getAllFemaleStudents__ - Return Female Students sorted by age -> lastName -> firstName
+* __getAllMaleStudents__ - Return Male Students sorted by age -> lastName -> firstName
+* __getStudentsByAge__ - Return Students grouped by Age
+* __getStudentsByLocation__ - Return Students grouped by Country and City
 #### POST
 * __createNewStudent__ - Save Student to database
 * __addContactToStudent__ - Adding Contact to Student with matching ID

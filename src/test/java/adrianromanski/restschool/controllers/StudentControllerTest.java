@@ -20,9 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 import static adrianromanski.restschool.domain.enums.FemaleName.CHARLOTTE;
@@ -88,11 +86,46 @@ class StudentControllerTest  extends AbstractRestControllerTest {
         return createStudentDTO(3L, CHARLOTTE.get(), HENDERSON.get(), FEMALE);
     }
 
+    private List<StudentDTO> getStudents() { return Arrays.asList(createEthan(), createSebastian(), createCharlotte()); }
+
+
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName")
+    @Test
+    void getStudentByFirstAndLastName() throws Exception {
+        StudentDTO studentDTO = createEthan();
+
+        when(studentService.getStudentByName(anyString(), anyString())).thenReturn(studentDTO);
+
+        mockMvc.perform(get(STUDENTS + "getByName/" + ETHAN.get() + "-" + COOPER.get())
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(studentDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())))
+                .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
+    }
+
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentById")
+    @Test
+    void getStudentByID() throws Exception {
+        StudentDTO studentDTO = createEthan();
+
+        when(studentService.getStudentByID(anyLong())).thenReturn(studentDTO);
+
+        mockMvc.perform(get(STUDENTS + "getByID/student-1")
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())))
+                .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
+    }
 
     @DisplayName("[GET], [Happy Path], [Method] = getAllStudents")
     @Test
     void getAllStudents() throws Exception {
-        List<StudentDTO> students = Arrays.asList(createEthan(), createSebastian(), createCharlotte());
+        List<StudentDTO> students = getStudents();
 
         when(studentService.getAllStudents()).thenReturn(students);
 
@@ -131,38 +164,41 @@ class StudentControllerTest  extends AbstractRestControllerTest {
                 .andExpect(jsonPath("$.students", hasSize(2)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName")
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentsByLocation")
     @Test
-    void getStudentByFirstAndLastName() throws Exception {
-        StudentDTO studentDTO = createEthan();
+    void getStudentsByAge() throws Exception {
+        Map<Long, List<StudentDTO>> map = new HashMap<>();
+        map.put(27L, getStudents());
 
-        when(studentService.getStudentByName(anyString(), anyString())).thenReturn(studentDTO);
+        when(studentService.getStudentsByAge()).thenReturn(map);
 
-        mockMvc.perform(get(STUDENTS + "getByName/" + ETHAN.get() + "-" + COOPER.get())
+        mockMvc.perform(get(STUDENTS + "groupedBy/age")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(studentDTO)))
+                .content(asJsonString(map)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())))
-                .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
+                .andExpect(jsonPath("$.27", hasSize(3)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getStudentById")
+    @DisplayName("[GET], [Happy Path], [Method] = getStudentsByLocation")
     @Test
-    void getStudentByID() throws Exception {
-        StudentDTO studentDTO = createEthan();
+    void getStudentsGroupedByLocation() throws Exception {
+        Map<String, Map<String, List<StudentDTO>>> map = new HashMap<>();
+        Map<String, List<StudentDTO>> nestedMaP = new HashMap<>();
+        nestedMaP.put(CITY, getStudents());
+        map.put(COUNTRY, nestedMaP);
 
-        when(studentService.getStudentByID(anyLong())).thenReturn(studentDTO);
+        when(studentService.getStudentsByLocation()).thenReturn(map);
 
-        mockMvc.perform(get(STUDENTS + "getByID/student-1")
+        mockMvc.perform(get(STUDENTS + "groupedBy/location")
                 .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(map)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())))
-                .andExpect(jsonPath("$.gender", equalTo(MALE.toString())));
+                .andExpect(jsonPath("$.Poland.Warsaw", hasSize(3)));
     }
+
+
 
     @DisplayName("[POST], [Happy Path], [Method] = createNewStudent")
     @Test

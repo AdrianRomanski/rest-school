@@ -81,7 +81,7 @@ public class StudentServiceImpl implements StudentService{
 
 
     /**
-     * @return all Students sorted by age -> lastName -> firstName
+     * @return Students sorted by age -> lastName -> firstName
      */
     @Override
     public List<StudentDTO> getAllStudents() {
@@ -93,7 +93,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /**
-     * @return  all Female Students sorted by age -> lastName -> firstName
+     * @return Female Students sorted by age -> lastName -> firstName
      */
     @Override
     public List<StudentDTO> getAllFemaleStudents() {
@@ -153,10 +153,9 @@ public class StudentServiceImpl implements StudentService{
     }
 
 
-
     /**
      * Saving Student to Database
-     * @return StudentDTO object
+     * @return StudentDTO
      */
     @Override
     public StudentDTO createNewStudent(StudentDTO studentDTO) {
@@ -168,7 +167,7 @@ public class StudentServiceImpl implements StudentService{
 
     /**
      * Adding Contact to Student
-     * @throws ResourceNotFoundException if Student not found
+     * @throws ResourceNotFoundException if not found
      */
     @Override
     public ContactDTO addContactToStudent(ContactDTO contactDTO, Long studentID) {
@@ -187,7 +186,7 @@ public class StudentServiceImpl implements StudentService{
 
     /**
      * Adding Address to Contact
-     * @throws ResourceNotFoundException if Student not found
+     * @throws ResourceNotFoundException if not found
      */
     @Override
     public StudentAddressDTO addAddressToStudent(StudentAddressDTO addressDTO, Long studentID) {
@@ -203,8 +202,8 @@ public class StudentServiceImpl implements StudentService{
 
 
     /**
-     *  Update Student with Matching ID and save it to Database
-     * @return StudentDTO object if the student was successfully saved
+     * Update Student with Matching ID and save it to Database
+     * @return StudentDTO object
      * @throws ResourceNotFoundException if not found
      */
     @Override
@@ -219,9 +218,9 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /**
-     *  Update Contact with Matching ID and save it to Database
-     * @return ContactDTO object if successfully updated
-     * @throws ResourceNotFoundException if not found student or contact
+     * Update Contact with Matching ID and save it to Database
+     * @return ContactDTO
+     * @throws ResourceNotFoundException if not found
      */
     @Override
     public ContactDTO updateContact(ContactDTO contactDTO, Long studentID, Long contactID) {
@@ -240,9 +239,9 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /**
-     *  Update Address with Matching ID and save it to Database
-     * @return AddressDTO object if successfully updated
-     * @throws ResourceNotFoundException if not found student, contact or address
+     * Update Address with Matching ID and save it to Database
+     * @return StudentAddressDTO
+     * @throws ResourceNotFoundException if not found student
      */
     @Override
     public StudentAddressDTO updateAddress(StudentAddressDTO addressDTO, Long studentID, Long addressID) {
@@ -273,7 +272,7 @@ public class StudentServiceImpl implements StudentService{
 
 
     /**
-     * Delete Contact from the Student with matching id and replaces it with default
+     * Delete Contact from the Student with matching id and replaces it with default Contact
      * @throws ResourceNotFoundException if not found
      */
     @Override
@@ -292,7 +291,7 @@ public class StudentServiceImpl implements StudentService{
     }
 
     /**
-     * Delete Address from the Contact with matching id and replaces it with default
+     * Delete Address from the Student with matching id and replaces it with default Address
      * @throws ResourceNotFoundException if not found
      */
     @Override
@@ -309,4 +308,5 @@ public class StudentServiceImpl implements StudentService{
         studentRepository.save(student);
         log.info("Address successfully deleted from the Student with id: " + studentID);
     }
+
 }

@@ -81,7 +81,42 @@
 
         private ExamDTO createExamDTO() { return ExamDTO.builder().name(NAME).build(); }
 
-        @DisplayName("[GET], [Happy Path], [Method] = getAllStudents")
+
+        @DisplayName("[GET], [Happy Path], [Method] = getTeacherByID")
+        @Test
+        void getTeacherByID() throws Exception {
+            TeacherDTO teacherDTO = createEthan();
+
+            when(teacherService.getTeacherByID(ID)).thenReturn(teacherDTO);
+
+            mockMvc.perform(get(TEACHERS + "getByID/teacher-1")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(teacherDTO)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
+        }
+
+
+        @DisplayName("[GET], [Happy Path], [Method] = getTeacherByFirstNameAndLastName")
+        @Test
+        void getTeacherByFirstNameAndLastName() throws Exception {
+            TeacherDTO teacherDTO = createEthan();
+
+            when(teacherService.getTeacherByFirstNameAndLastName(ETHAN.get(), COOPER.get())).thenReturn(teacherDTO);
+
+            mockMvc.perform(get(TEACHERS + "getByName/" + ETHAN.get() + "-" + COOPER.get())
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(teacherDTO)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
+        }
+
+
+        @DisplayName("[GET], [Happy Path], [Method] = getAllTeachers")
         @Test
         void getAllTeachers() throws Exception {
             List<TeacherDTO> teacherDTOList = Arrays.asList(createEthan(), createBenjamin(), createAria());
@@ -96,38 +131,6 @@
                     .andExpect(jsonPath("$.teachers", hasSize(3)));
         }
 
-        @DisplayName("[GET], [Happy Path], [Method] = getStudentByFirstAndLastName")
-        @Test
-        void getTeacherByFirstNameAndLastName() throws Exception {
-            TeacherDTO teacherDTO = createEthan();
-
-            when(teacherService.getTeacherByFirstNameAndLastName(ETHAN.get(), COOPER.get())).thenReturn(teacherDTO);
-
-            mockMvc.perform(get(TEACHERS + ETHAN.get() + "/" + COOPER.get())
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(asJsonString(teacherDTO)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
-        }
-
-        @DisplayName("[GET], [Happy Path], [Method] = getStudentById")
-        @Test
-        void getTeacherByID() throws Exception {
-            TeacherDTO teacherDTO = createEthan();
-
-            when(teacherService.getTeacherByID(ID)).thenReturn(teacherDTO);
-
-            mockMvc.perform(get(TEACHERS + ID)
-                    .accept(MediaType.APPLICATION_JSON)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(asJsonString(teacherDTO)))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                    .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
-        }
-
         @DisplayName("[GET], [Happy Path], [Method] = getTeachersBySpecialization")
         @Test
         void getTeachersBySpecialization() throws Exception {
@@ -138,7 +141,7 @@
 
             when(teacherService.getTeachersBySpecialization()).thenReturn(map);
 
-            mockMvc.perform(get(TEACHERS + "specializations")
+            mockMvc.perform(get(TEACHERS + "groupedBy/specializations")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(map)))
@@ -158,7 +161,7 @@
 
             when(teacherService.getTeachersByYearsOfExperience()).thenReturn(map);
 
-            mockMvc.perform(get(TEACHERS + "experience")
+            mockMvc.perform(get(TEACHERS + "groupedBy/experience")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(map)))
@@ -174,7 +177,7 @@
 
             when(teacherService.addExamForClass(anyLong(), any(ExamDTO.class))).thenReturn(examDTO);
 
-            mockMvc.perform(post(TEACHERS + "teacher-1/addExam")
+            mockMvc.perform(post(TEACHERS + "addExamToClass/teacher-1")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(examDTO)))
@@ -183,14 +186,14 @@
         }
 
 
-        @DisplayName("[POST], [Happy Path], [Method] = addCorrectionExamForStudent")
+        @DisplayName("[POST], [Happy Path], [Method] = addCorrectionExamToStudent")
         @Test
         void addCorrectionExamForStudent() throws Exception {
             ExamDTO examDTO = createExamDTO();
 
-            when(teacherService.addCorrectionExamForStudent(anyLong(), anyLong(), any(ExamDTO.class))).thenReturn(examDTO);
+            when(teacherService.addCorrectionExamToStudent(anyLong(), anyLong(), any(ExamDTO.class))).thenReturn(examDTO);
 
-            mockMvc.perform(post(TEACHERS + "/teacher-1/student-1/addExam")
+            mockMvc.perform(post(TEACHERS + "addExamToStudent/teacher-1/student-1")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(examDTO)))
@@ -205,7 +208,7 @@
 
             when(teacherService.addNewStudentToClass(anyLong(), any(StudentDTO.class))).thenReturn(studentDTO);
 
-            mockMvc.perform(post(TEACHERS + "/teacher-1/addStudent")
+            mockMvc.perform(post(TEACHERS + "addStudent/teacher-1")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(studentDTO)))
@@ -236,7 +239,7 @@
 
             when(teacherService.changeClassPresident(anyLong(), anyLong())).thenReturn(teacherDTO);
 
-            mockMvc.perform(put(TEACHERS + "teacher-1/student-1/changeClassPresident")
+            mockMvc.perform(put(TEACHERS + "changePresident/teacher-1/student-1")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(teacherDTO)))
@@ -251,7 +254,7 @@
 
             when(teacherService.updateTeacher(teacherDTO.getId(), teacherDTO)).thenReturn(teacherDTO);
 
-            mockMvc.perform(put(TEACHERS + teacherDTO.getId())
+            mockMvc.perform(put(TEACHERS + "updateTeacher/1")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(teacherDTO)))
@@ -263,7 +266,7 @@
         @DisplayName("[DELETE], [Happy Path], [Method] = removeStudentFromClass")
         @Test
         void removeStudentFromClass() throws Exception {
-            mockMvc.perform(delete(TEACHERS + "teacher-1/student-1/removeFromTheClass")
+            mockMvc.perform(delete(TEACHERS + "removeStudent/teacher-1/student-1")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk());
 
@@ -286,7 +289,7 @@
 
             when(teacherService.getTeacherByID(anyLong())).thenThrow(ResourceNotFoundException.class);
 
-            mockMvc.perform(get(TEACHERS + 222)
+            mockMvc.perform(get(TEACHERS + "getByID/teacher-222")
                     .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNotFound());
         }

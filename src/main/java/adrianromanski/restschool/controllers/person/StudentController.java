@@ -40,7 +40,7 @@ public class StudentController {
         return studentService.getStudentByName(firstName, lastName);
     }
     @ApiOperation("Returns Students sorted by age -> lastName -> firstName")
-    @GetMapping()
+    @GetMapping({"/list", "/", "", "getAll", "findAll"})
     @ResponseStatus(HttpStatus.OK)
     public StudentListDTO getAllStudents() {
         return new StudentListDTO(studentService.getAllStudents());

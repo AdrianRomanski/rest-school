@@ -204,7 +204,7 @@ class TeacherServiceImplTest {
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
-        ExamDTO returnDTO = teacherService.addCorrectionExamForStudent(1L, 1L, examDTO);
+        ExamDTO returnDTO = teacherService.addCorrectionExamToStudent(1L, 1L, examDTO);
 
         assertEquals(returnDTO.getStudentsDTO().size(), 1);
         assertEquals(returnDTO.getTeacherDTO().getFirstName(), ETHAN.get());
@@ -215,7 +215,7 @@ class TeacherServiceImplTest {
     void addCorrectionExamForStudentUnHappyPathTeacher() {
         ExamDTO examDTO = createExam();
 
-        Throwable ex = catchThrowable(() -> teacherService.addCorrectionExamForStudent(22L, 22L, examDTO));
+        Throwable ex = catchThrowable(() -> teacherService.addCorrectionExamToStudent(22L, 22L, examDTO));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
@@ -227,7 +227,7 @@ class TeacherServiceImplTest {
         Teacher teacher = createEthan();
 
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
-        Throwable ex = catchThrowable(() -> teacherService.addCorrectionExamForStudent(22L, -5L, examDTO));
+        Throwable ex = catchThrowable(() -> teacherService.addCorrectionExamToStudent(22L, -5L, examDTO));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }

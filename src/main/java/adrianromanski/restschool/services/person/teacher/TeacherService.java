@@ -13,11 +13,11 @@ import java.util.Map;
 public interface TeacherService {
 
     // GET
-    List<TeacherDTO> getAllTeachers();
-
     TeacherDTO getTeacherByFirstNameAndLastName(String firstName, String lastName);
 
     TeacherDTO getTeacherByID(Long id);
+
+    List<TeacherDTO> getAllTeachers();
 
     Map<Subjects, List<TeacherDTO>> getTeachersBySpecialization();
 
@@ -26,7 +26,7 @@ public interface TeacherService {
     // POST
     ExamDTO addExamForClass(Long teacherID, ExamDTO examDTO);
 
-    ExamDTO addCorrectionExamForStudent(Long teacherID, Long studentID, ExamDTO examDTO);
+    ExamDTO addCorrectionExamToStudent(Long teacherID, Long studentID, ExamDTO examDTO);
 
     StudentDTO addNewStudentToClass(Long teacherID, StudentDTO studentDTO);
 
@@ -43,7 +43,5 @@ public interface TeacherService {
     void deleteTeacherById(Long id);
 
     void removeStudentFromClass(Long teacherID, Long studentID);
-
-
 }
 

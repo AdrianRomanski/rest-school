@@ -1,19 +1,19 @@
 package adrianromanski.restschool.services.person.student;
 
 import adrianromanski.restschool.domain.base_entity.address.Address;
-import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.domain.base_entity.contact.Contact;
 import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
+import adrianromanski.restschool.domain.base_entity.contact.StudentContact;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.StudentAddressMapper;
-import adrianromanski.restschool.mapper.base_entity.ContactMapper;
+import adrianromanski.restschool.mapper.base_entity.StudentContactMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
-import adrianromanski.restschool.model.base_entity.address.AddressDTO;
-import adrianromanski.restschool.model.base_entity.ContactDTO;
 import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
-import adrianromanski.restschool.repositories.base_entity.ContactRepository;
+import adrianromanski.restschool.repositories.base_entity.StudentContactRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,10 +32,10 @@ import static java.util.stream.Collectors.*;
 public class StudentServiceImpl implements StudentService{
 
     private final StudentMapper studentMapper;
-    private final ContactMapper contactMapper;
+    private final StudentContactMapper contactMapper;
     private final StudentAddressMapper studentAddressMapper;
     private final StudentRepository studentRepository;
-    private final ContactRepository contactRepository;
+    private final StudentContactRepository studentContactRepository;
     private final AddressRepository addressRepository;
 
     public static final Comparator<Student> COMPARATOR = Comparator.comparing(Student::getAge)
@@ -45,13 +45,13 @@ public class StudentServiceImpl implements StudentService{
     public static final Function<StudentDTO, String> GROUPED_BY_COUNTRY = s -> s.getAddressDTO().getCountry();
     public static final Function<StudentDTO, String> GROUPED_BY_CITY = s -> s.getAddressDTO().getCity();
 
-    public StudentServiceImpl(StudentMapper studentMapper, ContactMapper contactMapper,
-                              StudentAddressMapper studentAddressMapper, StudentRepository studentRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
+    public StudentServiceImpl(StudentMapper studentMapper, StudentContactMapper contactMapper,
+                              StudentAddressMapper studentAddressMapper, StudentRepository studentRepository, StudentContactRepository studentContactRepository, AddressRepository addressRepository) {
         this.studentMapper = studentMapper;
         this.contactMapper = contactMapper;
         this.studentAddressMapper = studentAddressMapper;
         this.studentRepository = studentRepository;
-        this.contactRepository = contactRepository;
+        this.studentContactRepository = studentContactRepository;
         this.addressRepository = addressRepository;
     }
 
@@ -170,14 +170,14 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public ContactDTO addContactToStudent(ContactDTO contactDTO, Long studentID) {
+    public StudentContactDTO addContactToStudent(StudentContactDTO contactDTO, Long studentID) {
         Student student = studentRepository
                 .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        Contact contact = contactMapper.contactDTOToContact(contactDTO);
+        StudentContact contact = contactMapper.contactDTOToContact(contactDTO);
             student.setContact(contact);
             contact.setStudent(student);
-        contactRepository.save(contact);
+        studentContactRepository.save(contact);
         studentRepository.save(student);
             log.info("Contact successfully added to Student with id:  " + studentID);
         return contactMapper.contactToContactDTO(contact);
@@ -223,17 +223,17 @@ public class StudentServiceImpl implements StudentService{
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public ContactDTO updateContact(ContactDTO contactDTO, Long studentID, Long contactID) {
+    public StudentContactDTO updateContact(StudentContactDTO contactDTO, Long studentID, Long contactID) {
         Student student = studentRepository.findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        contactRepository.findById(contactID)
+        studentContactRepository.findById(contactID)
                 .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
-        Contact updatedContact = contactMapper.contactDTOToContact(contactDTO);
+        StudentContact updatedContact = contactMapper.contactDTOToContact(contactDTO);
             updatedContact.setId(contactID);
             student.setContact(updatedContact);
             updatedContact.setStudent(student);
         studentRepository.save(student);
-        contactRepository.save(updatedContact);
+        studentContactRepository.save(updatedContact);
             log.info("Contact with id: " + contactID + " successfully updated");
         return contactMapper.contactToContactDTO(updatedContact);
     }
@@ -280,12 +280,12 @@ public class StudentServiceImpl implements StudentService{
         Student student = studentRepository
                 .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        Contact contact = student.getContactOptional().
-                orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class, Contact.class));
-        Contact emptyContact = new Contact();
+        StudentContact contact = student.getContactOptional().
+                orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class, StudentContact.class));
+        StudentContact emptyContact = new StudentContact();
             emptyContact.setStudent(student);
             student.setContact(emptyContact);
-        contactRepository.delete(contact);
+        studentContactRepository.delete(contact);
         studentRepository.save(student);
         log.info("Contact successfully deleted from the Student with id: " + studentID);
     }

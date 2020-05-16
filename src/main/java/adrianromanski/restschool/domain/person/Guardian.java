@@ -1,6 +1,6 @@
 package adrianromanski.restschool.domain.person;
 
-import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.domain.base_entity.contact.Contact;
 import adrianromanski.restschool.domain.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
@@ -24,8 +24,6 @@ public class Guardian extends Person {
         super(firstName, lastName, gender, dateOfBirth, age);
     }
 
-    @OneToOne
-    private Contact contact;
 
     @JsonBackReference
     @ToString.Exclude

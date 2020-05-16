@@ -2,12 +2,11 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.StudentController;
-import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
-import adrianromanski.restschool.model.base_entity.address.AddressDTO;
-import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
 import org.junit.jupiter.api.BeforeEach;
@@ -220,9 +219,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     @DisplayName("[POST], [Happy Path], [Method] = createNewStudent")
     @Test
     void addContactToStudent() throws Exception {
-        ContactDTO contactDTO = ContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).email(EMAIL).build();
+        StudentContactDTO contactDTO = StudentContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).email(EMAIL).build();
 
-        when(studentService.addContactToStudent(any(ContactDTO.class), anyLong())).thenReturn(contactDTO);
+        when(studentService.addContactToStudent(any(StudentContactDTO.class), anyLong())).thenReturn(contactDTO);
 
         mockMvc.perform(post(STUDENTS + "addContact/student-1")
                 .accept(MediaType.APPLICATION_JSON)
@@ -273,9 +272,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     @DisplayName("[PUT], [Happy Path], [Method] = updateContact")
     @Test
     void updateContact() throws Exception {
-        ContactDTO contactDTO = ContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).emergencyNumber(TELEPHONE_NUMBER).email(EMAIL).build();
+        StudentContactDTO contactDTO = StudentContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).emergencyNumber(TELEPHONE_NUMBER).email(EMAIL).build();
 
-        when(studentService.updateContact(any(ContactDTO.class), anyLong(), anyLong())).thenReturn(contactDTO);
+        when(studentService.updateContact(any(StudentContactDTO.class), anyLong(), anyLong())).thenReturn(contactDTO);
 
         mockMvc.perform(put(STUDENTS + "updateContact/student-1/contact-1")
                 .accept(MediaType.APPLICATION_JSON)

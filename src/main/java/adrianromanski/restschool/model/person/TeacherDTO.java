@@ -2,7 +2,7 @@ package adrianromanski.restschool.model.person;
 
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.domain.enums.Subjects;
-import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.event.PaymentDTO;
 import adrianromanski.restschool.model.group.StudentClassDTO;

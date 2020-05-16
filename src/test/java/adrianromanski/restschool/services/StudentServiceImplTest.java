@@ -1,20 +1,22 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.address.Address;
-import adrianromanski.restschool.domain.base_entity.Contact;
+import adrianromanski.restschool.domain.base_entity.contact.Contact;
 import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
+import adrianromanski.restschool.domain.base_entity.contact.StudentContact;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.StudentAddressMapper;
-import adrianromanski.restschool.mapper.base_entity.ContactMapper;
+import adrianromanski.restschool.mapper.base_entity.StudentContactMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.address.AddressDTO;
-import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
-import adrianromanski.restschool.repositories.base_entity.ContactRepository;
+import adrianromanski.restschool.repositories.base_entity.StudentContactRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.services.person.student.StudentService;
 import adrianromanski.restschool.services.person.student.StudentServiceImpl;
@@ -55,7 +57,7 @@ class StudentServiceImplTest {
     @Mock
     StudentRepository studentRepository;
     @Mock
-    ContactRepository contactRepository;
+    StudentContactRepository studentContactRepository;
     @Mock
     AddressRepository addressRepository;
 
@@ -65,15 +67,15 @@ class StudentServiceImplTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        studentService = new StudentServiceImpl(StudentMapper.INSTANCE, ContactMapper.INSTANCE, StudentAddressMapper.INSTANCE,
-                                                studentRepository, contactRepository, addressRepository);
+        studentService = new StudentServiceImpl(StudentMapper.INSTANCE, StudentContactMapper.INSTANCE, StudentAddressMapper.INSTANCE,
+                                                studentRepository, studentContactRepository, addressRepository);
     }
 
     private Student createStudent(Long id, String firstName, String lastName, Gender gender) {
         Student student = Student.builder().firstName(firstName).lastName(lastName).gender(gender).build();
         student.setId(id);
-        student.setDateOfBirth(LocalDate.of(1992,11,03));
-        Contact contact = getContact();
+        student.setDateOfBirth(LocalDate.of(1992,11,3));
+        StudentContact contact = getContact();
         StudentAddress address = getAddress();
         student.setContact(contact);
         student.setAddress(address);
@@ -107,9 +109,9 @@ class StudentServiceImplTest {
 
     private StudentAddress getAddress() { return StudentAddress.builder().country(POLAND).city(WARSAW).postalCode(POSTAL_CODE).streetName(SESAME).build(); }
 
-    private ContactDTO getContactDTO() { return ContactDTO.builder().email(EMAIL).telephoneNumber(NUMBER).build(); }
+    private StudentContactDTO getContactDTO() { return StudentContactDTO.builder().email(EMAIL).telephoneNumber(NUMBER).build(); }
 
-    private Contact getContact() { return Contact.builder().telephoneNumber(NUMBER).email(EMAIL).build(); }
+    private StudentContact getContact() { return  StudentContact.builder().telephoneNumber(NUMBER).email(EMAIL).build(); }
 
 
 
@@ -230,7 +232,7 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = addContactToStudent")
     @Test
     void addContactToStudentHappyPath() {
-        ContactDTO contactDTO = getContactDTO();
+        StudentContactDTO contactDTO = getContactDTO();
         Student student = createEthan();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
@@ -240,7 +242,7 @@ class StudentServiceImplTest {
         assertEquals(returnDTO.getEmail(), EMAIL);
         assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
 
-        verify(contactRepository, times(1)).save(any(Contact.class));
+        verify(studentContactRepository, times(1)).save(any(StudentContact.class));
         verify(studentRepository, times(1)).save(any(Student.class));
     }
 
@@ -249,7 +251,7 @@ class StudentServiceImplTest {
     @DisplayName("[Unhappy Path], [Method] = addContactToStudent")
     @Test
     void addContactToStudentUnHappyPath() {
-        ContactDTO contactDTO = getContactDTO();
+        StudentContactDTO contactDTO = getContactDTO();
 
         Throwable ex = catchThrowable(() -> studentService.addContactToStudent(contactDTO, ID));
 
@@ -321,19 +323,19 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = updateContact")
     @Test
     void updateContact() {
-        ContactDTO contactDTO = getContactDTO();
-        Contact contact = getContact();
+        StudentContactDTO contactDTO = getContactDTO();
+        StudentContact contact = getContact();
         Student student = createEthan();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
-        when(contactRepository.findById(anyLong())).thenReturn(Optional.of(contact));
+        when(studentContactRepository.findById(anyLong())).thenReturn(Optional.of(contact));
 
         ContactDTO returnDTO = studentService.updateContact(contactDTO, ID, ID);
 
         assertEquals(returnDTO.getEmail(), EMAIL);
 
         verify(studentRepository).save(any(Student.class));
-        verify(contactRepository).save(any(Contact.class));
+        verify(studentContactRepository).save(any(StudentContact.class));
     }
 
     @DisplayName("[Happy Path], [Method] = updateAddress")
@@ -381,14 +383,15 @@ class StudentServiceImplTest {
     @DisplayName("[Happy Path], [Method] = deleteStudentContact")
     @Test
     void deleteStudentContact() {
-        Contact contact = getContact();
+        StudentContact contact = getContact();
         Student student = createEthan();
+        student.setContact(contact);
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(student));
 
         studentService.deleteStudentContact(ID);
 
-        verify(contactRepository, times(1)).delete(contact);
+        verify(studentContactRepository, times(1)).delete(contact);
         verify(studentRepository, times(1)).save(student);
     }
 
@@ -397,6 +400,7 @@ class StudentServiceImplTest {
     void deleteStudentAddress() {
         StudentAddress address = getAddress();
         Student student = createEthan();
+        student.setAddress(address);
 
         when(studentRepository.findById(ID)).thenReturn(Optional.of(student));
 

@@ -1,7 +1,8 @@
 package adrianromanski.restschool.controllers.person;
 
-import adrianromanski.restschool.model.base_entity.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.StudentListDTO;
 import adrianromanski.restschool.services.person.student.StudentService;
@@ -80,7 +81,7 @@ public class StudentController {
     @ApiOperation("Adding Contact to Student with matching ID")
     @PostMapping("addContact/student-{ID}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ContactDTO addContactToStudent(@PathVariable String ID, @RequestBody ContactDTO contactDTO)  {
+    public StudentContactDTO addContactToStudent(@PathVariable String ID, @RequestBody StudentContactDTO contactDTO)  {
         return studentService.addContactToStudent(contactDTO, Long.valueOf(ID));
     }
 
@@ -102,7 +103,7 @@ public class StudentController {
     @ApiOperation("Update Student Contact with matching ID")
     @PutMapping("updateContact/student-{studentID}/contact-{contactID}")
     @ResponseStatus(HttpStatus.OK)
-    public ContactDTO updateContact(@RequestBody @Valid ContactDTO contactDTO,
+    public ContactDTO updateContact(@RequestBody @Valid StudentContactDTO contactDTO,
                                     @PathVariable  String studentID, @PathVariable String contactID) {
         return studentService.updateContact(contactDTO, Long.valueOf(studentID), Long.valueOf(contactID));
     }

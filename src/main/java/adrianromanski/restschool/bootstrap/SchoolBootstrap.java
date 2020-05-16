@@ -1,8 +1,7 @@
 package adrianromanski.restschool.bootstrap;
 
-import adrianromanski.restschool.domain.base_entity.address.Address;
-import adrianromanski.restschool.domain.base_entity.Contact;
 import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
+import adrianromanski.restschool.domain.base_entity.contact.StudentContact;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.event.ExamResult;
 import adrianromanski.restschool.domain.group.SportTeam;
@@ -12,7 +11,7 @@ import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
 import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
-import adrianromanski.restschool.repositories.base_entity.ContactRepository;
+import adrianromanski.restschool.repositories.base_entity.StudentContactRepository;
 import adrianromanski.restschool.repositories.base_entity.SubjectRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.event.ExamResultRepository;
@@ -51,12 +50,12 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final StudentClassRepository studentClassRepository;
     private final GuardianRepository guardianRepository;
     private final SportTeamRepository sportTeamRepository;
-    private final ContactRepository contactRepository;
+    private final StudentContactRepository studentContactRepository;
     private final AddressRepository addressRepository;
 
     public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository, ExamResultRepository examResultRepository,
                            TeacherRepository teacherRepository, StudentClassRepository studentClassRepository, GuardianRepository guardianRepository,
-                           SportTeamRepository sportTeamRepository, ContactRepository contactRepository, AddressRepository addressRepository) {
+                           SportTeamRepository sportTeamRepository, StudentContactRepository studentContactRepository, AddressRepository addressRepository) {
         this.studentRepository = studentRepository;
         this.subjectRepository = subjectRepository;
         this.examRepository = examRepository;
@@ -65,7 +64,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         this.studentClassRepository = studentClassRepository;
         this.guardianRepository = guardianRepository;
         this.sportTeamRepository = sportTeamRepository;
-        this.contactRepository = contactRepository;
+        this.studentContactRepository = studentContactRepository;
         this.addressRepository = addressRepository;
     }
 
@@ -100,7 +99,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
         // Contact Jacob
         StudentAddress address = StudentAddress.builder().country("Poland").city("Warsaw").postalCode("22-421").streetName("District 9").build();
-        Contact contact = Contact.builder().email("JacobStar@gmail.com").telephoneNumber("22-4421-22").emergencyNumber("22-4112-22").build();
+        StudentContact contact = StudentContact.builder().email("JacobStar@gmail.com").telephoneNumber("22-4421-22").emergencyNumber("22-4112-22").build();
         contact.setStudent(jacob);
         address.setStudent(jacob);
         jacob.setContact(contact);
@@ -247,7 +246,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         // Saving to repositories
 
         // Contact
-        contactRepository.save(contact);
+        studentContactRepository.save(contact);
 
         // Address
         addressRepository.save(address);

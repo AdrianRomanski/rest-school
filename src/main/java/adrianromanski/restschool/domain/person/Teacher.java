@@ -1,5 +1,6 @@
 package adrianromanski.restschool.domain.person;
 
+import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.event.Payment;
@@ -28,6 +29,9 @@ public class Teacher extends Person {
         this.firstDay = firstDay;
         this.subject = subject;
     }
+
+    @OneToOne
+    private TeacherAddress address;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "teacher")

@@ -13,6 +13,7 @@ public interface TeacherMapper {
     TeacherMapper INSTANCE = Mappers.getMapper(TeacherMapper.class);
 
     @Mappings({
+            @Mapping(source = "address", target = "addressDTO"),
             @Mapping(source = "studentClass", target = "studentClassDTO"),
             @Mapping(source = "exams", target = "examsDTO"),
             @Mapping(source = "payments",target = "paymentsDTO")
@@ -20,6 +21,7 @@ public interface TeacherMapper {
     TeacherDTO teacherToTeacherDTO(Teacher teacher);
 
     @Mappings({
+            @Mapping(source = "addressDTO", target = "address"),
             @Mapping(source = "studentClassDTO", target = "studentClass"),
             @Mapping(source = "examsDTO", target = "exams"),
             @Mapping(source = "paymentsDTO", target = "payments")

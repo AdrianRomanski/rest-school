@@ -23,57 +23,58 @@ public class GuardianController {
         this.guardianService = legalGuardianService;
     }
 
-    @ApiOperation("Returns a GuardianListDTO Object that contains all Payments")
-    @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    GuardianListDTO getAllLegalGuardians() {
-        return new GuardianListDTO(guardianService.getAllGuardians());
-    }
 
-    @ApiOperation("Returns an Guardian Object based on ID or else throw ResourceNotFoundException")
-    @GetMapping("id-{ID}")
+    @ApiOperation("Returns an Guardian with matching ID")
+    @GetMapping("getById/guardian-{ID}")
     @ResponseStatus(HttpStatus.OK)
     GuardianDTO getGuardianByID(@PathVariable String ID) {
         return guardianService.getGuardianByID(Long.valueOf(ID));
     }
 
-    @ApiOperation("Returns an Guardian Object based on Strings or else throw ResourceNotFoundException")
-    @GetMapping("{firstName}_{lastName}")
+    @ApiOperation("Returns an Guardian with matching firsName and lastName")
+    @GetMapping("getByName/{firstName}-{lastName}")
     @ResponseStatus(HttpStatus.OK)
     GuardianDTO getGuardianByFirstAndLastName(@PathVariable String firstName, @PathVariable String lastName) {
         return guardianService.getGuardianByFirstAndLastName(firstName, lastName);
     }
 
-    @ApiOperation("Returns an Guardian Object based on ID or else throw ResourceNotFoundException")
-    @GetMapping("/age")
+    @ApiOperation("Returns all Guardians")
+    @GetMapping({"/list", "/", "", "getAll", "findAll"})
+    @ResponseStatus(HttpStatus.OK)
+    GuardianListDTO getAllGuardians() {
+        return new GuardianListDTO(guardianService.getAllGuardians());
+    }
+
+    @ApiOperation("Returns Guardians grouped by Age")
+    @GetMapping("groupedBy/age")
     @ResponseStatus(HttpStatus.OK)
     Map<Long, List<GuardianDTO>> getGuardiansByAge() {
         return guardianService.getGuardiansByAge();
     }
 
-    @ApiOperation("Returns an Guardian Object based on ID or else throw ResourceNotFoundException")
-    @GetMapping("id-{ID}/getStudents")
+    @ApiOperation("Returns all Students for Guardian")
+    @GetMapping("getStudents/guardian-{ID}")
     @ResponseStatus(HttpStatus.OK)
     StudentListDTO getAllStudentsForGuardian(@PathVariable String ID) {
         return new StudentListDTO(guardianService.getAllStudentsForGuardian(Long.valueOf(ID)));
     }
 
-    @ApiOperation("Create and save new Guardian based on GuardianDTO body")
+    @ApiOperation("Create and save new Guardian")
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     GuardianDTO createNewGuardian(@RequestBody GuardianDTO guardianDTO) {
         return guardianService.createNewGuardian(guardianDTO);
     }
 
-    @ApiOperation("Update an existing Guardian with matching ID or create a new one")
-    @PutMapping("{ID}")
+    @ApiOperation("Update an existing Guardian with matching ID and save it")
+    @PutMapping("updateGuardian/guardian-{ID}")
     @ResponseStatus(HttpStatus.OK)
     GuardianDTO updateGuardian(@RequestBody GuardianDTO guardianDTO, @PathVariable String ID) {
         return guardianService.updateGuardian(guardianDTO, Long.valueOf(ID));
     }
 
-    @ApiOperation("Delete an Guardian based on ID")
-    @DeleteMapping("{ID}")
+    @ApiOperation("Delete Guardian with matching ID")
+    @DeleteMapping("deleteGuardian/guardian-{ID}")
     @ResponseStatus(HttpStatus.OK)
     void deleteGuardian(@PathVariable String ID) {
         guardianService.deleteGuardianByID(Long.valueOf(ID));

@@ -55,15 +55,15 @@ class GuardianControllerTest {
                                         .build();
     }
 
-    GuardianDTO createEthan() {
-        return GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).build();
-    }
+    private GuardianDTO createEthan() { return GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).build(); }
+
+    private List<GuardianDTO> getGuardians() { return Arrays.asList(createEthan(), createEthan(), createEthan()); }
 
 
-    @DisplayName("[GET], [Happy Path], [Method] = getAllGuardians, [Expected] = List containing 3 Guardians")
+    @DisplayName("[GET], [Happy Path], [Method] = getAllGuardians")
     @Test
     void getAllGuardians() throws Exception {
-        List<GuardianDTO> guardianDTOList = Arrays.asList(createEthan(), createEthan(), createEthan());
+        List<GuardianDTO> guardianDTOList = getGuardians();
 
         when(guardianService.getAllGuardians()).thenReturn(guardianDTOList);
 
@@ -74,14 +74,15 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.guardianDTOList", hasSize(3)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getGuardianByID, [Expected] = GuardianDTO with matching fields")
+
+    @DisplayName("[GET], [Happy Path], [Method] = getGuardianByID")
     @Test
     void getGuardianByID() throws Exception {
         GuardianDTO guardianDTO = createEthan();
 
         when(guardianService.getGuardianByID(ID)).thenReturn(guardianDTO);
 
-        mockMvc.perform(get(GUARDIANS+ "id-" + ID)
+        mockMvc.perform(get(GUARDIANS+ "getById/guardian-1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(guardianDTO)))
@@ -90,18 +91,35 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getGuardiansByAge, [Expected] = Map with 3 Keys (27,24,22)")
+    @DisplayName("[GET], [Happy Path], [Method] = getGuardianByFirstAndLastName")
+    @Test
+    void getGuardianByFirstAndLastName() throws Exception {
+        GuardianDTO guardianDTO = createEthan();
+
+        when(guardianService.getGuardianByFirstAndLastName(anyString(), anyString())).thenReturn(guardianDTO);
+
+        mockMvc.perform(get(GUARDIANS + "getByName/" + ETHAN.get() + "-" + COOPER.get())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(guardianDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
+                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
+    }
+
+
+    @DisplayName("[GET], [Happy Path], [Method] = getGuardiansByAge")
     @Test
     void getGuardiansByAge() throws Exception {
         Map<Long, List<GuardianDTO>> map = new HashMap<>();
 
         map.putIfAbsent(27L, Arrays.asList(createEthan(), createEthan()));
         map.putIfAbsent(24L, Collections.singletonList(createEthan()));
-        map.putIfAbsent(22L, Arrays.asList(createEthan(), createEthan(), createEthan()));
+        map.putIfAbsent(22L, getGuardians());
 
         when(guardianService.getGuardiansByAge()).thenReturn(map);
 
-        mockMvc.perform(get(GUARDIANS + "age")
+        mockMvc.perform(get(GUARDIANS + "groupedBy/age")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(map)))
@@ -111,14 +129,14 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.22", hasSize(3)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getAllStudentsForGuardian, [Expected] = List of size 2")
+    @DisplayName("[GET], [Happy Path], [Method] = getAllStudentsForGuardian")
     @Test
-    void getAllStudentsForGuardian() throws Exception {
+    void getStudentsForGuardian() throws Exception {
         List<StudentDTO> studentDTOS = Arrays.asList(new StudentDTO(), new StudentDTO());
 
         when(guardianService.getAllStudentsForGuardian(anyLong())).thenReturn(studentDTOS);
 
-        mockMvc.perform(get(GUARDIANS + "id-1/getStudents")
+        mockMvc.perform(get(GUARDIANS + "getStudents/guardian-1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(studentDTOS)))
@@ -126,23 +144,8 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.students", hasSize(2)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getGuardianByFirstAndLastName, [Expected] = GuardianDTO with matching fields")
-    @Test
-    void getGuardianByFirstAndLastName() throws Exception {
-        GuardianDTO guardianDTO = createEthan();
 
-        when(guardianService.getGuardianByFirstAndLastName(anyString(), anyString())).thenReturn(guardianDTO);
-
-        mockMvc.perform(get(GUARDIANS + ETHAN.get() + "_" + COOPER.get())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(asJsonString(guardianDTO)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
-                .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
-    }
-
-    @DisplayName("[POST], [Happy Path], [Method] = createNewGuardian, [Expected] = GuardianDTO with matching fields")
+    @DisplayName("[POST], [Happy Path], [Method] = createNewGuardian")
     @Test
     void createNewGuardian() throws Exception {
         GuardianDTO guardianDTO = createEthan();
@@ -158,7 +161,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
-    @DisplayName("[PUT], [Happy Path], [Method] = updateGuardian, [Expected] = GuardianDTO with updated fields")
+    @DisplayName("[PUT], [Happy Path], [Method] = updateGuardian")
     @Test
     void updateGuardian() throws Exception {
 
@@ -167,7 +170,7 @@ class GuardianControllerTest {
 
         when(guardianService.updateGuardian(any(GuardianDTO.class), anyLong())).thenReturn(guardianDTO);
 
-        mockMvc.perform(put("/guardians/1")
+        mockMvc.perform(put(GUARDIANS + "updateGuardian/guardian-1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(guardianDTO)))
@@ -176,10 +179,10 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
-    @DisplayName("[DELETE], [Happy Path], [Method] = deleteGuardianByID, [Expected] = guardianService deleting student")
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteGuardianByID")
     @Test
     void deleteGuardian() throws Exception {
-        mockMvc.perform(delete(GUARDIANS + ID)
+        mockMvc.perform(delete(GUARDIANS + "deleteGuardian/guardian-1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

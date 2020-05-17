@@ -1,6 +1,7 @@
 package adrianromanski.restschool.services.person.guardian;
 
 import adrianromanski.restschool.domain.person.Guardian;
+import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
@@ -34,44 +35,43 @@ public class GuardianServiceImpl implements GuardianService {
         this.studentRepository = studentRepository;
     }
 
+
+    /**
+     * @return Guardian with matching id
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public GuardianDTO getGuardianByID(Long id) {
+        return guardianMapper.guardianToGuardianDTO(guardianRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class)));
+    }
+
+    /**
+     * @return Guardian with matching firstName and lastName
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public GuardianDTO getGuardianByFirstAndLastName(String firstName, String lastName) {
+        return guardianMapper.guardianToGuardianDTO(guardianRepository
+                .getGuardianByFirstNameAndLastName(firstName, lastName)
+                .orElseThrow(() -> new ResourceNotFoundException(firstName, lastName, Guardian.class)));
+    }
+
     /**
      * @return all Guardians
      */
     @Override
     public List<GuardianDTO> getAllGuardians() {
         return guardianRepository.findAll()
-                                        .stream()
-                                        .map(guardianMapper::guardianToGuardianDTO)
-                                        .collect(Collectors.toList());
+                .stream()
+                .map(guardianMapper::guardianToGuardianDTO)
+                .collect(Collectors.toList());
     }
 
 
     /**
-     * @return GuardianDTO with matching id
-     * @throws ResourceNotFoundException if not found
-     */
-    @Override
-    public GuardianDTO getGuardianByID(Long id) {
-        return guardianMapper.guardianToGuardianDTO(guardianRepository
-                                        .findById(id)
-                                        .orElseThrow(ResourceNotFoundException::new));
-    }
-
-
-    /**
-     * @return GuardianDTO with matching firstName and lastName
-     * @throws ResourceNotFoundException if not found
-     */
-    @Override
-    public GuardianDTO getGuardianByFirstAndLastName(String firstName, String lastName) {
-        return guardianMapper.guardianToGuardianDTO(guardianRepository
-                                        .getGuardianByFirstNameAndLastName(firstName, lastName)
-                                        .orElseThrow(ResourceNotFoundException::new));
-    }
-
-
-    /**
-     * @return Map where the keys are ages of Guardians and values List of Guardians
+     * @return Guardians grouped by Age
      */
     @Override
     public Map<Long, List<GuardianDTO>> getGuardiansByAge() {
@@ -99,7 +99,7 @@ public class GuardianServiceImpl implements GuardianService {
 
 
     /**
-     * Converts DTO Object and Save it to Database
+     * Save Guardian to Database
      * @return GuardianDTO object
      */
     @Override
@@ -111,21 +111,18 @@ public class GuardianServiceImpl implements GuardianService {
 
 
     /**
-     * Converts DTO Object, Update Guardian with Matching ID and save it to Database
-     * @return GuardianDTO object if the guardian was successfully saved
+     * Update Guardian with Matching ID and save it to Database
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public GuardianDTO updateGuardian(GuardianDTO guardianDTO, Long id) {
-        if(guardianRepository.findById(id).isPresent()) {
+            guardianRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class));
             Guardian updatedGuardian = guardianMapper.guardianDTOToGuardian(guardianDTO);
-            updatedGuardian.setId(id);
+                updatedGuardian.setId(id);
             guardianRepository.save(updatedGuardian);
             log.info("Guardian with id: " + id + " successfully saved");
             return guardianMapper.guardianToGuardianDTO(updatedGuardian);
-        } else {
-            throw new ResourceNotFoundException("Guardian with id: " + id + " not found");
-        }
     }
 
 
@@ -135,11 +132,9 @@ public class GuardianServiceImpl implements GuardianService {
      */
     @Override
     public void deleteGuardianByID(Long id) {
-        if(guardianRepository.findById(id).isPresent()) {
-            guardianRepository.deleteById(id);
-            log.info("Guardian with id: " + id + " successfully deleted");
-        } else {
-            throw new ResourceNotFoundException("Guardian with id: " + id + " not found");
-        }
+        Guardian guardian = guardianRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class));
+        guardianRepository.delete(guardian);
+        log.info("Guardian with id: " + id + " successfully deleted");
     }
 }

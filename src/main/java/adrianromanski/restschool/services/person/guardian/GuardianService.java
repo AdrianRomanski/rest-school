@@ -8,25 +8,24 @@ import java.util.Map;
 
 public interface GuardianService {
 
-    List<GuardianDTO> getAllGuardians();
-
+    // GET
     GuardianDTO getGuardianByID(Long id);
 
     GuardianDTO getGuardianByFirstAndLastName(String firstName, String lastName);
 
-    Map<Long, List<GuardianDTO>> getGuardiansByAge();
+    List<GuardianDTO> getAllGuardians();
 
     List<StudentDTO> getAllStudentsForGuardian(Long id);
 
+    Map<Long, List<GuardianDTO>> getGuardiansByAge();
+
+    // POST
     GuardianDTO createNewGuardian(GuardianDTO legalGuardianDTO);
 
+    // PUT
     GuardianDTO updateGuardian(GuardianDTO legalGuardianDTO, Long id);
 
+    // DELETE
     void deleteGuardianByID(Long id);
 
-    // Ideas
-    // getGuardians sorted by Students Map<String, List<Students>>
-    // get youngest guardian Guardian
-    // get oldest guardian Guardian
-    // get guardian with highest number of students Map<Guardian, List<Students>>
 }

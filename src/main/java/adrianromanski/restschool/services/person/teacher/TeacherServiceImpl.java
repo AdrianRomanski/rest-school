@@ -27,7 +27,6 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class TeacherServiceImpl implements TeacherService {
 
-    public static final String SAVED_TO_REPOSITORY = " saved to repository";
     private final TeacherRepository teacherRepository;
     private final StudentRepository studentRepository;
     private final ExamRepository examRepository;
@@ -86,7 +85,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * @return Teachers sorted by Specialization
+     * @return Teachers grouped by Specialization
      */
     @Override
     public Map<Subjects, List<TeacherDTO>> getTeachersBySpecialization() {
@@ -101,7 +100,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     /**
-     * @return Teachers sorted by yearsOfExperience
+     * @return Teachers grouped by yearsOfExperience
      */
     @Override
     public Map<Long, List<TeacherDTO>> getTeachersByYearsOfExperience() {
@@ -117,7 +116,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Adding Exam to every Student in the Class
-     * @throws ResourceNotFoundException if teacher not found
+     * @throws ResourceNotFoundException if not found
      */
     @Override
     public ExamDTO addExamForClass(Long teacherID, ExamDTO examDTO) {
@@ -130,17 +129,16 @@ public class TeacherServiceImpl implements TeacherService {
             exam.setStudents(teacher.getStudentClass().getStudentList()); // Adding Students to Exam
             exam.setTeacher(teacher);
         teacherRepository.save(teacher);
-            log.info("Teacher with id: " + teacherID + SAVED_TO_REPOSITORY);
+            log.info("Teacher with id: " + teacherID + " saved to repository");
         examRepository.save(exam);
-            log.info("Exam with id: " + exam.getId() + SAVED_TO_REPOSITORY);
+            log.info("Exam with id: " + exam.getId() + " saved to repository");
         return examMapper.examToExamDTO(exam);
     }
 
 
     /**
      * Adding Correction Exam to Student with matching id
-     * @throws ResourceNotFoundException if teacher or student not found
-     *
+     * @throws ResourceNotFoundException if not found
      */
     @Override
     public ExamDTO addCorrectionExamToStudent(Long teacherID, Long studentID, ExamDTO examDTO) {
@@ -156,11 +154,11 @@ public class TeacherServiceImpl implements TeacherService {
                 exam.getStudents().add(student);
                 exam.setTeacher(teacher);
             studentRepository.save(student);
-                log.info("Student with id: " + studentID + SAVED_TO_REPOSITORY);
+                log.info("Student with id: " + studentID + " saved to repository");
             teacherRepository.save(teacher);
-                log.info("Teacher with id: " + teacherID + SAVED_TO_REPOSITORY);
+                log.info("Teacher with id: " + teacherID + " saved to repository");
             examRepository.save(exam);
-                log.info("Exam with id: " + exam.getId() + SAVED_TO_REPOSITORY);
+                log.info("Exam with id: " + exam.getId() + " saved to repository");
             return examMapper.examToExamDTO(exam);
     }
 
@@ -177,21 +175,20 @@ public class TeacherServiceImpl implements TeacherService {
             student.setStudentClass(teacher.getStudentClass()); // Adding StudentClass to Student
             teacher.getStudentClass().getStudentList().add(student); // Adding Student to StudentClass
         studentRepository.save(student);
-            log.info("Student with id: " + student.getId() + SAVED_TO_REPOSITORY);
+            log.info("Student with id: " + student.getId() + " saved to repository");
         teacherRepository.save(teacher);
-            log.info("Teacher with id: " + teacherID + SAVED_TO_REPOSITORY);
+            log.info("Teacher with id: " + teacherID + " saved to repository");
         return studentMapper.studentToStudentDTO(student);
     }
 
 
     /**
-     * Converts DTO Object and Save it to Database
-     * @return TeacherDTO object
+     *  Save Teacher to Database
      */
     @Override
     public TeacherDTO createNewTeacher(TeacherDTO teacherDTO) {
         teacherRepository.save(teacherMapper.teacherDTOToTeacher(teacherDTO));
-            log.info("Teacher with id: " + teacherDTO.getId() + SAVED_TO_REPOSITORY);
+            log.info("Teacher with id: " + teacherDTO.getId() + " saved to repository");
         return teacherDTO;
     }
 
@@ -207,7 +204,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
         teacher.getExams().get(examID).setDate(localDate); //  Changing date
         teacherRepository.save(teacher);
-            log.info("Teacher with id: " + teacherID + SAVED_TO_REPOSITORY);
+            log.info("Teacher with id: " + teacherID + " saved to repository");
         return examMapper.examToExamDTO(teacher.getExams().get(examID));
     }
 
@@ -242,7 +239,7 @@ public class TeacherServiceImpl implements TeacherService {
             Teacher updatedTeacher = teacherMapper.teacherDTOToTeacher(teacherDTO);
             updatedTeacher.setId(id);
             teacherRepository.save(updatedTeacher);
-                log.info("Teacher with id:" + id + SAVED_TO_REPOSITORY);
+                log.info("Teacher with id:" + id + " saved to repository");
             return teacherMapper.teacherToTeacherDTO(updatedTeacher);
     }
 

@@ -308,5 +308,4 @@ public class StudentServiceImpl implements StudentService{
         studentRepository.save(student);
         log.info("Address successfully deleted from the Student with id: " + studentID);
     }
-
 }

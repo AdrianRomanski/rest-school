@@ -208,7 +208,7 @@ class GuardianServiceImplTest {
         when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
         guardianService.deleteGuardianByID(guardian.getId());
 
-        verify(guardianRepository, times(1)).deleteById(ID);
+        verify(guardianRepository, times(1)).delete(guardian);
     }
 
     @DisplayName("[Unhappy Path], [Method] = deleteGuardianByID, [Reason] = Guardian with id 222 not found")

@@ -34,9 +34,9 @@ public interface StudentService {
     // PUT
     StudentDTO updateStudent(Long id, StudentDTO studentDTO);
 
-    StudentContactDTO updateContact(StudentContactDTO contactDTO, Long studentID, Long contactID);
+    StudentContactDTO updateContact(StudentContactDTO contactDTO, Long studentID);
 
-    StudentAddressDTO updateAddress(StudentAddressDTO addressDTO, Long studentID, Long addressID);
+    StudentAddressDTO updateAddress(StudentAddressDTO addressDTO, Long studentID);
 
     // DELETE
     void deleteStudentByID(Long studentID);

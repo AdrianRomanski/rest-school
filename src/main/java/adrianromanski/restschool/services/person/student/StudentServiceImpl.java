@@ -13,7 +13,7 @@ import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
-import adrianromanski.restschool.repositories.base_entity.StudentContactRepository;
+import adrianromanski.restschool.repositories.base_entity.ContactRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,7 +35,7 @@ public class StudentServiceImpl implements StudentService{
     private final StudentContactMapper contactMapper;
     private final StudentAddressMapper studentAddressMapper;
     private final StudentRepository studentRepository;
-    private final StudentContactRepository studentContactRepository;
+    private final ContactRepository contactRepository;
     private final AddressRepository addressRepository;
 
     public static final Comparator<Student> COMPARATOR = Comparator.comparing(Student::getAge)
@@ -46,12 +46,12 @@ public class StudentServiceImpl implements StudentService{
     public static final Function<StudentDTO, String> GROUPED_BY_CITY = s -> s.getAddressDTO().getCity();
 
     public StudentServiceImpl(StudentMapper studentMapper, StudentContactMapper contactMapper,
-                              StudentAddressMapper studentAddressMapper, StudentRepository studentRepository, StudentContactRepository studentContactRepository, AddressRepository addressRepository) {
+                              StudentAddressMapper studentAddressMapper, StudentRepository studentRepository, ContactRepository studentContactRepository, AddressRepository addressRepository) {
         this.studentMapper = studentMapper;
         this.contactMapper = contactMapper;
         this.studentAddressMapper = studentAddressMapper;
         this.studentRepository = studentRepository;
-        this.studentContactRepository = studentContactRepository;
+        this.contactRepository = studentContactRepository;
         this.addressRepository = addressRepository;
     }
 
@@ -160,7 +160,7 @@ public class StudentServiceImpl implements StudentService{
     @Override
     public StudentDTO createNewStudent(StudentDTO studentDTO) {
         studentRepository.save(studentMapper.studentDTOToStudent(studentDTO));
-            log.info("Student with id: " + studentDTO.getId() + " successfully saved");
+        log.info("Student with id: " + studentDTO.getId() + " successfully saved");
         return studentDTO;
     }
 
@@ -177,9 +177,9 @@ public class StudentServiceImpl implements StudentService{
         StudentContact contact = contactMapper.contactDTOToContact(contactDTO);
             student.setContact(contact);
             contact.setStudent(student);
-        studentContactRepository.save(contact);
+        contactRepository.save(contact);
         studentRepository.save(student);
-            log.info("Contact successfully added to Student with id:  " + studentID);
+        log.info("Contact successfully added to Student with id:  " + studentID);
         return contactMapper.contactToContactDTO(contact);
     }
 
@@ -196,7 +196,7 @@ public class StudentServiceImpl implements StudentService{
         Address address = studentAddressMapper.addressDTOToAddress(addressDTO);
         studentRepository.save(student);
         addressRepository.save(address);
-            log.info("Address successfully added to Student with id: " + studentID);
+        log.info("Address successfully added to Student with id: " + studentID);
         return addressDTO;
     }
 
@@ -213,47 +213,49 @@ public class StudentServiceImpl implements StudentService{
            Student updatedStudent = studentMapper.studentDTOToStudent(studentDTO);
                updatedStudent.setId(studentID);
            studentRepository.save(updatedStudent);
-               log.info("Student with id:" + studentID +  " successfully updated");
+           log.info("Student with id:" + studentID +  " successfully updated");
            return studentMapper.studentToStudentDTO(updatedStudent);
     }
 
     /**
-     * Update Contact with Matching ID and save it to Database
+     * Update Contact  of Student Matching ID and save it to Database
      * @return ContactDTO
      * @throws ResourceNotFoundException if not found
      */
     @Override
-    public StudentContactDTO updateContact(StudentContactDTO contactDTO, Long studentID, Long contactID) {
+    public StudentContactDTO updateContact(StudentContactDTO contactDTO, Long studentID) {
         Student student = studentRepository.findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        studentContactRepository.findById(contactID)
-                .orElseThrow(() -> new ResourceNotFoundException(contactID, Contact.class));
+        StudentContact contact = student.getContactOptional()
+                .orElseThrow(() -> new ResourceNotFoundException("Contact can't be updated"));
         StudentContact updatedContact = contactMapper.contactDTOToContact(contactDTO);
-            updatedContact.setId(contactID);
+            updatedContact.setId(contact.getId());
             student.setContact(updatedContact);
             updatedContact.setStudent(student);
         studentRepository.save(student);
-        studentContactRepository.save(updatedContact);
-            log.info("Contact with id: " + contactID + " successfully updated");
+        contactRepository.save(updatedContact);
+        log.info("Contact of Student with id: " + studentID + " successfully updated");
         return contactMapper.contactToContactDTO(updatedContact);
     }
 
     /**
-     * Update Address with Matching ID and save it to Database
+     * Update Address of Student Matching ID and save it to Database
      * @return StudentAddressDTO
      * @throws ResourceNotFoundException if not found student
      */
     @Override
-    public StudentAddressDTO updateAddress(StudentAddressDTO addressDTO, Long studentID, Long addressID) {
+    public StudentAddressDTO updateAddress(StudentAddressDTO addressDTO, Long studentID) {
         Student student = studentRepository.findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
-        addressRepository.findById(addressID)
-                .orElseThrow(() -> new ResourceNotFoundException(addressID, Address.class));
+        StudentAddress address = student.getAddressOptional()
+                .orElseThrow(() -> new ResourceNotFoundException("Address can't be updated"));
         StudentAddress updatedAddress = studentAddressMapper.addressDTOToAddress(addressDTO);
-            updatedAddress.setId(addressID);
+            updatedAddress.setId(address.getId());
+            student.setAddress(updatedAddress);
+            updatedAddress.setStudent(student);
         studentRepository.save(student);
         addressRepository.save(updatedAddress);
-            log.info("Address with id: " + addressID + " successfully updated");
+        log.info("Address of Student with id: " + studentID + " successfully updated");
         return studentAddressMapper.addressToAddressDTO(updatedAddress);
     }
 
@@ -285,7 +287,7 @@ public class StudentServiceImpl implements StudentService{
         StudentContact emptyContact = new StudentContact();
             emptyContact.setStudent(student);
             student.setContact(emptyContact);
-        studentContactRepository.delete(contact);
+        contactRepository.delete(contact);
         studentRepository.save(student);
         log.info("Contact successfully deleted from the Student with id: " + studentID);
     }

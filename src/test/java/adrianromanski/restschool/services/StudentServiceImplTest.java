@@ -1,7 +1,6 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.address.Address;
-import adrianromanski.restschool.domain.base_entity.contact.Contact;
 import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.base_entity.contact.StudentContact;
 import adrianromanski.restschool.domain.person.Student;
@@ -16,7 +15,7 @@ import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
-import adrianromanski.restschool.repositories.base_entity.StudentContactRepository;
+import adrianromanski.restschool.repositories.base_entity.ContactRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.services.person.student.StudentService;
 import adrianromanski.restschool.services.person.student.StudentServiceImpl;
@@ -57,7 +56,7 @@ class StudentServiceImplTest {
     @Mock
     StudentRepository studentRepository;
     @Mock
-    StudentContactRepository studentContactRepository;
+    ContactRepository studentContactRepository;
     @Mock
     AddressRepository addressRepository;
 
@@ -324,13 +323,11 @@ class StudentServiceImplTest {
     @Test
     void updateContact() {
         StudentContactDTO contactDTO = getContactDTO();
-        StudentContact contact = getContact();
         Student student = createEthan();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
-        when(studentContactRepository.findById(anyLong())).thenReturn(Optional.of(contact));
 
-        ContactDTO returnDTO = studentService.updateContact(contactDTO, ID, ID);
+        ContactDTO returnDTO = studentService.updateContact(contactDTO, ID);
 
         assertEquals(returnDTO.getEmail(), EMAIL);
 
@@ -346,9 +343,8 @@ class StudentServiceImplTest {
         Student student = createEthan();
 
         when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
-        when(addressRepository.findById(anyLong())).thenReturn(Optional.of(address));
 
-        AddressDTO returnDTO = studentService.updateAddress(addressDTO,ID,ID);
+        AddressDTO returnDTO = studentService.updateAddress(addressDTO,ID);
 
         assertEquals(returnDTO.getCountry(), POLAND);
         assertEquals(returnDTO.getCity(), WARSAW);

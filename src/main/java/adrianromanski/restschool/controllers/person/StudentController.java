@@ -101,19 +101,19 @@ public class StudentController {
     }
 
     @ApiOperation("Update Student Contact with matching ID")
-    @PutMapping("updateContact/student-{studentID}/contact-{contactID}")
+    @PutMapping("updateContact/student-{studentID}")
     @ResponseStatus(HttpStatus.OK)
     public ContactDTO updateContact(@RequestBody @Valid StudentContactDTO contactDTO,
-                                    @PathVariable  String studentID, @PathVariable String contactID) {
-        return studentService.updateContact(contactDTO, Long.valueOf(studentID), Long.valueOf(contactID));
+                                    @PathVariable  String studentID) {
+        return studentService.updateContact(contactDTO, Long.valueOf(studentID));
     }
 
     @ApiOperation("Update Student Address with matching ID")
-    @PutMapping("updateAddress/student-{studentID}/address-{addressID}")
+    @PutMapping("updateAddress/student-{studentID}")
     @ResponseStatus(HttpStatus.OK)
     public StudentAddressDTO updateAddress(@RequestBody @Valid StudentAddressDTO addressDTO,
-                                    @PathVariable  String studentID, @PathVariable String addressID) {
-        return studentService.updateAddress(addressDTO, Long.valueOf(studentID), Long.valueOf(addressID));
+                                    @PathVariable  String studentID) {
+        return studentService.updateAddress(addressDTO, Long.valueOf(studentID));
     }
 
     @ApiOperation("Delete a student with matching ID")

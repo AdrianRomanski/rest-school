@@ -1,5 +1,6 @@
 package adrianromanski.restschool.services;
 
+import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.group.StudentClass;
@@ -7,12 +8,16 @@ import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.mapper.base_entity.TeacherAddressMapper;
 import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
+import adrianromanski.restschool.model.base_entity.address.AddressDTO;
+import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
+import adrianromanski.restschool.repositories.base_entity.AddressRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
@@ -46,6 +51,10 @@ class TeacherServiceImplTest {
     public static final long ID = 1L;
     public static final String STUDENT_CLASS_NAME = "Rookies";
     public static final LocalDate NOW = LocalDate.now();
+    public static final String COUNTRY = "Poland";
+    public static final String CITY = "Warsaw";
+    public static final String POSTAL_CODE = "22-421";
+    public static final String STREET = "District 9";
 
     TeacherService teacherService;
 
@@ -57,6 +66,9 @@ class TeacherServiceImplTest {
 
     @Mock
     ExamRepository examRepository;
+
+    @Mock
+    AddressRepository addressRepository;
 
     Teacher createTeacher(Long id, String firstName, String lastName, Gender gender, Subjects subjects, LocalDate firstDay) {
         Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).gender(gender).
@@ -81,24 +93,30 @@ class TeacherServiceImplTest {
         return teacher;
     }
 
-    Teacher createBenjamin() {
-        return createTeacher(2L, BENJAMIN.get(), RODRIGUEZ.get(), MALE, BIOLOGY, LocalDate.of(2017, 10, 3));
-    }
+    Teacher createBenjamin() { return createTeacher(2L, BENJAMIN.get(), RODRIGUEZ.get(), MALE, BIOLOGY, LocalDate.of(2017, 10, 3)); }
 
-    Teacher createAria() {
-        return createTeacher(3L, ARIA.get(), WILLIAMS.get(), FEMALE, PHYSICS, LocalDate.of(2017, 10, 3));
-    }
+    Teacher createAria() { return createTeacher(3L, ARIA.get(), WILLIAMS.get(), FEMALE, PHYSICS, LocalDate.of(2017, 10, 3)); }
 
     private ExamDTO createExam() {
         return ExamDTO.builder().maxPoints(100L).name("Ethan Exam").build();
     }
 
+    private StudentDTO createStudentDTO() {
+        return StudentDTO.builder().firstName(ETHAN.get()).build();
+    }
+
+    private TeacherAddressDTO createAddressDTO() { return TeacherAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET).build(); }
+
+    private TeacherAddress createAddress() { return TeacherAddress.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET).build(); }
+
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        teacherService = new TeacherServiceImpl(teacherRepository, studentRepository, examRepository,
-                                            TeacherMapper.INSTANCE, ExamMapper.INSTANCE, StudentMapper.INSTANCE);
+        teacherService = new TeacherServiceImpl(teacherRepository, studentRepository, examRepository,  addressRepository,
+                                                TeacherMapper.INSTANCE, TeacherAddressMapper.INSTANCE,
+                                                ExamMapper.INSTANCE, StudentMapper.INSTANCE);
     }
 
     @DisplayName("[Happy Path], [Method] = getAllTeachers")
@@ -255,10 +273,6 @@ class TeacherServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    private StudentDTO createStudentDTO() {
-        return StudentDTO.builder().firstName(ETHAN.get()).build();
-    }
-
 
     @DisplayName("[Happy Path], [Method] = createNewTeacher")
     @Test
@@ -273,6 +287,26 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
         assertEquals(returnDTO.getFirstName(), ETHAN.get());
         assertEquals(returnDTO.getLastName(), COOPER.get());
+    }
+
+    @DisplayName("[Happy Path], [Method] = addAddressToTeacher")
+    @Test
+    void addAddressToTeacher() {
+        Teacher teacher = createEthan();
+
+        TeacherAddressDTO teacherAddress = createAddressDTO();
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        AddressDTO returnDTO = teacherService.addAddressToTeacher(1L, teacherAddress);
+
+        assertEquals(returnDTO.getCity(), CITY);
+        assertEquals(returnDTO.getCountry(), COUNTRY);
+        assertEquals(returnDTO.getPostalCode(), POSTAL_CODE);
+        assertEquals(returnDTO.getStreetName(), STREET);
+
+        verify(teacherRepository).save(any(Teacher.class));
+        verify(addressRepository).save(any(TeacherAddress.class));
     }
 
     @DisplayName("[Happy Path], [Method] = moveExamToAnotherDay")
@@ -335,8 +369,6 @@ class TeacherServiceImplTest {
     }
 
 
-
-
     @DisplayName("[Happy Path], [Method] = updateTeacher")
     @Test
     void updateTeacher() {
@@ -363,6 +395,27 @@ class TeacherServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+    @DisplayName("[Happy Path], [Method] = updateAddress")
+    @Test
+    void updateAddress() {
+        TeacherDTO teacherDTO = createEthanDTO();
+        Teacher teacher = createEthan();
+        TeacherAddressDTO addressDTO = createAddressDTO();
+        TeacherAddress address = createAddress();
+        teacher.setAddress(address);
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        TeacherAddressDTO returnDTO = teacherService.updateAddress(ID, addressDTO);
+
+        assertEquals(returnDTO.getCountry(), COUNTRY);
+        assertEquals(returnDTO.getCity(), CITY);
+        assertEquals(returnDTO.getPostalCode(), POSTAL_CODE);
+        assertEquals(returnDTO.getStreetName(), STREET);
+
+        verify(teacherRepository).save(any(Teacher.class));
+        verify(addressRepository).save(any(TeacherAddress.class));
+    }
     @DisplayName("[Happy Path], [Method] = deleteTeacherById")
     @Test
     void deleteTeacherByIdHappyPath() {

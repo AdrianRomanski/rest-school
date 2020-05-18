@@ -274,9 +274,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     void updateContact() throws Exception {
         StudentContactDTO contactDTO = StudentContactDTO.builder().telephoneNumber(TELEPHONE_NUMBER).emergencyNumber(TELEPHONE_NUMBER).email(EMAIL).build();
 
-        when(studentService.updateContact(any(StudentContactDTO.class), anyLong(), anyLong())).thenReturn(contactDTO);
+        when(studentService.updateContact(any(StudentContactDTO.class), anyLong())).thenReturn(contactDTO);
 
-        mockMvc.perform(put(STUDENTS + "updateContact/student-1/contact-1")
+        mockMvc.perform(put(STUDENTS + "updateContact/student-1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(contactDTO)))
@@ -290,9 +290,9 @@ class StudentControllerTest  extends AbstractRestControllerTest {
     void updateAddress() throws Exception {
         StudentAddressDTO addressDTO = StudentAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build();
 
-        when(studentService.updateAddress(any(StudentAddressDTO.class), anyLong(), anyLong())).thenReturn(addressDTO);
+        when(studentService.updateAddress(any(StudentAddressDTO.class), anyLong())).thenReturn(addressDTO);
 
-        mockMvc.perform(put(STUDENTS + "updateAddress/student-1/address-1")
+        mockMvc.perform(put(STUDENTS + "updateAddress/student-1")
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(addressDTO)))

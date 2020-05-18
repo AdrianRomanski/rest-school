@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -30,8 +31,12 @@ public class Teacher extends Person {
         this.subject = subject;
     }
 
-    @OneToOne
+    @OneToOne(cascade={CascadeType.ALL})
     private TeacherAddress address;
+
+    public Optional<TeacherAddress> getAddressOptional() {
+        return Optional.ofNullable(this.address);
+    }
 
     @ToString.Exclude
     @OneToMany(mappedBy = "teacher")

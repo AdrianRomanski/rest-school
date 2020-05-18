@@ -3,8 +3,10 @@ package adrianromanski.restschool.model.person;
 
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.model.base_entity.address.AddressDTO;
+import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
+import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.group.SportTeamDTO;
 import adrianromanski.restschool.model.group.StudentClassDTO;
@@ -27,9 +29,9 @@ public class StudentDTO extends PersonDTO {
         super(firstName, lastName, gender, dateOfBirth, age);
     }
 
-    private ContactDTO contactDTO;
+    private StudentContactDTO contactDTO;
 
-    private AddressDTO addressDTO;
+    private StudentAddressDTO addressDTO;
 
     @JsonIgnore
     private List<SubjectDTO> subjectsDTO = new ArrayList<>();

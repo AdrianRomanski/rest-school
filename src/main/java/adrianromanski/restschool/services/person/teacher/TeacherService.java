@@ -1,6 +1,7 @@
 package adrianromanski.restschool.services.person.teacher;
 
 import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
@@ -32,12 +33,16 @@ public interface TeacherService {
 
     TeacherDTO createNewTeacher(TeacherDTO teacherDTO);
 
+    TeacherAddressDTO addAddressToTeacher(Long teacherID, TeacherAddressDTO teacherAddressDTO);
+
     // PUT
     ExamDTO moveExamToAnotherDay(Long teacherID, Integer examID, LocalDate date);
 
     TeacherDTO changeClassPresident(Long teacherID, Long studentID);
 
     TeacherDTO updateTeacher(Long id, TeacherDTO teacherDTO);
+
+    TeacherAddressDTO updateAddress(Long teacherID, TeacherAddressDTO addressDTO);
 
     // DELETE
     void deleteTeacherById(Long id);

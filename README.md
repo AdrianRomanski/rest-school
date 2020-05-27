@@ -1,8 +1,8 @@
 # <div align="center"> REST API High School</div>
 
-## <div align="center"> [![CircleCI](https://circleci.com/gh/AdrianRomanski/rest-school.svg?style=svg)](https://circleci.com/gh/AdrianRomanski/rest-school) [![codecov](https://codecov.io/gh/AdrianRomanski/rest-school/branch/master/graph/badge.svg)](https://codecov.io/gh/AdrianRomanski/rest-school) </div>
-## <div align="center"> [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)] </div>
-
+## <div align="center">[![Generic badge](https://img.shields.io/badge/Status-Progress-<COLOR>.svg)](https://shields.io/) [![CircleCI](https://circleci.com/gh/AdrianRomanski/rest-school.svg?style=shield)](https://circleci.com/gh/AdrianRomanski/rest-school)  [![codecov](https://codecov.io/gh/AdrianRomanski/rest-school/branch/master/graph/badge.svg)](https://codecov.io/gh/AdrianRomanski/rest-school)  [![Language grade: Java](https://img.shields.io/lgtm/grade/java/g/AdrianRomanski/rest-school.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/AdrianRomanski/rest-school/context:java)  ![Total alerts](https://img.shields.io/lgtm/alerts/g/AdrianRomanski/rest-school.svg?logo=lgtm&logoWidth=18)  [![GitHub license](https://img.shields.io/github/license/Naereen/StrapDown.js.svg)](https://github.com/Naereen/StrapDown.js/blob/master/LICENSE)  
+</div>
+    
 ## <div align="left"> Running rest-school locally </div>
 
     git clone git@github.com:AdrianRomanski/rest-school.git

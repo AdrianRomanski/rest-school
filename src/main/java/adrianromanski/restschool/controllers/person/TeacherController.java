@@ -1,6 +1,8 @@
 package adrianromanski.restschool.controllers.person;
 
 import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.base_entity.address.AddressDTO;
+import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
@@ -91,6 +93,13 @@ public class TeacherController {
         return teacherService.createNewTeacher(teacherDTO);
     }
 
+    @ApiOperation("Adding Address to Teacher with matching ID")
+    @PostMapping("addAddress/teacher-{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AddressDTO addAddressToTeacher(@PathVariable String id, @RequestBody TeacherAddressDTO addressDTO) {
+        return teacherService.addAddressToTeacher(Long.valueOf(id), addressDTO);
+    }
+
     @ApiOperation("Changing class president")
     @PutMapping("changePresident/teacher-{teacherID}/student-{studentID}")
     @ResponseStatus(HttpStatus.OK)
@@ -99,10 +108,16 @@ public class TeacherController {
     }
 
     @ApiOperation("Update an existing Teacher with matching ID or create a new one")
-    @PutMapping("updateTeacher/{ID}")
+    @PutMapping("updateTeacher/teacher-{id}")
     @ResponseStatus(HttpStatus.OK)
-    public TeacherDTO updateTeacher(@PathVariable String ID, @RequestBody TeacherDTO teacherDTO) {
-        return teacherService.updateTeacher(Long.valueOf(ID), teacherDTO);
+    public TeacherDTO updateTeacher(@PathVariable String id, @RequestBody TeacherDTO teacherDTO) {
+        return teacherService.updateTeacher(Long.valueOf(id), teacherDTO);
+    }
+
+    @PutMapping("updateAddress/teacher-{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public AddressDTO updateAddress(@PathVariable String id, @RequestBody TeacherAddressDTO addressDTO) {
+        return teacherService.updateAddress(Long.valueOf(id), addressDTO);
     }
 
     @ApiOperation("Removes a Student from the Class")

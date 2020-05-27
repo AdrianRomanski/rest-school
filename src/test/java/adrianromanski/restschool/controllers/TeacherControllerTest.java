@@ -5,6 +5,8 @@
     import adrianromanski.restschool.domain.enums.Gender;
     import adrianromanski.restschool.domain.enums.Subjects;
     import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+    import adrianromanski.restschool.model.base_entity.address.AddressDTO;
+    import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
     import adrianromanski.restschool.model.event.ExamDTO;
     import adrianromanski.restschool.model.person.StudentDTO;
     import adrianromanski.restschool.model.person.TeacherDTO;
@@ -42,6 +44,10 @@
         public static final String TEACHERS = "/teachers/";
         public static final long ID = 1L;
         public static final String NAME = "Final Math";
+        public static final String COUNTRY = "Poland";
+        public static final String CITY = "Warsaw";
+        public static final String CODE = "222";
+        public static final String STREET_NAME = "Sesame";
 
         MockMvc mockMvc;
 
@@ -60,26 +66,26 @@
                     .build();
         }
 
-        TeacherDTO createTeacherDTO(Long id, String firstName, String lastName, Gender gender, Subjects subject) {
+        private TeacherDTO createTeacherDTO(Long id, String firstName, String lastName, Gender gender, Subjects subject) {
             TeacherDTO teacherDTO = TeacherDTO.builder().firstName(firstName).lastName(lastName).gender(gender).build();
             teacherDTO.setId(id);
             teacherDTO.setSubject(subject);
             return teacherDTO;
         }
 
-        TeacherDTO createEthan() {
+        private TeacherDTO createEthan() {
             return createTeacherDTO(ID, ETHAN.get(), COOPER.get(), MALE, CHEMISTRY);
         }
 
-        TeacherDTO createBenjamin() {
-            return createTeacherDTO(2L, BENJAMIN.get(), RODRIGUEZ.get(), MALE, BIOLOGY);
-        }
+        private TeacherDTO createBenjamin() { return createTeacherDTO(2L, BENJAMIN.get(), RODRIGUEZ.get(), MALE, BIOLOGY); }
 
-        TeacherDTO createAria() {
+        private TeacherDTO createAria() {
             return createTeacherDTO(3L, ARIA.get(), WILLIAMS.get(), FEMALE, PHYSICS);
         }
 
         private ExamDTO createExamDTO() { return ExamDTO.builder().name(NAME).build(); }
+
+        private TeacherAddressDTO getTeacherAddressDTO() { return TeacherAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(CODE).streetName(STREET_NAME).build(); }
 
 
         @DisplayName("[GET], [Happy Path], [Method] = getTeacherByID")
@@ -232,6 +238,24 @@
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
 
+        @DisplayName("[POST], [Happy Path], [Method] = addAddressToTeacher")
+        @Test
+        void addAddressToTeacher() throws Exception {
+            TeacherAddressDTO addressDTO = getTeacherAddressDTO();
+
+            when(teacherService.addAddressToTeacher(anyLong(), any(TeacherAddressDTO.class))).thenReturn(addressDTO);
+
+            mockMvc.perform(post(TEACHERS + "addAddress/teacher-1")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(addressDTO)))
+                    .andExpect(status().isCreated())
+                    .andExpect(jsonPath("$.country", equalTo(COUNTRY)))
+                    .andExpect(jsonPath("$.city", equalTo(CITY)))
+                    .andExpect(jsonPath("$.postalCode", equalTo(CODE)))
+                    .andExpect(jsonPath("$.streetName", equalTo(STREET_NAME)));
+        }
+
         @DisplayName("[PUT], [Happy Path], [Method] = changeClassPresident")
         @Test
         void changeClassPresident() throws Exception {
@@ -252,9 +276,9 @@
             TeacherDTO teacherDTO = createEthan();
             teacherDTO.setFirstName("Updated");
 
-            when(teacherService.updateTeacher(teacherDTO.getId(), teacherDTO)).thenReturn(teacherDTO);
+            when(teacherService.updateTeacher(anyLong(), any(TeacherDTO.class))).thenReturn(teacherDTO);
 
-            mockMvc.perform(put(TEACHERS + "updateTeacher/1")
+            mockMvc.perform(put(TEACHERS + "updateTeacher/teacher-1")
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(asJsonString(teacherDTO)))
@@ -262,6 +286,26 @@
                     .andExpect(jsonPath("$.firstName", equalTo("Updated")))
                     .andExpect(jsonPath("$.lastName", equalTo(COOPER.get())));
         }
+
+        @DisplayName("[PUT], [Happy Path], [Method] = updateAddress")
+        @Test
+        void updateAddress() throws Exception {
+            TeacherAddressDTO addressDTO = getTeacherAddressDTO();
+
+            when(teacherService.updateAddress(anyLong(), any(TeacherAddressDTO.class))).thenReturn(addressDTO);
+
+            mockMvc.perform(put(TEACHERS + "updateAddress/teacher-1")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(asJsonString(addressDTO)))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.country", equalTo(COUNTRY)))
+                    .andExpect(jsonPath("$.city", equalTo(CITY)))
+                    .andExpect(jsonPath("$.postalCode", equalTo(CODE)))
+                    .andExpect(jsonPath("$.streetName", equalTo(STREET_NAME)));
+
+        }
+
 
         @DisplayName("[DELETE], [Happy Path], [Method] = removeStudentFromClass")
         @Test

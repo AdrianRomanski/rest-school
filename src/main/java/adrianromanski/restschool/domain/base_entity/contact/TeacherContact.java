@@ -1,6 +1,6 @@
 package adrianromanski.restschool.domain.base_entity.contact;
 
-import adrianromanski.restschool.domain.person.Student;
+import adrianromanski.restschool.domain.person.Teacher;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -10,15 +10,14 @@ import javax.persistence.OneToOne;
 @Setter
 @Entity
 @NoArgsConstructor
-public class StudentContact extends Contact{
+public class TeacherContact extends Contact{
 
     @Builder
-    public StudentContact(String telephoneNumber, String emergencyNumber, String email) {
+    public TeacherContact(String telephoneNumber, String emergencyNumber, String email) {
         super(telephoneNumber, emergencyNumber, email);
     }
 
-    @ToString.Exclude
     @OneToOne
-    private Student student;
+    private Teacher teacher;
 
 }

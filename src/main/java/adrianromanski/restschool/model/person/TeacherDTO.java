@@ -4,19 +4,19 @@ import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
 import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.TeacherContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.event.PaymentDTO;
 import adrianromanski.restschool.model.group.StudentClassDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class TeacherDTO extends PersonDTO {
 
@@ -33,7 +33,7 @@ public class TeacherDTO extends PersonDTO {
     }
 
     private TeacherAddressDTO addressDTO;
-    private ContactDTO contactDTO;
+    private TeacherContactDTO contactDTO;
 
     @JsonIgnore
     private List<ExamDTO> examsDTO = new ArrayList<>();

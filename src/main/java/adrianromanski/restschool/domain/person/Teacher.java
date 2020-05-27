@@ -1,6 +1,7 @@
 package adrianromanski.restschool.domain.person;
 
 import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
+import adrianromanski.restschool.domain.base_entity.contact.TeacherContact;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.event.Payment;
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Teacher extends Person {
@@ -36,6 +38,13 @@ public class Teacher extends Person {
 
     public Optional<TeacherAddress> getAddressOptional() {
         return Optional.ofNullable(this.address);
+    }
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    private TeacherContact contact;
+
+    public Optional<TeacherContact> getContactOptional() {
+        return Optional.ofNullable(this.contact);
     }
 
     @ToString.Exclude

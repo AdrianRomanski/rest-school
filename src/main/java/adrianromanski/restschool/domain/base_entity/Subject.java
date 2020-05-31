@@ -10,8 +10,8 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@EqualsAndHashCode(exclude = {"students", "exams"})
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 public class Subject extends BaseEntity {
@@ -26,18 +26,11 @@ public class Subject extends BaseEntity {
     }
 
     @JsonBackReference
-    @ToString.Exclude
     @ManyToMany(mappedBy = "subjects")
     private Set<Student> students = new HashSet<>();
 
     @JsonBackReference
-    @ToString.Exclude
     @OneToMany(mappedBy = "subject")
     private Set<Exam> exams = new HashSet<>();
 
-    public void addStudent(Student student) {
-        this.students.add(student);
-    }
-
-    public void addExam(Exam exam) { this.exams.add(exam); }
 }

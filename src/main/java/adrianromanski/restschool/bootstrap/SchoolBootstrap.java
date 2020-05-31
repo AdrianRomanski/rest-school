@@ -216,8 +216,8 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
                                                     .score(85f).exam(biologyExam).date(LocalDate.now()).build();
 
         // Assign Exams to Subjects
-        math.addExam(mathExam);
-        biology.addExam(biologyExam);
+        math.getExams().add(mathExam);
+        math.getExams().add(biologyExam);
 
         // Assign subject to Exam
         mathExam.setSubject(math);

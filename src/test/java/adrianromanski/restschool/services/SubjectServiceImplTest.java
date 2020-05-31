@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.swing.text.html.Option;
 import java.util.*;
 
 import static adrianromanski.restschool.domain.enums.Subjects.*;
@@ -60,6 +61,7 @@ class SubjectServiceImplTest {
         return Arrays.asList(createBiology(), createMath(), createPhysics());
     }
 
+
     @DisplayName("[Happy Path], [Method] = getAllSubjects")
     @Test
     void getAllSubjects() {
@@ -75,7 +77,7 @@ class SubjectServiceImplTest {
 
     @DisplayName("[Happy Path], [Method] = getSubjectByID")
     @Test
-    void getSubjectByID() {
+    void getSubjectByIDHappyPath() {
         Subject subject = createMath();
 
         when(subjectRepository.findById(anyLong())).thenReturn(Optional.of(subject));
@@ -86,17 +88,45 @@ class SubjectServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Happy Path], [Method] = getAllSubjects")
+
+    @DisplayName("[UnHappy Path], [Method] = getSubjectByID")
     @Test
-    void getSubjectByName() {
+    void getSubjectByIDUnHappyPath() {
+        Throwable ex = catchThrowable(() -> subjectService.getSubjectByID(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = getSubjectByName")
+    @Test
+    void getSubjectByNameHappyPath() {
         Subject subject = createMath();
 
-        when(subjectRepository.findByName(anyString())).thenReturn(subject);
+        when(subjectRepository.findByName(MATHEMATICS)).thenReturn(Optional.of(subject));
 
         SubjectDTO returnDTO = subjectService.getSubjectByName(MATHEMATICS.toString());
 
         assertEquals(returnDTO.getName(), MATHEMATICS);
         assertEquals(returnDTO.getId(), ID);
+    }
+
+
+    @DisplayName("[UnHappy Path], [Method] = getSubjectByName")
+    @Test
+    void getSubjectByNameUnhappyPathSubjectNotInsideDatabase() {
+        Throwable ex = catchThrowable(() -> subjectService.getSubjectByName(MATHEMATICS.toString()));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[UnHappy Path], [Method] = getSubjectByName")
+    @Test
+    void getSubjectByNameUnhappyPathWrongEnumValue() {
+        Throwable ex = catchThrowable(() -> subjectService.getSubjectByName("Pen"));
+
+        assertThat(ex).isInstanceOf(IllegalArgumentException.class); // I should do something with this exception
     }
 
 
@@ -111,6 +141,7 @@ class SubjectServiceImplTest {
 
         assertEquals(returnDTO.size(), 1);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getSubjectsWithLowestValue")
     @Test
@@ -140,20 +171,21 @@ class SubjectServiceImplTest {
         assertEquals(returnDTO.getName(), MATHEMATICS);
     }
 
+
     @DisplayName("[Happy Path], [Method] = updateSubject")
     @Test
     void updateSubjectHappyPath() {
         SubjectDTO subjectDTO = new SubjectDTO();
-        subjectDTO.setValue(45L); // updating
+        subjectDTO.setValue(150L);
         Subject subject = createMath();
 
         when(subjectRepository.findById(anyLong())).thenReturn(Optional.of(subject));
-        when(subjectRepository.save(any(Subject.class))).thenReturn(subject);
 
         SubjectDTO savedDTO = subjectService.updateSubject(ID, subjectDTO);
 
-        assertEquals(savedDTO.getValue(), 45L);
+        assertEquals(savedDTO.getValue(), 150L);
     }
+
 
     @DisplayName("[Unhappy Path], [Method] = updateSubject")
     @Test
@@ -165,6 +197,7 @@ class SubjectServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+
     @DisplayName("[Happy Path], [Method] = deleteSubjectByID")
     @Test
     void deleteSubjectByIdHappyPath() {
@@ -174,19 +207,15 @@ class SubjectServiceImplTest {
 
         subjectService.deleteSubjectByID(anyLong());
 
-        verify(subjectRepository, times(1)).deleteById(anyLong());
+        verify(subjectRepository, times(1)).delete(subject);
     }
+
 
     @DisplayName("[Unhappy Path], [Method] = deleteSubjectByID")
     @Test
     void deleteSubjectByIdUnhappyPath() {
-
         Throwable ex = catchThrowable(() -> subjectService.deleteSubjectByID(222L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
-
-
-
-
 }

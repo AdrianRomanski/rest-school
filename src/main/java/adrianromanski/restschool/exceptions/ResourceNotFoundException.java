@@ -21,6 +21,10 @@ public class ResourceNotFoundException extends RuntimeException {
         super(cls1.getSimpleName() + " with id: " + id + " dont have " + cls2.getSimpleName() + " to delete");
     }
 
+    public ResourceNotFoundException(String name, Class cls) {
+        super(cls.getSimpleName() + " with name: " + name + " not found");
+    }
+
     public ResourceNotFoundException(String firstName, String lastName, Class cls) {
         super(cls.getSimpleName() + " with name: " + firstName +  " " + lastName + " not found");
     }

@@ -3,6 +3,8 @@ package adrianromanski.restschool.controllers.person;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.model.base_entity.address.AddressDTO;
 import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.TeacherContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
@@ -96,8 +98,15 @@ public class TeacherController {
     @ApiOperation("Adding Address to Teacher with matching ID")
     @PostMapping("addAddress/teacher-{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public AddressDTO addAddressToTeacher(@PathVariable String id, @RequestBody TeacherAddressDTO addressDTO) {
+    public TeacherAddressDTO addAddressToTeacher(@PathVariable String id, @RequestBody TeacherAddressDTO addressDTO) {
         return teacherService.addAddressToTeacher(Long.valueOf(id), addressDTO);
+    }
+
+    @ApiOperation("Adding Contact to Teacher with matching ID")
+    @PostMapping("addContact/teacher-{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public TeacherContactDTO addContactToTeacher(@PathVariable String id, @RequestBody TeacherContactDTO contactDTO) {
+        return teacherService.addContactToTeacher(Long.valueOf(id), contactDTO);
     }
 
     @ApiOperation("Changing class president")
@@ -116,8 +125,14 @@ public class TeacherController {
 
     @PutMapping("updateAddress/teacher-{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AddressDTO updateAddress(@PathVariable String id, @RequestBody TeacherAddressDTO addressDTO) {
+    public TeacherAddressDTO updateAddress(@PathVariable String id, @RequestBody TeacherAddressDTO addressDTO) {
         return teacherService.updateAddress(Long.valueOf(id), addressDTO);
+    }
+
+    @PutMapping("updateContact/teacher-{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TeacherContactDTO updateContact(@PathVariable String id, @RequestBody TeacherContactDTO contactDTO) {
+        return teacherService.updateContact(Long.valueOf(id), contactDTO);
     }
 
     @ApiOperation("Removes a Student from the Class")

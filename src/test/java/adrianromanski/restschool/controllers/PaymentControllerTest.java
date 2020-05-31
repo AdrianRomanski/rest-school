@@ -130,19 +130,14 @@ class PaymentControllerTest {
 
     @Test
     void updatePayment() throws Exception {
-        PaymentDTO paymentDTO = initPaymentDTO();
+        PaymentDTO returnDTO = initPaymentDTO();
 
-        PaymentDTO returnDTO = new PaymentDTO();
-        returnDTO.setName(paymentDTO.getName());
-        returnDTO.setAmount(paymentDTO.getAmount());
-
-
-        when(paymentService.updatePayment(ID, paymentDTO)).thenReturn(returnDTO);
+        when(paymentService.updatePayment(anyLong(), any(PaymentDTO.class))).thenReturn(returnDTO);
 
         mockMvc.perform(put(PAYMENTS + 1)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(paymentDTO)))
+                .content(asJsonString(returnDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name", equalTo(NAME)))
                 .andExpect(jsonPath("$.amount", equalTo(AMOUNT)));
@@ -151,7 +146,7 @@ class PaymentControllerTest {
 
     @Test
     void deletePaymentById() throws Exception {
-        mockMvc.perform(delete("/payments/1")
+        mockMvc.perform(delete(PAYMENTS + 1)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

@@ -1,12 +1,14 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.event.Payment;
+import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.event.PaymentMapper;
 import adrianromanski.restschool.model.event.PaymentDTO;
 import adrianromanski.restschool.repositories.event.PaymentRepository;
 import adrianromanski.restschool.services.event.payment.PaymentService;
 import adrianromanski.restschool.services.event.payment.PaymentServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -16,7 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -38,25 +42,19 @@ class PaymentServiceImplTest {
         paymentService = new PaymentServiceImpl(paymentRepository, PaymentMapper.INSTANCE);
     }
 
-    Payment initPayment() {
-        Payment payment = new Payment();
-        payment.setName(NAME);
-        payment.setDate(DATE);
-        payment.setAmount(AMOUNT);
+    Payment createPayment() {
+        Payment payment = Payment.builder().name(NAME).date(DATE).amount(AMOUNT).build();
         payment.setId(ID);
         return payment;
     }
 
-
-    PaymentDTO initPaymentDTO() {
-        PaymentDTO paymentDTO = new PaymentDTO();
-        paymentDTO.setName(NAME);
-        paymentDTO.setDate(DATE);
-        paymentDTO.setAmount(AMOUNT);
+    PaymentDTO createPaymentDTO() {
+        PaymentDTO paymentDTO = PaymentDTO.builder().name(NAME).date(DATE).amount(AMOUNT).build();
         paymentDTO.setId(ID);
         return paymentDTO;
     }
 
+    @DisplayName("[Happy Path], [Method] = getAllPayments")
     @Test
     void getAllPayments() {
         List<Payment> payments = Arrays.asList(new Payment(), new Payment(), new Payment());
@@ -68,9 +66,11 @@ class PaymentServiceImplTest {
         assertEquals(paymentsDTO.size(),payments.size());
     }
 
+
+    @DisplayName("[Happy Path], [Method] = getPaymentById")
     @Test
-    void getPaymentById() {
-        Payment payment = initPayment();
+    void getPaymentByIdHappyPath() {
+        Payment payment = createPayment();
 
         when(paymentRepository.findById(payment.getId())).thenReturn(Optional.of(payment));
 
@@ -80,12 +80,22 @@ class PaymentServiceImplTest {
         assertEquals(paymentDTO.getId(), ID);
         assertEquals(paymentDTO.getDate(), DATE);
         assertEquals(paymentDTO.getAmount(), AMOUNT);
-
     }
 
+
+    @DisplayName("[Unhappy Path], [Method] = getPaymentById")
     @Test
-    void getPaymentByName() {
-        Payment payment = initPayment();
+    void getPaymentByIdUnHappyPath() {
+        Throwable ex = catchThrowable(() -> paymentService.getPaymentById(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = getPaymentByName")
+    @Test
+    void getPaymentByNameHappyPath() {
+        Payment payment = createPayment();
 
         when(paymentRepository.findPaymentByName(NAME)).thenReturn(Optional.of(payment));
 
@@ -97,41 +107,79 @@ class PaymentServiceImplTest {
         assertEquals(paymentDTO.getAmount(), AMOUNT);
     }
 
+
+    @DisplayName("[Unhappy Path], [Method] = getPaymentByName")
+    @Test
+    void getPaymentByNameUnHappyPath() {
+        Throwable ex = catchThrowable(() -> paymentService.getPaymentByName("Banana"));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = createNewPayment")
     @Test
     void createNewPayment() {
-        PaymentDTO paymentDTO = initPaymentDTO();
+        PaymentDTO paymentDTO = createPaymentDTO();
+        Payment payment = createPayment();
 
-        Payment savedPayment = initPayment();
+        when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
-        when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
+        PaymentDTO returnDTO = paymentService.createNewPayment(paymentDTO);
 
-        PaymentDTO returnPaymentDTO = paymentService.createNewPayment(paymentDTO);
-
-        assertEquals(savedPayment.getAmount(), returnPaymentDTO.getAmount());
-        assertEquals(savedPayment.getDate(), returnPaymentDTO.getDate());
-        assertEquals(savedPayment.getId(), returnPaymentDTO.getId());
-        assertEquals(savedPayment.getName(), returnPaymentDTO.getName());
+        assertEquals(returnDTO.getAmount(), payment.getAmount());
+        assertEquals(returnDTO.getDate(), payment.getDate());
+        assertEquals(returnDTO.getId(), payment.getId());
+        assertEquals(returnDTO.getName(), payment.getName());
     }
 
+
+    @DisplayName("[Happy Path], [Method] = updatePayment")
     @Test
-    void updatePayment() {
-        PaymentDTO paymentDTO = initPaymentDTO();
+    void updatePaymentHappyPath() {
+        PaymentDTO paymentDTO = createPaymentDTO();
+        Payment payment = createPayment();
 
-        Payment savedPayment = initPayment();
+        when(paymentRepository.findById(anyLong())).thenReturn(Optional.of(payment));
 
-        when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
+        PaymentDTO returnDTO = paymentService.updatePayment(paymentDTO.getId(), paymentDTO);
 
-        PaymentDTO returnPaymentDTO = paymentService.updatePayment(paymentDTO.getId(), paymentDTO);
-
-        assertEquals(savedPayment.getAmount(), returnPaymentDTO.getAmount());
-        assertEquals(savedPayment.getDate(), returnPaymentDTO.getDate());
-        assertEquals(savedPayment.getId(), returnPaymentDTO.getId());
-        assertEquals(savedPayment.getName(), returnPaymentDTO.getName());
+        assertEquals(returnDTO.getAmount(), payment.getAmount());
+        assertEquals(returnDTO.getDate(), payment.getDate());
+        assertEquals(returnDTO.getId(), payment.getId());
+        assertEquals(returnDTO.getName(), payment.getName());
     }
 
+
+    @DisplayName("[Unhappy Path], [Method] = updatePayment")
     @Test
-    void deletePaymentById() {
-        paymentRepository.deleteById(ID);
+    void updatePaymentUnHappyPath() {
+        PaymentDTO paymentDTO = createPaymentDTO();
+
+        Throwable ex = catchThrowable(() -> paymentService.updatePayment(1L, paymentDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @DisplayName("[Happy Path], [Method] = deletePaymentById")
+    @Test
+    void deletePaymentByIdHappyPath() {
+        Payment payment = createPayment();
+
+        when(paymentRepository.findById(anyLong())).thenReturn(Optional.of(payment));
+
+        paymentService.deletePaymentById(ID);
+
         verify(paymentRepository, times(1)).deleteById(ID);
     }
+
+    @DisplayName("[Unhappy Path], [Method] = deletePaymentById")
+    @Test
+    void deletePaymentByIdUnHappyPath() {
+        Throwable ex = catchThrowable(() -> paymentService.deletePaymentById(1L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
 }

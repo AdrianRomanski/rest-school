@@ -5,11 +5,13 @@ import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.event.PaymentMapper;
 import adrianromanski.restschool.model.event.PaymentDTO;
 import adrianromanski.restschool.repositories.event.PaymentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
@@ -21,45 +23,89 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentMapper = paymentMapper;
     }
 
+
+    /**
+     * @return all Payments
+     */
     @Override
     public List<PaymentDTO> getAllPayments() {
         return paymentRepository.findAll()
-                                    .stream()
-                                    .map(paymentMapper::paymentToPaymentDTO)
-                                    .collect(Collectors.toList());
-
+                .stream()
+                .map(paymentMapper::paymentToPaymentDTO)
+                .collect(Collectors.toList());
     }
 
+
+    /**
+     * @param id of the Payment to be found
+     * @return Payment with matching id
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public PaymentDTO getPaymentById(Long id) {
-        return paymentMapper.paymentToPaymentDTO(paymentRepository.findById(id)
-                                                                .orElseThrow(ResourceNotFoundException::new));
+        return paymentRepository
+                .findById(id)
+                .map(paymentMapper::paymentToPaymentDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Payment.class));
     }
 
+
+    /**
+     * @param name of the Payment to be found
+     * @return Payment with matching name
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public PaymentDTO getPaymentByName(String name) {
-        return paymentMapper.paymentToPaymentDTO(paymentRepository.findPaymentByName(name)
-                                                                .orElseThrow(ResourceNotFoundException::new));
+        return paymentRepository
+                .findPaymentByName(name)
+                .map(paymentMapper::paymentToPaymentDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(name, Payment.class));
     }
 
+
+    /**
+     * @param paymentDTO
+     * Save Payment to Database
+     * @return Payment after saving it to database
+     */
     @Override
     public PaymentDTO createNewPayment(PaymentDTO paymentDTO) {
-        return saveAndReturnDTO(paymentMapper.paymentDTOToPayment(paymentDTO));
+        paymentRepository.save(paymentMapper.paymentDTOToPayment(paymentDTO));
+        log.info("Payment with id: " + paymentDTO.getId() + "successfully saved to database");
+        return paymentDTO;
+
     }
 
+
+    /**
+     * @param id of Payment to be updated
+     * @param paymentDTO body to save
+     * @return Updated Payment if successfully saved
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public PaymentDTO updatePayment(Long id, PaymentDTO paymentDTO) {
-        paymentDTO.setId(id);
-        return saveAndReturnDTO(paymentMapper.paymentDTOToPayment(paymentDTO));
+        paymentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Payment.class));
+        Payment updatedPayment = paymentMapper.paymentDTOToPayment(paymentDTO);
+        updatedPayment.setId(id);
+        paymentRepository.save(updatedPayment);
+        log.info("Payment with id: " + id + "successfully updated");
+        return paymentMapper.paymentToPaymentDTO(updatedPayment);
     }
 
+
+
+    /**
+     * @param id of Payment to be deleted
+     * @throws ResourceNotFoundException if not found
+     */
     @Override
     public void deletePaymentById(Long id) {
+        paymentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Payment.class));
         paymentRepository.deleteById(id);
-    }
-
-    public PaymentDTO saveAndReturnDTO(Payment payment) {
-        paymentRepository.save(payment);
-        return paymentMapper.paymentToPaymentDTO(payment);
+        log.info("Payment with id: " + id + "successfully deleted");
     }
 }

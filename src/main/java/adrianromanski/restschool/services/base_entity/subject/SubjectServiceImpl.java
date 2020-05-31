@@ -46,9 +46,10 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public SubjectDTO getSubjectByID(Long id) {
-        return subjectMapper.subjectToSubjectDTO(subjectRepository
+        return subjectRepository
                 .findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(id, Subject.class)));
+                .map(subjectMapper::subjectToSubjectDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Subject.class));
     }
 
 
@@ -59,9 +60,10 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public SubjectDTO getSubjectByName(String name) {
-        return subjectMapper.subjectToSubjectDTO(subjectRepository
+        return subjectRepository
                 .findByName(Subjects.valueOf(name))
-                .orElseThrow(() -> new ResourceNotFoundException(name, Subject.class)));
+                .map(subjectMapper::subjectToSubjectDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(name, Subject.class));
     }
 
 
@@ -112,12 +114,11 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public SubjectDTO updateSubject(Long id, SubjectDTO subjectDTO) {
-        Subject subject = subjectRepository
-                .findById(id)
+        subjectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id, Subject.class));
         Subject updatedSubject = subjectMapper.subjectDTOToSubject(subjectDTO);
         updatedSubject.setId(id);
-        subjectRepository.save(subject);
+        subjectRepository.save(updatedSubject);
         log.info("Subject with id: " + id + "successfully saved to database");
         return subjectMapper.subjectToSubjectDTO(updatedSubject);
     }
@@ -129,10 +130,9 @@ public class SubjectServiceImpl implements SubjectService {
      */
     @Override
     public void deleteSubjectByID(Long id) {
-        Subject subject = subjectRepository
-                .findById(id)
+        subjectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id, Subject.class));
-        subjectRepository.delete(subject);
+        subjectRepository.deleteById(id);
         log.info("Subject with id: " + id + "successfully deleted");
     }
 }

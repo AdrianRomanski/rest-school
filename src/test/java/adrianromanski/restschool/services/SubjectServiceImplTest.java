@@ -207,7 +207,7 @@ class SubjectServiceImplTest {
 
         subjectService.deleteSubjectByID(anyLong());
 
-        verify(subjectRepository, times(1)).delete(subject);
+        verify(subjectRepository, times(1)).deleteById(anyLong());
     }
 
 

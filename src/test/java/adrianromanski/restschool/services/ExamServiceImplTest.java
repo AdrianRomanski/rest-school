@@ -96,7 +96,7 @@ class ExamServiceImplTest {
 
     @DisplayName("[Happy Path], [Method] = getExamById")
     @Test
-    void getExamById() {
+    void getExamByIdHappyPath() {
         Exam exam = initBiologyExam();
 
         when(examRepository.findById(anyLong())).thenReturn(Optional.of(exam));
@@ -109,9 +109,18 @@ class ExamServiceImplTest {
     }
 
 
+    @DisplayName("[Unhappy Path], [Method] = getExamById")
+    @Test
+    void getExamByIdUnHappyPath() {
+        Throwable ex = catchThrowable(() -> examService.getExamById(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
     @DisplayName("[Happy Path], [Method] = getExamByName")
     @Test
-    void getExamByName() {
+    void getExamByNameHappyPath() {
         Exam exam = initBiologyExam();
 
         when(examRepository.getByName(anyString())).thenReturn(Optional.of(exam));
@@ -121,6 +130,15 @@ class ExamServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
         assertEquals(returnDTO.getName(), NAME);
         assertEquals(returnDTO.getMaxPoints(), POINTS);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = getExamByName")
+    @Test
+    void getExamByNameUnHappyPath() {
+        Throwable ex = catchThrowable(() -> examService.getExamByName("Swimming"));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
 
@@ -151,6 +169,7 @@ class ExamServiceImplTest {
         assertEquals(returnMap.size(), 1);
     }
 
+
     @DisplayName("[Happy Path], [Method] = getAllExamsBySubjectsAndTeachers")
     @Test
     void getAllExamsBySubjectsAndTeachers() {
@@ -168,6 +187,7 @@ class ExamServiceImplTest {
         assertEquals(returnMap.get(BIOLOGY.name()).get(HENDERSON.get() + " " + ETHAN.get()).size(), 2); // 2 Exams of  Biology
         assertEquals(returnMap.get(MATHEMATICS.name()).get(SMITH.get() + " " + SEBASTIAN.get()).size(), 1); // 1 Exam of  Math
     }
+
 
     @DisplayName("[Happy Path], [Method] = getAllExamsByStudentsAndSubjects")
     @Test
@@ -200,6 +220,7 @@ class ExamServiceImplTest {
         assertEquals(returnDTO.getMaxPoints(), POINTS);
     }
 
+
     @DisplayName("[Happy Path], [Method] = updateExam")
     @Test
     void updateExamHappyPath() {
@@ -217,6 +238,7 @@ class ExamServiceImplTest {
         assertEquals(returnDTO.getMaxPoints(), 50); // updated points
     }
 
+
     @DisplayName("[Unhappy Path], [Method] = updateExam, [Reason] = Exam with id 222 not found")
     @Test
     void updateExamUnHappyPath() {
@@ -226,6 +248,7 @@ class ExamServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = deleteExamById")
     @Test
@@ -239,13 +262,12 @@ class ExamServiceImplTest {
         verify(examRepository, times(1)).deleteById(anyLong());
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteExamById, [Reason] = Exam with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = deleteExamById")
     @Test
     void deleteExamByIdUnHappyPath() {
-
         Throwable ex = catchThrowable(() -> examService.deleteExamById(222L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
-
 }

@@ -6,11 +6,8 @@ import java.util.List;
 
 public interface SubjectService {
 
+    // GET
     List<SubjectDTO> getAllSubjects();
-
-    SubjectDTO createNewSubject(SubjectDTO subjectDTO);
-
-    SubjectDTO updateSubject(Long id, SubjectDTO subjectDTO);
 
     SubjectDTO getSubjectByID(Long id);
 
@@ -20,5 +17,12 @@ public interface SubjectService {
 
     List<SubjectDTO> getSubjectsWithLowestValue();
 
+    // POST
+    SubjectDTO createNewSubject(SubjectDTO subjectDTO);
+
+    // PUT
+    SubjectDTO updateSubject(Long id, SubjectDTO subjectDTO);
+
+    // DELETE
     void deleteSubjectByID(Long id);
 }

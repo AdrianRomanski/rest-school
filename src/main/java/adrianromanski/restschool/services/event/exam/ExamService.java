@@ -8,6 +8,7 @@ import java.util.Map;
 
 public interface ExamService  {
 
+    // GET
     List<ExamDTO> getAllExams();
 
     ExamDTO getExamById(Long id);
@@ -22,10 +23,13 @@ public interface ExamService  {
 
     Map<Integer, Map<String, List<ExamDTO>>> getAllExamsByStudentsAndSubjects();
 
+    // POST
     ExamDTO createNewExam(ExamDTO examDTO);
 
+    // PUT
     ExamDTO updateExam(Long id, ExamDTO examDTO);
 
+    // DELETE
     void deleteExamById(Long id);
 
 }

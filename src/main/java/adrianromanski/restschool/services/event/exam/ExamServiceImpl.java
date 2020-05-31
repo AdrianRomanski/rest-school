@@ -31,7 +31,6 @@ public class ExamServiceImpl implements ExamService {
         this.examRepository = examRepository;
     }
 
-
     /**
      * @return all Exams
      */
@@ -50,7 +49,8 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public ExamDTO getExamById(Long id) {
-        return examRepository.findById(id)
+        return examRepository
+                .findById(id)
                 .map(examMapper::examToExamDTO)
                 .orElseThrow(ResourceNotFoundException::new);
     }
@@ -61,7 +61,8 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public ExamDTO getExamByName(String name) {
-        return examRepository.getByName(name)
+        return examRepository
+                .getByName(name)
                 .map(examMapper::examToExamDTO)
                 .orElseThrow(ResourceNotFoundException::new);
     }
@@ -81,7 +82,7 @@ public class ExamServiceImpl implements ExamService {
 
 
     /**
-     * @return Map where the Key is matching Subject and values List of Exams
+     * @return All Exams For Subjects
      */
     @Override
     public Map<String, List<ExamDTO>> getExamsForSubject(Subjects subjects) {
@@ -96,9 +97,9 @@ public class ExamServiceImpl implements ExamService {
                 );
     }
 
+
     /**
-     * @return Map where the Keys are Subjects and values Maps
-     * where they Keys are Teachers and values List of exams
+     * @return All Exams grouped by Subjects and Teachers
      */
     @Override
     public Map<String, Map<String, List<ExamDTO>>> getAllExamsBySubjectsAndTeachers() {
@@ -114,8 +115,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     /**
-     * @return Map where the Keys are Number of Students and
-     * values Maps where they Keys are Subjects and values List of exams
+     * @return All Exams grouped by number of Students and Subjects
      */
     @Override
     public Map<Integer, Map<String, List<ExamDTO>>> getAllExamsByStudentsAndSubjects() {
@@ -130,9 +130,11 @@ public class ExamServiceImpl implements ExamService {
                 );
     }
 
+
     /**
-     * Converts DTO Object and Save it to Database
-     * @return ExamDTO object
+     * @param examDTO
+     * Save Subject to Database
+     * @return ExamDTO after saving it to database
      */
     @Override
     public ExamDTO createNewExam(ExamDTO examDTO) {
@@ -142,23 +144,20 @@ public class ExamServiceImpl implements ExamService {
 
 
     /**
-     * Converts DTO Object, Update Exam with Matching ID and save it to Database
-     * @return ExamDTO object if the Sport Team  was successfully saved
+     * Update Exam with Matching ID and save it to Database
+     * @return ExamDTO object if successfully saved
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public ExamDTO updateExam(Long id, ExamDTO examDTO) {
-        if (examRepository.findById(id).isPresent()) {
-            Exam exam = examMapper.examDTOToExam(examDTO);
-            exam.setId(id);
-            examRepository.save(exam);
-            log.info("Exam with id: " + id + " successfully updated");
-            return examMapper.examToExamDTO(exam);
-        } else {
-            log.debug("Exam with id: " + id + " not found");
-            throw new ResourceNotFoundException("Exam with id: " + id + " not found");
+        examRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Exam.class));
+        Exam updatedExam = examMapper.examDTOToExam(examDTO);
+        updatedExam.setId(id);
+        examRepository.save(updatedExam);
+        log.info("Exam with id: " + id + " successfully updated");
+        return examMapper.examToExamDTO(updatedExam);
         }
-    }
 
 
     /**
@@ -167,12 +166,9 @@ public class ExamServiceImpl implements ExamService {
      */
     @Override
     public void deleteExamById(Long id) {
-        if (examRepository.findById(id).isPresent()) {
-            examRepository.deleteById(id);
-            log.info("Exam with id: " + id + " successfully deleted");
-        } else {
-            log.debug("Exam with id: " + id + " not found");
-            throw new ResourceNotFoundException("Exam with id: " + id + " not found");
-        }
+        examRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Exam.class));
+        examRepository.deleteById(id);
+        log.info("Exam with id: " + id + " successfully deleted");
     }
 }

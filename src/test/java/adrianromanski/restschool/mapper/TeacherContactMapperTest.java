@@ -1,6 +1,7 @@
-package adrianromanski.restschool.mapper.base_entity;
+package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.contact.TeacherContact;
+import adrianromanski.restschool.mapper.base_entity.TeacherContactMapper;
 import adrianromanski.restschool.model.base_entity.contact.TeacherContactDTO;
 import org.junit.jupiter.api.Test;
 

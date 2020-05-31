@@ -1,9 +1,10 @@
-package adrianromanski.restschool.mapper.base_entity;
+package adrianromanski.restschool.mapper;
 
 import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
 import adrianromanski.restschool.domain.enums.LastName;
 import adrianromanski.restschool.domain.enums.MaleName;
 import adrianromanski.restschool.domain.person.Teacher;
+import adrianromanski.restschool.mapper.base_entity.TeacherAddressMapper;
 import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
 import org.junit.jupiter.api.Test;
@@ -28,7 +29,7 @@ class TeacherAddressMapperTest {
         teacherAddress.setTeacher(teacher);
         teacher.setAddress(teacherAddress);
 
-        TeacherAddressDTO teacherAddressDTO = teacherAddressMapper.teacherAddressToTeacherAddressDTO(teacherAddress);
+        TeacherAddressDTO teacherAddressDTO = teacherAddressMapper.addressToAddressDTO(teacherAddress);
 
         assertEquals(teacherAddressDTO.getCountry(), COUNTRY);
         assertEquals(teacherAddressDTO.getCity(), CITY);
@@ -44,7 +45,7 @@ class TeacherAddressMapperTest {
         teacherAddressDTO.setTeacherDTO(teacherDTO);
         teacherDTO.setAddressDTO(teacherAddressDTO);
 
-        TeacherAddress teacherAddress = teacherAddressMapper.teacherAddressDTOToTeacherAddress(teacherAddressDTO);
+        TeacherAddress teacherAddress = teacherAddressMapper.addressDTOToAddress(teacherAddressDTO);
 
         assertEquals(teacherAddress.getCountry(), COUNTRY);
         assertEquals(teacherAddress.getCity(), CITY);

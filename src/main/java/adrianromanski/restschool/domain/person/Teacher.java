@@ -43,9 +43,7 @@ public class Teacher extends Person {
     @OneToOne(cascade = {CascadeType.ALL})
     private TeacherContact contact;
 
-    public Optional<TeacherContact> getContactOptional() {
-        return Optional.ofNullable(this.contact);
-    }
+    public Optional<TeacherContact> getContactOptional() { return Optional.ofNullable(this.contact); }
 
     @ToString.Exclude
     @OneToMany(mappedBy = "teacher")

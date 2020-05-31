@@ -13,8 +13,8 @@ public interface TeacherAddressMapper {
     TeacherAddressMapper  INSTANCE = Mappers.getMapper(TeacherAddressMapper.class);
 
     @Mapping(source = "teacher", target = "teacherDTO")
-    TeacherAddressDTO teacherAddressToTeacherAddressDTO(TeacherAddress teacherAddress);
+    TeacherAddressDTO addressToAddressDTO(TeacherAddress teacherAddress);
 
     @Mapping(source = "teacherDTO", target = "teacher")
-    TeacherAddress teacherAddressDTOToTeacherAddress(TeacherAddressDTO teacherAddressDTO);
+    TeacherAddress addressDTOToAddress(TeacherAddressDTO teacherAddressDTO);
 }

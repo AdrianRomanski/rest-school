@@ -1,6 +1,7 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
+import adrianromanski.restschool.domain.base_entity.contact.TeacherContact;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.group.StudentClass;
@@ -9,15 +10,19 @@ import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.TeacherAddressMapper;
+import adrianromanski.restschool.mapper.base_entity.TeacherContactMapper;
 import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
 import adrianromanski.restschool.model.base_entity.address.AddressDTO;
 import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.TeacherContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
+import adrianromanski.restschool.repositories.base_entity.ContactRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
@@ -55,6 +60,9 @@ class TeacherServiceImplTest {
     public static final String CITY = "Warsaw";
     public static final String POSTAL_CODE = "22-421";
     public static final String STREET = "District 9";
+    public static final String EMAIL = "Ethan@Gmail.com";
+    public static final String EMERGENCY_NUMBER = "22-22-11";
+    public static final String NUMBER = "22-12-22";
 
     TeacherService teacherService;
 
@@ -69,6 +77,9 @@ class TeacherServiceImplTest {
 
     @Mock
     AddressRepository addressRepository;
+
+    @Mock
+    ContactRepository contactRepository;
 
     Teacher createTeacher(Long id, String firstName, String lastName, Gender gender, Subjects subjects, LocalDate firstDay) {
         Teacher teacher = Teacher.builder().firstName(firstName).lastName(lastName).gender(gender).
@@ -109,15 +120,20 @@ class TeacherServiceImplTest {
 
     private TeacherAddress createAddress() { return TeacherAddress.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET).build(); }
 
+    private TeacherContactDTO createContactDTO() { return TeacherContactDTO.builder().email(EMAIL).emergencyNumber(EMERGENCY_NUMBER).telephoneNumber(NUMBER).build(); }
+
+    private TeacherContact createContact() { return TeacherContact.builder().email(EMAIL).emergencyNumber(EMERGENCY_NUMBER).telephoneNumber(NUMBER).build(); }
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        teacherService = new TeacherServiceImpl(teacherRepository, studentRepository, examRepository,  addressRepository,
-                                                TeacherMapper.INSTANCE, TeacherAddressMapper.INSTANCE,
+        teacherService = new TeacherServiceImpl(teacherRepository, contactRepository, studentRepository, examRepository, addressRepository,
+                                                TeacherMapper.INSTANCE, TeacherAddressMapper.INSTANCE, TeacherContactMapper.INSTANCE,
                                                 ExamMapper.INSTANCE, StudentMapper.INSTANCE);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getAllTeachers")
     @Test
@@ -130,6 +146,7 @@ class TeacherServiceImplTest {
 
         assertEquals(returnTeachers.size(), teachers.size());
      }
+
 
     @DisplayName("[Happy Path], [Method] = getTeacherByFirstNameAndLastName")
     @Test
@@ -145,6 +162,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
+
     @DisplayName("[Happy Path], [Method] = getTeacherByID")
     @Test
     void getTeacherByID() {
@@ -158,6 +176,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getLastName(), COOPER.get());
         assertEquals(returnDTO.getId(), ID);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getTeachersBySpecialization")
     @Test
@@ -174,6 +193,7 @@ class TeacherServiceImplTest {
         assertTrue(map.containsKey(CHEMISTRY));
     }
 
+
     @DisplayName("[Happy Path], [Method] = getTeachersByYearsOfExperience")
     @Test
     void getTeachersByYearsOfExperience() {
@@ -187,6 +207,7 @@ class TeacherServiceImplTest {
         assertTrue(map.containsKey(1L));
         assertTrue(map.containsKey(2L));
     }
+
 
     @DisplayName("[Happy Path], [Method] = addExamForClass")
     @Test
@@ -202,6 +223,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getStudentsDTO().size(), 2);
     }
 
+
     @DisplayName("[Unhappy Path], [Method] = addExamForClass")
     @Test
     void addExamForClassUnhappy() {
@@ -211,6 +233,7 @@ class TeacherServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = addCorrectionExamForStudent")
     @Test
@@ -228,7 +251,8 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getTeacherDTO().getFirstName(), ETHAN.get());
     }
 
-    @DisplayName("[UnHappy Path], [Method] = addCorrectionExamForStudent, [Reason] = Teacher not found")
+
+    @DisplayName("[UnHappy Path], [Method] = addCorrectionExamForStudent")
     @Test
     void addCorrectionExamForStudentUnHappyPathTeacher() {
         ExamDTO examDTO = createExam();
@@ -238,7 +262,8 @@ class TeacherServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[UnHappy Path], [Method] = addCorrectionExamForStudent, [Reason] = Student not found")
+
+    @DisplayName("[UnHappy Path], [Method] = addCorrectionExamForStudent")
     @Test
     void addCorrectionExamForStudentUnHappyPathStudent() {
         ExamDTO examDTO = createExam();
@@ -249,6 +274,7 @@ class TeacherServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = addNewStudentToClass")
     @Test
@@ -262,6 +288,7 @@ class TeacherServiceImplTest {
 
         assertEquals(returnDTO.getStudentClassDTO().getName(), STUDENT_CLASS_NAME);
     }
+
 
     @DisplayName("[Unhappy Path], [Method] = addNewStudentToClass")
     @Test
@@ -289,16 +316,16 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getLastName(), COOPER.get());
     }
 
+
     @DisplayName("[Happy Path], [Method] = addAddressToTeacher")
     @Test
-    void addAddressToTeacher() {
+    void addAddressToTeacherHappyPath() {
         Teacher teacher = createEthan();
-
-        TeacherAddressDTO teacherAddress = createAddressDTO();
+        TeacherAddressDTO addressDTO = createAddressDTO();
 
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
-        AddressDTO returnDTO = teacherService.addAddressToTeacher(1L, teacherAddress);
+        AddressDTO returnDTO = teacherService.addAddressToTeacher(1L, addressDTO);
 
         assertEquals(returnDTO.getCity(), CITY);
         assertEquals(returnDTO.getCountry(), COUNTRY);
@@ -308,6 +335,48 @@ class TeacherServiceImplTest {
         verify(teacherRepository).save(any(Teacher.class));
         verify(addressRepository).save(any(TeacherAddress.class));
     }
+
+
+    @DisplayName("[Unhappy Path], [Method] = addAddressToTeacher")
+    @Test
+    void addAddressToTeacherUnHappyPath() {
+        TeacherAddressDTO addressDTO = createAddressDTO();
+
+        Throwable ex = catchThrowable(() -> teacherService.addAddressToTeacher(1L, addressDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = addContactToTeacher")
+    @Test
+    void addContactToTeacherHappyPath() {
+        Teacher teacher = createEthan();
+        TeacherContactDTO contactDTO = createContactDTO();
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        ContactDTO returnDTO = teacherService.addContactToTeacher(1L, contactDTO);
+
+        assertEquals(returnDTO.getEmail(), EMAIL);
+        assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
+        assertEquals(returnDTO.getEmergencyNumber(), EMERGENCY_NUMBER);
+
+        verify(teacherRepository).save(any(Teacher.class));
+        verify(contactRepository).save(any(TeacherContact.class));
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = addContactToTeacher")
+    @Test
+    void addContactToTeacherUnhappyPath() {
+        TeacherContactDTO contactDTO = createContactDTO();
+
+        Throwable ex = catchThrowable(() -> teacherService.addContactToTeacher(1L, contactDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
 
     @DisplayName("[Happy Path], [Method] = moveExamToAnotherDay")
     @Test
@@ -324,6 +393,7 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getDate(), LocalDate.of(2020, 10,10));
     }
 
+
     @DisplayName("[Unhappy Path], [Method] = moveExamToAnotherDay")
     @Test
     void moveExamToAnotherDayUnhappyPath() {
@@ -332,6 +402,7 @@ class TeacherServiceImplTest {
 
           assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = changeClassPresident")
     @Test
@@ -347,6 +418,7 @@ class TeacherServiceImplTest {
          assertEquals(returnDTO.getStudentClassDTO().getPresident(), "Isaac Henderson");
     }
 
+
     @DisplayName("[Unhappy Path], [Method] = changeClassPresident")
     @Test
     void changeClassPresidentUnhappyPathTeacher()  {
@@ -355,6 +427,7 @@ class TeacherServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Unhappy Path], [Method] = changeClassPresident")
     @Test
@@ -385,7 +458,8 @@ class TeacherServiceImplTest {
         assertEquals(returnDTO.getLastName(), COOPER.get());
     }
 
-    @DisplayName("[Unhappy Path], [Method] = updateTeacher, [Reason] = Teacher with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = updateTeacher")
     @Test
     void updateTeacherUnHappyPath() {
         TeacherDTO teacherDTO = createEthanDTO();
@@ -395,10 +469,10 @@ class TeacherServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+
     @DisplayName("[Happy Path], [Method] = updateAddress")
     @Test
-    void updateAddress() {
-        TeacherDTO teacherDTO = createEthanDTO();
+    void updateAddressHappy() {
         Teacher teacher = createEthan();
         TeacherAddressDTO addressDTO = createAddressDTO();
         TeacherAddress address = createAddress();
@@ -416,6 +490,51 @@ class TeacherServiceImplTest {
         verify(teacherRepository).save(any(Teacher.class));
         verify(addressRepository).save(any(TeacherAddress.class));
     }
+
+
+    @DisplayName("[Unhappy Path], [Method] = updateAddress")
+    @Test
+    void updateAddressUnHappyPath() {
+        TeacherAddressDTO addressDTO = createAddressDTO();
+
+        Throwable ex = catchThrowable(() -> teacherService.updateAddress(1L, addressDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = updateContact")
+    @Test
+    void updateContactHappyPath() {
+        Teacher teacher = createEthan();
+        TeacherContactDTO contactDTO = createContactDTO();
+        TeacherContact contact = createContact();
+        teacher.setContact(contact);
+
+        when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
+
+        TeacherContactDTO returnDTO = teacherService.updateContact(ID, contactDTO);
+
+        assertEquals(returnDTO.getEmail(), EMAIL);
+        assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
+        assertEquals(returnDTO.getEmergencyNumber(), EMERGENCY_NUMBER);
+
+        verify(teacherRepository).save(any(Teacher.class));
+        verify(contactRepository).save(any(TeacherContact.class));
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = updateContact")
+    @Test
+    void updateContactUnHappyPath() {
+        TeacherContactDTO contactDTO = createContactDTO();
+
+        Throwable ex = catchThrowable(() -> teacherService.updateContact(1L, contactDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
     @DisplayName("[Happy Path], [Method] = deleteTeacherById")
     @Test
     void deleteTeacherByIdHappyPath() {
@@ -426,7 +545,8 @@ class TeacherServiceImplTest {
         teacherService.deleteTeacherById(ID);
    }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById, [Reason] = Teacher with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById")
     @Test
     void deleteTeacherByIDUnHappyPath() {
 
@@ -434,6 +554,7 @@ class TeacherServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = removeStudentFromClass")
     @Test
@@ -450,7 +571,8 @@ class TeacherServiceImplTest {
       assertEquals(teacher.getStudentClass().getStudentList().size(), 2);   // That's why im excepting 2 here
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById, [Reason] = Teacher with id 1 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById")
     @Test
     void removeStudentFromClassUnHappyPathTeacher()  {
 
@@ -459,7 +581,8 @@ class TeacherServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById, [Reason] = Student with id 1 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = deleteTeacherById")
     @Test
     void removeStudentFromClassUnHappyPathStudent() {
         Teacher teacher = createEthan();

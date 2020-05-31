@@ -2,20 +2,24 @@ package adrianromanski.restschool.services.person.teacher;
 
 import adrianromanski.restschool.domain.base_entity.address.Address;
 import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
+import adrianromanski.restschool.domain.base_entity.contact.TeacherContact;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.TeacherAddressMapper;
+import adrianromanski.restschool.mapper.base_entity.TeacherContactMapper;
 import adrianromanski.restschool.mapper.event.ExamMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.mapper.person.TeacherMapper;
 import adrianromanski.restschool.model.base_entity.address.TeacherAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.TeacherContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
+import adrianromanski.restschool.repositories.base_entity.ContactRepository;
 import adrianromanski.restschool.repositories.event.ExamRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.repositories.person.TeacherRepository;
@@ -34,11 +38,13 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     private final TeacherRepository teacherRepository;
+    private final AddressRepository addressRepository;
+    private final ContactRepository contactRepository;
     private final StudentRepository studentRepository;
     private final ExamRepository examRepository;
-    private final AddressRepository addressRepository;
     private final TeacherMapper teacherMapper;
     private final TeacherAddressMapper addressMapper;
+    private final TeacherContactMapper contactMapper;
     private final ExamMapper examMapper;
     private final StudentMapper studentMapper;
 
@@ -46,17 +52,22 @@ public class TeacherServiceImpl implements TeacherService {
             .comparing(TeacherDTO::getSubject)
             .thenComparing(TeacherDTO::getYearsOfExperience);
 
-    public TeacherServiceImpl(TeacherRepository teacherRepository, StudentRepository studentRepository, ExamRepository examRepository,
-                              AddressRepository addressRepository, TeacherMapper teacherMapper, TeacherAddressMapper addressMapper, ExamMapper examMapper, StudentMapper studentMapper) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, ContactRepository contactRepository, StudentRepository studentRepository,
+                              ExamRepository examRepository, AddressRepository addressRepository,
+                              TeacherMapper teacherMapper, TeacherAddressMapper addressMapper, TeacherContactMapper contactMapper,
+                              ExamMapper examMapper, StudentMapper studentMapper) {
         this.teacherRepository = teacherRepository;
+        this.contactRepository = contactRepository;
         this.studentRepository = studentRepository;
         this.examRepository = examRepository;
         this.addressRepository = addressRepository;
         this.teacherMapper = teacherMapper;
         this.addressMapper = addressMapper;
+        this.contactMapper = contactMapper;
         this.examMapper = examMapper;
         this.studentMapper = studentMapper;
     }
+
 
     /**
      * @return Teachers sorted by Specialization -> yearsOfExperience
@@ -198,20 +209,39 @@ public class TeacherServiceImpl implements TeacherService {
 
 
     /**
-     * Add Address to Teacher and save to database
+     * Adding Address to Teacher
+     * @throws ResourceNotFoundException if not found
      */
     @Override
     public TeacherAddressDTO addAddressToTeacher(Long teacherID, TeacherAddressDTO teacherAddressDTO) {
         Teacher teacher = teacherRepository
                 .findById(teacherID)
                 .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
-        TeacherAddress address = addressMapper.teacherAddressDTOToTeacherAddress(teacherAddressDTO);
+        TeacherAddress address = addressMapper.addressDTOToAddress(teacherAddressDTO);
             teacher.setAddress(address);
             address.setTeacher(teacher);
         teacherRepository.save(teacher);
         addressRepository.save(address);
         log.info("Address successfully added to Teacher with id: " + teacherID);
-        return addressMapper.teacherAddressToTeacherAddressDTO(address);
+        return addressMapper.addressToAddressDTO(address);
+    }
+
+    /**
+     * Adding Contact to Teacher
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public TeacherContactDTO addContactToTeacher(Long teacherID, TeacherContactDTO contactDTO) {
+        Teacher teacher = teacherRepository
+                .findById(teacherID)
+                .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
+        TeacherContact contact = contactMapper.contactDTOToContact(contactDTO);
+            teacher.setContact(contact);
+            contact.setTeacher(teacher);
+        teacherRepository.save(teacher);
+        contactRepository.save(contact);
+        log.info("Contact successfully added to Teacher with id: " + teacherID);
+        return contactMapper.contactToContactDTO(contact);
     }
 
 
@@ -268,7 +298,7 @@ public class TeacherServiceImpl implements TeacherService {
 
     /**
      * Update Teacher Address with Matching ID, and save it to Database
-     *  @throws ResourceNotFoundException if not found
+     * @throws ResourceNotFoundException if not found
      */
     @Override
     public TeacherAddressDTO updateAddress(Long teacherID, TeacherAddressDTO addressDTO) {
@@ -276,14 +306,34 @@ public class TeacherServiceImpl implements TeacherService {
                 .findById(teacherID)
                 .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
         Address address = teacher.getAddressOptional()
-                .orElseThrow(() -> new ResourceNotFoundException("Address can't be updated"));
-        TeacherAddress updatedAddress = addressMapper.teacherAddressDTOToTeacherAddress(addressDTO);
+                .orElseThrow(() -> new ResourceNotFoundException("Please initialize address before updating"));
+        TeacherAddress updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
             updatedAddress.setId(address.getId());
             teacher.setAddress(updatedAddress);
         teacherRepository.save(teacher);
         addressRepository.save(updatedAddress);
         log.info("Address of Teacher with id: " + teacherID + " successfully updated");
-        return addressMapper.teacherAddressToTeacherAddressDTO(updatedAddress);
+        return addressMapper.addressToAddressDTO(updatedAddress);
+    }
+
+    /**
+     * Update Teacher Contact with Matching ID, and save it to Database
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public TeacherContactDTO updateContact(Long teacherID, TeacherContactDTO contactDTO) {
+        Teacher teacher = teacherRepository
+                .findById(teacherID)
+                .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
+        TeacherContact contact = teacher.getContactOptional()
+                .orElseThrow(() -> new ResourceNotFoundException("Please initialize address before updating"));
+        TeacherContact updatedContact = contactMapper.contactDTOToContact(contactDTO);
+            updatedContact.setId(contact.getId());
+            teacher.setContact(updatedContact);
+        teacherRepository.save(teacher);
+        contactRepository.save(updatedContact);
+        log.info("Contact of Teacher with id: " + teacherID + " successfully updated");
+        return contactMapper.contactToContactDTO(updatedContact);
     }
 
     /**

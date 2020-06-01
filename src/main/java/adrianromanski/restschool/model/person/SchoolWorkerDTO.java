@@ -1,7 +1,6 @@
 package adrianromanski.restschool.model.person;
 
 import adrianromanski.restschool.domain.enums.Gender;
-import adrianromanski.restschool.domain.enums.Subjects;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +14,6 @@ import java.time.LocalDate;
 @MappedSuperclass
 public class SchoolWorkerDTO extends PersonDTO {
 
-    private Subjects subject;
     private LocalDate firstDay;
     private Long yearsOfExperience;
 

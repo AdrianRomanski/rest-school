@@ -17,7 +17,6 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,16 +25,14 @@ import java.util.Optional;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Teacher extends Person {
+public class Teacher extends SchoolWorker {
 
     private Subjects subject;
-    private Long yearsOfExperience;
-    private LocalDate firstDay;
 
     @Builder
-    public Teacher(String firstName, String lastName, Gender gender, LocalDate dateOfBirth, Long age, Subjects subject, LocalDate firstDay) {
-        super(firstName, lastName, gender, dateOfBirth, age);
-        this.firstDay = firstDay;
+    public Teacher(String firstName, String lastName, Gender gender, LocalDate dateOfBirth,
+                   Long age, Long yearsOfExperience, LocalDate firstDay, Subjects subject) {
+        super(firstName, lastName, gender, dateOfBirth, age, yearsOfExperience, firstDay);
         this.subject = subject;
     }
 
@@ -60,14 +57,5 @@ public class Teacher extends Person {
     @OneToMany(mappedBy = "teacher")
     private List<Payment> payments = new ArrayList<>();
 
-    public Long getYearsOfExperience() {
-        if (firstDay != null) {
-            LocalDate now = LocalDate.now();
-            Period period = Period.between(this.firstDay, now);
-            this.yearsOfExperience = (long) period.getYears();
-            return this.yearsOfExperience;
-        } else {
-            return 0L;
-        }
-    }
+
 }

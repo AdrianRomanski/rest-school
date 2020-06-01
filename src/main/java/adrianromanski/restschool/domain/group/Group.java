@@ -10,8 +10,8 @@ import javax.persistence.MappedSuperclass;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @MappedSuperclass
+@NoArgsConstructor
 @AllArgsConstructor
 public class Group extends BaseEntity {
 

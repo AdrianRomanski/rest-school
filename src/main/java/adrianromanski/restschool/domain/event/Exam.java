@@ -1,13 +1,15 @@
 package adrianromanski.restschool.domain.event;
 
-import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.base_entity.Subject;
+import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.person.Teacher;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +30,6 @@ public class Exam extends Event {
     }
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "exams")
-    private List<Student> students = new ArrayList<>();
-
-    @JsonBackReference
     @OneToMany(mappedBy = "exam", cascade = CascadeType.PERSIST)
     private List<ExamResult> results = new ArrayList<>();
 
@@ -41,5 +39,10 @@ public class Exam extends Event {
     @JsonBackReference
     @ManyToOne
     private Teacher teacher;
+
+    @JsonBackReference
+    @ManyToMany(mappedBy = "exams")
+    private List<Student> students = new ArrayList<>();
+
 
 }

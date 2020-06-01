@@ -7,5 +7,5 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class ExamListDTO {
-    List<ExamDTO> examDTOList;
+    private final List<ExamDTO> examDTOList;
 }

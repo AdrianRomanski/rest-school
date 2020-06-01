@@ -9,5 +9,5 @@ import java.util.List;
 @AllArgsConstructor
 public class SportTeamListDTO {
 
-    private List<SportTeamDTO> sportTeamDTOList;
+    private final List<SportTeamDTO> sportTeamDTOList;
 }

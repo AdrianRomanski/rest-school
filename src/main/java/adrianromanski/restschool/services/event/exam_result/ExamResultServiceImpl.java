@@ -136,7 +136,6 @@ public class ExamResultServiceImpl implements ExamResultService {
     public Map<LocalDate, Map<String, List<ExamResultDTO>>> getResultGroupedByDateAndGrade() {
         return examResultRepository.findAll()
                 .stream()
-                .filter(examResult -> examResult.getExam().getTeacher() != null)
                 .map(examResultMapper::examResultToExamResultDTO)
                 .collect(
                         groupingBy(

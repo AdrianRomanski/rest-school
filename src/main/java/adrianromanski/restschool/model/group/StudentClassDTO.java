@@ -3,14 +3,13 @@ package adrianromanski.restschool.model.group;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class StudentClassDTO extends GroupDTO {
 
@@ -23,6 +22,5 @@ public class StudentClassDTO extends GroupDTO {
     }
 
     private TeacherDTO teacherDTO;
-
     private List<StudentDTO> studentDTOList = new ArrayList<>();
 }

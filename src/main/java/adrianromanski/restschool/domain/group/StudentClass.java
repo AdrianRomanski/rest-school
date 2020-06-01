@@ -12,8 +12,9 @@ import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @Entity
+@Setter
+@Getter
 @NoArgsConstructor
 public class StudentClass extends Group {
 

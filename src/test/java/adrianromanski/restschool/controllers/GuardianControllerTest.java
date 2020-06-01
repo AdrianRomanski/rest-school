@@ -22,8 +22,8 @@ import static adrianromanski.restschool.controllers.AbstractRestControllerTest.a
 import static adrianromanski.restschool.domain.enums.LastName.COOPER;
 import static adrianromanski.restschool.domain.enums.LastName.HENDERSON;
 import static adrianromanski.restschool.domain.enums.MaleName.ETHAN;
-import static org.hamcrest.Matchers.*;
-
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -91,6 +91,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
+
     @DisplayName("[GET], [Happy Path], [Method] = getGuardianByFirstAndLastName")
     @Test
     void getGuardianByFirstAndLastName() throws Exception {
@@ -129,6 +130,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.22", hasSize(3)));
     }
 
+
     @DisplayName("[GET], [Happy Path], [Method] = getAllStudentsForGuardian")
     @Test
     void getStudentsForGuardian() throws Exception {
@@ -150,7 +152,7 @@ class GuardianControllerTest {
     void createNewGuardian() throws Exception {
         GuardianDTO guardianDTO = createEthan();
 
-        when(guardianService.createNewGuardian(guardianDTO)).thenReturn(guardianDTO);
+        when(guardianService.createNewGuardian(any(GuardianDTO.class))).thenReturn(guardianDTO);
 
         mockMvc.perform(post(GUARDIANS)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -160,6 +162,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
                 .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
+
 
     @DisplayName("[PUT], [Happy Path], [Method] = updateGuardian")
     @Test
@@ -179,6 +182,7 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
     }
 
+
     @DisplayName("[DELETE], [Happy Path], [Method] = deleteGuardianByID")
     @Test
     void deleteGuardian() throws Exception {
@@ -188,6 +192,7 @@ class GuardianControllerTest {
 
         verify(guardianService).deleteGuardianByID(ID);
     }
+
 
     @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Guardian with id 222 not found")
     @Test

@@ -8,6 +8,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class GuardianListDTO {
-
-    List<GuardianDTO> guardianDTOList;
+   private final List<GuardianDTO> guardianDTOList;
 }

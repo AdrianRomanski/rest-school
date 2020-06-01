@@ -3,14 +3,13 @@ package adrianromanski.restschool.model.group;
 import adrianromanski.restschool.domain.enums.Sport;
 import adrianromanski.restschool.model.person.StudentDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class SportTeamDTO extends GroupDTO{
 

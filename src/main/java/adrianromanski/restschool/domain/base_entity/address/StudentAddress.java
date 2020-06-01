@@ -2,14 +2,17 @@ package adrianromanski.restschool.domain.base_entity.address;
 
 import adrianromanski.restschool.domain.person.Student;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
-@Data
+
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 public class StudentAddress extends Address {
 

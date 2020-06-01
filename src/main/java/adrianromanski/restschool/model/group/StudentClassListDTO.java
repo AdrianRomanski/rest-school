@@ -9,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class StudentClassListDTO {
 
-    private List<StudentClassDTO> studentClasses;
+    private final List<StudentClassDTO> studentClasses;
 
 }

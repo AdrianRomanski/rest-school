@@ -5,15 +5,14 @@ import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ExamDTO extends Event {
 

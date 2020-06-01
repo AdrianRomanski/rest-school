@@ -2,14 +2,20 @@ package adrianromanski.restschool.domain.person;
 
 import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
 import adrianromanski.restschool.domain.base_entity.contact.TeacherContact;
+import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.event.Payment;
 import adrianromanski.restschool.domain.group.StudentClass;
-import adrianromanski.restschool.domain.enums.Gender;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
@@ -18,8 +24,8 @@ import java.util.Optional;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
+@NoArgsConstructor
 public class Teacher extends Person {
 
     private Subjects subject;
@@ -33,6 +39,9 @@ public class Teacher extends Person {
         this.subject = subject;
     }
 
+    @OneToOne
+    private StudentClass studentClass;
+
     @OneToOne(cascade={CascadeType.ALL})
     private TeacherAddress address;
 
@@ -45,18 +54,11 @@ public class Teacher extends Person {
 
     public Optional<TeacherContact> getContactOptional() { return Optional.ofNullable(this.contact); }
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "teacher")
     private List<Exam> exams = new ArrayList<>();
 
-    @ToString.Exclude
-    @OneToOne
-    private StudentClass studentClass;
-
-    @ToString.Exclude
     @OneToMany(mappedBy = "teacher")
     private List<Payment> payments = new ArrayList<>();
-
 
     public Long getYearsOfExperience() {
         if (firstDay != null) {

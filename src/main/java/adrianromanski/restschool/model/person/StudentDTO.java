@@ -2,25 +2,25 @@ package adrianromanski.restschool.model.person;
 
 
 import adrianromanski.restschool.domain.enums.Gender;
-import adrianromanski.restschool.model.base_entity.address.AddressDTO;
-import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
-import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.base_entity.SubjectDTO;
+import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
 import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.group.SportTeamDTO;
 import adrianromanski.restschool.model.group.StudentClassDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class StudentDTO extends PersonDTO {
 
@@ -30,7 +30,6 @@ public class StudentDTO extends PersonDTO {
     }
 
     private StudentContactDTO contactDTO;
-
     private StudentAddressDTO addressDTO;
 
     @JsonIgnore

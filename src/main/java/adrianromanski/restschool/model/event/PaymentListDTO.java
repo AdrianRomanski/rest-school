@@ -8,6 +8,5 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class PaymentListDTO {
-
-    private List<PaymentDTO> paymentDTOList;
+    private final List<PaymentDTO> paymentDTOList;
 }

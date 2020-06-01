@@ -9,9 +9,9 @@ import javax.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"students"})
-@Data
 @Entity
+@Setter
+@Getter
 @NoArgsConstructor
 public class SportTeam extends Group {
 
@@ -23,7 +23,6 @@ public class SportTeam extends Group {
         this.sport = sport;
     }
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "sportTeam")
     private List<Student> students = new ArrayList<>();
 

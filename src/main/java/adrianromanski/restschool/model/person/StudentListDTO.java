@@ -7,6 +7,5 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class StudentListDTO {
-    List<StudentDTO> students;
-
+    private final List<StudentDTO> students;
 }

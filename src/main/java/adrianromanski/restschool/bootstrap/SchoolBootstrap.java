@@ -230,14 +230,14 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
 
         // Assign result
-        jacob.getExams().get(0).addResult(jacobResultMath);
-        jacob.getExams().get(1).addResult(jacobResultBiology);
+        jacob.getExams().get(0).getResults().add(jacobResultMath);
+        jacob.getExams().get(1).getResults().add(jacobResultBiology);
 
-        ethan.getExams().get(0).addResult(ethanResultMath);
-        ethan.getExams().get(1).addResult(ethanResultBiology);
+        ethan.getExams().get(0).getResults().add(ethanResultMath);
+        ethan.getExams().get(1).getResults().add(ethanResultBiology);
 
-        charlotte.getExams().get(0).addResult(charlotteResultMath);
-        charlotte.getExams().get(1).addResult(charlotteResultBiology);
+        charlotte.getExams().get(0).getResults().add(charlotteResultMath);
+        charlotte.getExams().get(1).getResults().add(charlotteResultBiology);
 
         // Assign Student and Teacher to Class
         physicsClass.setTeacher(isaac_biology);
@@ -297,17 +297,16 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
 
 
 
-        // Logging to console
 
-//        log.info("Saved: " + guardianRepository.count() + " Guardians");
-//        log.info("Saved: " + teacherRepository.count() + " Teachers");
-//        log.info("Saved: " + subjectRepository.count() + " Subjects");
-//        log.info("Saved: " + examRepository.count() + " Exams");
-//        log.info("Saved: " + examResultRepository.count() + " Exam Results");
-//        log.info("Saved: " + studentClassRepository.count() + " Student Classes");
-//        log.info("Saved: " + sportTeamRepository.count() + " Sport Teams");
-//        log.info("Saved: " + contactRepository.count() + " Contacts");
-//        log.info("Saved: " + addressRepository.count() + " Addresses");
-//        log.info("Saved: " + studentRepository.count() + " Students");
+//      Logging to console
+        log.info("Saved: " + guardianRepository.count() + " Guardians");
+        log.info("Saved: " + teacherRepository.count() + " Teachers");
+        log.info("Saved: " + subjectRepository.count() + " Subjects");
+        log.info("Saved: " + examRepository.count() + " Exams");
+        log.info("Saved: " + examResultRepository.count() + " Exam Results");
+        log.info("Saved: " + studentClassRepository.count() + " Student Classes");
+        log.info("Saved: " + sportTeamRepository.count() + " Sport Teams");
+        log.info("Saved: " + studentRepository.count() + " Students");
+
     }
 }

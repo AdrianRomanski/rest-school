@@ -8,6 +8,7 @@ import java.util.Map;
 
 public interface ExamResultService {
 
+    // GET
     List<ExamResultDTO> getAllExamResults();
 
     ExamResultDTO getExamResultByID(Long id);
@@ -24,10 +25,13 @@ public interface ExamResultService {
 
     Map<LocalDate, Map<String, List<ExamResultDTO>>> getResultGroupedByDateAndGrade();
 
+    // POST
     ExamResultDTO createExamResult(ExamResultDTO examResultDTO);
 
+    // PUT
     ExamResultDTO updateExamResult(Long id, ExamResultDTO examResultDTO);
 
+    // DELETE
     void deleteExamResultByID(Long id);
 
 

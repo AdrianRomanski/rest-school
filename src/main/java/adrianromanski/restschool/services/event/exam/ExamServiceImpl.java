@@ -52,7 +52,7 @@ public class ExamServiceImpl implements ExamService {
         return examRepository
                 .findById(id)
                 .map(examMapper::examToExamDTO)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException(id, Exam.class));
     }
 
     /**
@@ -64,7 +64,7 @@ public class ExamServiceImpl implements ExamService {
         return examRepository
                 .getByName(name)
                 .map(examMapper::examToExamDTO)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException(name, Exam.class));
     }
 
     /**

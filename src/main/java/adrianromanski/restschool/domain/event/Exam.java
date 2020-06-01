@@ -12,10 +12,11 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-@EqualsAndHashCode(exclude = {"students", "subject", "results", "teacher"})
-@Data
-@NoArgsConstructor
+
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
 public class Exam extends Event {
 
     private Long maxPoints;
@@ -27,12 +28,10 @@ public class Exam extends Event {
     }
 
     @JsonBackReference
-    @ToString.Exclude
     @ManyToMany(mappedBy = "exams")
     private List<Student> students = new ArrayList<>();
 
     @JsonBackReference
-    @ToString.Exclude
     @OneToMany(mappedBy = "exam", cascade = CascadeType.PERSIST)
     private List<ExamResult> results = new ArrayList<>();
 
@@ -43,7 +42,4 @@ public class Exam extends Event {
     @ManyToOne
     private Teacher teacher;
 
-    public void addResult(ExamResult examResult) {
-        this.results.add(examResult);
-    }
 }

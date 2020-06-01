@@ -13,9 +13,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-
-
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -51,7 +50,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     public ExamResultDTO getExamResultByID(Long id) {
         return examResultRepository.findById(id)
                 .map(examResultMapper::examResultToExamResultDTO)
-                .orElseThrow(ResourceNotFoundException::new);
+                .orElseThrow(() -> new ResourceNotFoundException(id, ExamResult.class));
     }
 
 
@@ -67,6 +66,7 @@ public class ExamResultServiceImpl implements ExamResultService {
                 .collect(toList());
     }
 
+
     /**
      * @return All Exam Result with Grade F
      */
@@ -78,6 +78,7 @@ public class ExamResultServiceImpl implements ExamResultService {
                 .map(examResultMapper::examResultToExamResultDTO)
                 .collect(toList());
     }
+
 
     /**
      * @param subjectName of ExamResult
@@ -92,6 +93,7 @@ public class ExamResultServiceImpl implements ExamResultService {
                 .map(examResultMapper::examResultToExamResultDTO)
                 .collect(toList());
     }
+
 
     /**
      * @param subjectName of ExamResult
@@ -109,7 +111,7 @@ public class ExamResultServiceImpl implements ExamResultService {
 
 
     /**
-     * @return Exam Results grouped by -> Grade -> Exam Name
+     * @return Exam Results grouped by Grade and Name
      */
     @Override
     public Map<String, Map<String, List<ExamResultDTO>>> getResultsGroupedByGradeAndName() {
@@ -126,8 +128,9 @@ public class ExamResultServiceImpl implements ExamResultService {
                 );
     }
 
+
     /**
-     * @return Exam Results grouped by -> Date -> Grade
+     * @return Exam Results grouped by Date and Grade
      */
     @Override
     public Map<LocalDate, Map<String, List<ExamResultDTO>>> getResultGroupedByDateAndGrade() {
@@ -148,7 +151,7 @@ public class ExamResultServiceImpl implements ExamResultService {
 
 
     /**
-     * @param examResultDTO body to be saved
+     * @param examResultDTO to save
      * @return examResultDTO if successfully saved
      */
     @Override
@@ -167,18 +170,14 @@ public class ExamResultServiceImpl implements ExamResultService {
      */
     @Override
     public ExamResultDTO updateExamResult(Long id, ExamResultDTO examResultDTO) {
-        if(examResultRepository.findById(id).isPresent()) {
-            ExamResult examResult = examResultMapper.examResultDTOToExamResult(examResultDTO);
-            examResult.setId(id);
-            examResultRepository.save(examResult);
-            log.info("Exam Result with id: " + id + " successfully saved to database");
-            return examResultMapper.examResultToExamResultDTO(examResult);
-        } else {
-            log.debug("Exam Result with id: " + id + " not found");
-            throw new ResourceNotFoundException("Exam Result with id: " + id + " not found");
+        examResultRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, ExamResult.class));
+        ExamResult updatedResult = examResultMapper.examResultDTOToExamResult(examResultDTO);
+        updatedResult.setId(id);
+        examResultRepository.save(updatedResult);
+        log.info("Exam Result with id: " + id + " successfully updated");
+        return examResultMapper.examResultToExamResultDTO(updatedResult);
         }
-
-    }
 
 
     /**
@@ -187,14 +186,9 @@ public class ExamResultServiceImpl implements ExamResultService {
      */
     @Override
     public void deleteExamResultByID(Long id) {
-        if(examResultRepository.findById(id).isPresent()) {
-            examResultRepository.deleteById(id);
-            log.info("Exam Result with id: " + id + " successfully deleted");
-        } else {
-            log.debug("Exam Result with id: " + id + " not found");
-            throw new ResourceNotFoundException("Exam Result with id: " + id + " not found");
-        }
+        examResultRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, ExamResult.class));
+        examResultRepository.deleteById(id);
+        log.info("Exam Result with id: " + id + " successfully deleted");
     }
-
-
 }

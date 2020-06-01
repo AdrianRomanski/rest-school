@@ -80,6 +80,7 @@ class ExamResultServiceImplTest {
                              initExamResult(50, MATHEMATICS.get()), initExamResult(60,MATHEMATICS.get()));
     }
 
+
     @DisplayName("[Happy Path], [Method] = getAllExams")
     @Test
     void getAllExamResults() {
@@ -92,9 +93,10 @@ class ExamResultServiceImplTest {
         assertEquals(returnDTO.size(), 4);
     }
 
+
     @DisplayName("[Happy Path], [Method] = getExamResultByID")
     @Test
-    void getExamResultByID() {
+    void getExamResultByIDHappyPath() {
         ExamResult examResult = initBiology();
 
         when(examResultRepository.findById(anyLong())).thenReturn(Optional.of(examResult));
@@ -104,6 +106,16 @@ class ExamResultServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
         assertEquals(returnDTO.getName(), BIOLOGY.get());
     }
+
+    
+    @DisplayName("[Unhappy Path], [Method] = getExamResultByID")
+    @Test
+    void getExamResultByIDUnHappyPath() {
+        Throwable ex = catchThrowable(() -> examResultService.getExamResultByID(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
 
     @DisplayName("[Happy Path], [Method] = getAllPassedExamResults")
     @Test
@@ -116,6 +128,7 @@ class ExamResultServiceImplTest {
 
         assertEquals(returnDTO.size(), 3);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getAllPassedExamResults")
     @Test
@@ -142,6 +155,7 @@ class ExamResultServiceImplTest {
         assertEquals(returnDTO.size(), 1);
     }
 
+
     @DisplayName("[Happy Path], [Method] = getAllNotPassedForSubject")
     @Test
     void getAllNotPassedForSubject() {
@@ -153,6 +167,7 @@ class ExamResultServiceImplTest {
 
         assertEquals(returnDTO.size(), 1);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getResultsGroupedByGradeAndName")
     @Test
@@ -169,6 +184,7 @@ class ExamResultServiceImplTest {
         assertTrue(returnDTO.containsKey("C"));
         assertEquals(returnDTO.get("F").get(BIOLOGY.get()).size(), 1);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getResultGroupedByDateAndGrade")
     @Test
@@ -201,6 +217,7 @@ class ExamResultServiceImplTest {
         assertEquals(returnDTO.getScore(), SCORE);
     }
 
+
     @DisplayName("[Happy Path], [Method] = updateExamResult")
     @Test
     void updateExamResult() {
@@ -218,7 +235,8 @@ class ExamResultServiceImplTest {
         assertEquals(returnDTO.getScore(), SCORE);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = updateExamResult, [Reason] = Student Class with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = updateExamResult")
     @Test
     void updateExamResultUnHappyPath() {
         ExamResultDTO examResultDTO = initExamResultDTO();
@@ -227,6 +245,7 @@ class ExamResultServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = deleteExamResultByID")
     @Test
@@ -240,10 +259,10 @@ class ExamResultServiceImplTest {
         verify(examResultRepository, times(1)).deleteById(anyLong());
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteExamResultByID, [Reason] = Student Class with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = deleteExamResultByID")
     @Test
     void deleteExamResultByIDUnHappyPath() {
-
         Throwable ex = catchThrowable(() -> examResultService.deleteExamResultByID(222L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);

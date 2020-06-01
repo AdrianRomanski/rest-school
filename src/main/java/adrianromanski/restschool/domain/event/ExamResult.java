@@ -6,9 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.time.LocalDate;
 
-@EqualsAndHashCode(exclude = {"exam"})
+
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ExamResult extends Event {
 
@@ -30,6 +31,7 @@ public class ExamResult extends Event {
         setGrade(score);
     }
 
+    // I Could do it more OOP
     private void setGrade(float score) {
         if(this.exam != null && score >= 0 && score <= this.exam.getMaxPoints()) {
             Long maxPoints = this.exam.getMaxPoints();

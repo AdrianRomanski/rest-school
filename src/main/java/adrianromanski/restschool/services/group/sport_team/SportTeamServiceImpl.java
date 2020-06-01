@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -34,38 +35,43 @@ public class SportTeamServiceImpl implements SportTeamService {
     @Override
     public List<SportTeamDTO> getAllSportTeam() {
         return sportTeamRepository.findAll()
-                            .stream()
-                            .map(sportTeamMapper::sportTeamToSportTeamDTO)
-                            .collect(toList());
+                .stream()
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .collect(toList());
     }
 
 
     /**
-     * @return Sport Team with matching id
+     * @param id of the SportTeam to be found
+     * @return SportTeam with matching id
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public SportTeamDTO getSportTeamById(Long id) {
-        return sportTeamMapper.sportTeamToSportTeamDTO(sportTeamRepository
-                            .findById(id)
-                            .orElseThrow(ResourceNotFoundException::new));
+        return sportTeamRepository
+                .findById(id)
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(id, SportTeam.class));
     }
 
 
     /**
+     * @param name of the SportTeam to be found
      * @return Sport Team with matching name
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public SportTeamDTO getSportTeamByName(String name) {
-        return sportTeamRepository.getSportTeamByName(name)
-                            .map(sportTeamMapper::sportTeamToSportTeamDTO)
-                            .orElseThrow(ResourceNotFoundException::new);
+        return sportTeamRepository
+                .getSportTeamByName(name)
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(name, SportTeam.class));
     }
 
 
     /**
-     * @return  List of Sport Teams with matching president
+     * @param president name
+     * @return List of Sport Teams with matching president
      */
     @Override
     public List<SportTeamDTO> getSportTeamByPresident(String president) {
@@ -78,25 +84,39 @@ public class SportTeamServiceImpl implements SportTeamService {
 
 
     /**
-     * @return Map where they key is Matching Sport and values Lists of Sport Teams grouped by President
+     * @return Sport teams grouped by total of Students
      */
     @Override
-    public Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsForSport(Sport sport) {
-        return  sportTeamRepository.findAll()
+    public Map<Integer, List<SportTeamDTO>> getSportTeamsByStudentsSize() {
+        return sportTeamRepository.findAll()
                 .stream()
-                .filter(s -> s.getSport().equals(sport))
                 .map(sportTeamMapper::sportTeamToSportTeamDTO)
                 .collect(groupingBy(
-                        SportTeamDTO::getSport,
-                        groupingBy(
-                                SportTeamDTO::getPresident
-                        )
+                        SportTeamDTO::getStudentsSize
                 ));
     }
 
 
     /**
-     * @return Map where the keys are Sports and values Lists of Sport Teams grouped by President
+     * @param sport name
+     * @return Sport Teams with matching sport grouped president
+     */
+    @Override
+    public Map<String, List<SportTeamDTO>> getTeamsForSport(Sport sport) {
+        return  sportTeamRepository.findAll()
+                .stream()
+                .filter(s -> s.getSport().equals(sport))
+                .map(sportTeamMapper::sportTeamToSportTeamDTO)
+                .collect(groupingBy(
+                                SportTeamDTO::getPresident
+                        )
+                );
+    }
+
+
+    /**
+     * @return Sport Teams grouped by Sport
+     * @see Sport
      */
     @Override
     public Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsGroupedBySport() {
@@ -114,22 +134,9 @@ public class SportTeamServiceImpl implements SportTeamService {
 
 
     /**
-     * @return Map where the keys are numbers of Students and values Lists of Sport Teams
-     */
-    @Override
-    public Map<Integer, List<SportTeamDTO>> getSportTeamsByStudentsSize() {
-        return sportTeamRepository.findAll()
-                .stream()
-                .map(sportTeamMapper::sportTeamToSportTeamDTO)
-                .collect(groupingBy(
-                        SportTeamDTO::getStudentsSize
-                ));
-    }
-
-
-    /**
-     * Converts DTO Object and Save it to Database
-     * @return SportTeamDTO object
+     * @param sportTeamDTO
+     * Save Sport Team to Database
+     * @return Sport Team after saving it to database
      */
     @Override
     public SportTeamDTO createNewSportTeam(SportTeamDTO sportTeamDTO) {
@@ -140,37 +147,32 @@ public class SportTeamServiceImpl implements SportTeamService {
 
 
     /**
-     * Converts DTO Object, Update Sport Team with Matching ID and save it to Database
-     * @return SportTeamDTO object if the Sport Team  was successfully saved
+     * @param id of Sport Team  to be updated
+     * @param sportTeamDTO Object to save
+     * @return Updated Sport Team if successfully saved
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public SportTeamDTO updateSportTeam(SportTeamDTO sportTeamDTO, Long id) {
-        if(sportTeamRepository.findById(id).isPresent()) {
+            sportTeamRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException(id, SportTeam.class));
             SportTeam updated = sportTeamMapper.sportTeamDTOToSportTeam(sportTeamDTO);
             updated.setId(id);
             sportTeamRepository.save(updated);
             log.info("Sport Team with id: " + id + " successfully updated");
             return sportTeamMapper.sportTeamToSportTeamDTO(updated);
-        } else {
-            log.debug("Sport Team id: " + id + " not found");
-            throw new ResourceNotFoundException("Sport Team with id: " + id + " not found");
-        }
     }
 
 
     /**
-     * Delete Sport Team with matching id
+     * @param id of Sport Team to be deleted
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public void deleteSportTeamById(Long id) {
-        if(sportTeamRepository.findById(id).isPresent()) {
-            sportTeamRepository.deleteById(id);
-            log.info("Sport Team with id: " + id + " successfully deleted");
-        } else {
-            log.debug("Sport Team id: " + id + " not found");
-            throw new ResourceNotFoundException("Sport Team with id: " + id + " not found");
-        }
+        sportTeamRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, SportTeam.class));
+        sportTeamRepository.deleteById(id);
+        log.info("Sport Team with id: " + id + " successfully deleted");
     }
 }

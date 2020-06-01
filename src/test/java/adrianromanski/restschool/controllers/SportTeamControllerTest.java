@@ -56,7 +56,13 @@ class SportTeamControllerTest {
         return Arrays.asList(initSportTeamDTO(), initSportTeamDTO());
     }
 
-    private Map<Sport, Map<String, List<SportTeamDTO>>> getSportTeamMap() {
+    private Map<String, List<SportTeamDTO>> getSportTeamMapSmall() {
+        Map<String, List<SportTeamDTO>> map = new HashMap<>();
+        map.put(ISAAC.get(), getListOfTeams());
+        return map;
+    }
+
+    private Map<Sport, Map<String, List<SportTeamDTO>>> getSportTeamMapBig() {
         Map<Sport, Map<String, List<SportTeamDTO>>> map = new HashMap<>();
         Map<String, List<SportTeamDTO>> nestedMapFootball = new HashMap<>();
         Map<String, List<SportTeamDTO>> nestedMapBasketball = new HashMap<>();
@@ -76,7 +82,8 @@ class SportTeamControllerTest {
                                             .build();
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getAllSportTeam, [Expected] = List containing 3 Sport Teams")
+
+    @DisplayName("[GET], [Happy Path], [Method] = getAllSportTeam")
     @Test
     void getAllSportTeam() throws Exception {
         List<SportTeamDTO> sportTeamList = Arrays.asList(initSportTeamDTO(), initSportTeamDTO(), initSportTeamDTO());
@@ -91,7 +98,8 @@ class SportTeamControllerTest {
                 .andExpect(jsonPath("$.sportTeamDTOList", hasSize(3)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getSportTeamById, [Expected] = SportTeamDTO with matching fields")
+
+    @DisplayName("[GET], [Happy Path], [Method] = getSportTeamById")
     @Test
     void getSportTeamById() throws Exception {
         SportTeamDTO sportTeamDTO = initSportTeamDTO();
@@ -107,7 +115,8 @@ class SportTeamControllerTest {
                 .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getSportTeamByName, [Expected] = SportTeamDTO with matching fields")
+
+    @DisplayName("[GET], [Happy Path], [Method] = getSportTeamByName")
     @Test
     void getSportTeamByName() throws Exception {
         SportTeamDTO sportTeamDTO = initSportTeamDTO();
@@ -123,6 +132,8 @@ class SportTeamControllerTest {
                 .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
+
+    @DisplayName("[GET], [Happy Path], [Method] = getSportTeamByPresident")
     @Test
     void getSportTeamByPresident() throws Exception {
         List<SportTeamDTO> list = getListOfTeams();
@@ -137,10 +148,11 @@ class SportTeamControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getTeamsForSport, [Expected] = Map with one key that holds 2 Sport Teams")
+
+    @DisplayName("[GET], [Happy Path], [Method] = getTeamsForSport")
     @Test
     void getTeamsForSport() throws Exception {
-        Map<Sport, Map<String, List<SportTeamDTO>>> map = getSportTeamMap();
+        Map<String, List<SportTeamDTO>> map = getSportTeamMapSmall();
 
         when(sportTeamService.getTeamsForSport(any(Sport.class))).thenReturn(map);
 
@@ -149,13 +161,14 @@ class SportTeamControllerTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .content(asJsonString(map)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.FOOTBALL.Isaac", hasSize(2)));
+                .andExpect(jsonPath("$.Isaac", hasSize(2)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getTeamsGroupedBySport, [Expected] = Map with 2 keys")
+
+    @DisplayName("[GET], [Happy Path], [Method] = getTeamsGroupedBySport")
     @Test
     void getTeamsGroupedBySport() throws Exception {
-        Map<Sport, Map<String, List<SportTeamDTO>>> map = getSportTeamMap();
+        Map<Sport, Map<String, List<SportTeamDTO>>> map = getSportTeamMapBig();
 
         when(sportTeamService.getTeamsGroupedBySport()).thenReturn(map);
 
@@ -168,7 +181,8 @@ class SportTeamControllerTest {
                 .andExpect(jsonPath("$.BASKETBALL.Sebastian", hasSize(3)));
     }
 
-    @DisplayName("[GET], [Happy Path], [Method] = getSportTeamsByStudentsSize, [Expected] = Map with one key and 2 values")
+
+    @DisplayName("[GET], [Happy Path], [Method] = getSportTeamsByStudentsSize")
     @Test
     void getSportTeamsByStudentsSize() throws Exception {
         Map<Integer, List<SportTeamDTO>> map = new HashMap<>();
@@ -185,8 +199,7 @@ class SportTeamControllerTest {
     }
 
 
-
-    @DisplayName("[POST], [Happy Path], [Method] = createNewSportTeam, [Expected] = SportTeamDTO with matching fields")
+    @DisplayName("[POST], [Happy Path], [Method] = createNewSportTeam")
     @Test
     void createNewSportTeam() throws Exception {
         SportTeamDTO returnDTO = initSportTeamDTO();
@@ -203,7 +216,7 @@ class SportTeamControllerTest {
     }
 
 
-    @DisplayName("[PUT], [Happy Path], [Method] = updateSportTeam, [Expected] = SportTeamDTO with updated fields")
+    @DisplayName("[PUT], [Happy Path], [Method] = updateSportTeam")
     @Test
     void updateSportTeam() throws Exception {
         SportTeamDTO returnDTO = initSportTeamDTO();
@@ -219,7 +232,8 @@ class SportTeamControllerTest {
                 .andExpect(jsonPath("$.president", equalTo(ISAAC.get())));
     }
 
-    @DisplayName("[DELETE], [Happy Path], [Method] = deleteGuardianByID, [Expected] = sportTeamService deleting team")
+
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteGuardianByID")
     @Test
     void deleteSportTeamById() throws Exception {
 
@@ -231,7 +245,8 @@ class SportTeamControllerTest {
         verify(sportTeamService, times(1)).deleteSportTeamById(ID);
     }
 
-    @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Sport Team with id 222 not found")
+
+    @DisplayName("[GET, PUT, DELETE], [Unhappy Path]")
     @Test
     public void testNotFoundException() throws Exception {
 

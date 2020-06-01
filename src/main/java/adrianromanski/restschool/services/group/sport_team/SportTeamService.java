@@ -8,23 +8,27 @@ import java.util.Map;
 
 public interface SportTeamService {
 
+    // GET
     List<SportTeamDTO> getAllSportTeam();
 
     SportTeamDTO getSportTeamById(Long id);
 
     SportTeamDTO getSportTeamByName(String name);
 
-    Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsForSport(Sport sport);
-
-    Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsGroupedBySport();
+    List<SportTeamDTO> getSportTeamByPresident(String president);
 
     Map<Integer, List<SportTeamDTO>> getSportTeamsByStudentsSize();
 
-    List<SportTeamDTO> getSportTeamByPresident(String president);
+    Map<String, List<SportTeamDTO>> getTeamsForSport(Sport sport);
 
+    Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsGroupedBySport();
+
+    // POST
     SportTeamDTO createNewSportTeam(SportTeamDTO sportTeamDTO);
 
+    // UPDATE
     SportTeamDTO updateSportTeam(SportTeamDTO sportTeamDTO, Long id);
 
+    // DELETE
     void deleteSportTeamById(Long id);
 }

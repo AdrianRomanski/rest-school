@@ -54,7 +54,7 @@ public class SportTeamController {
     @ApiOperation("Returns Map where they key is Matching Sport and values Lists of Sport Teams grouped by President")
     @GetMapping("sport-{sport}")
     @ResponseStatus(HttpStatus.OK)
-    public Map<Sport, Map<String, List<SportTeamDTO>>> getTeamsForSport(@PathVariable String sport) {
+    public Map<String, List<SportTeamDTO>> getTeamsForSport(@PathVariable String sport) {
         return sportTeamService.getTeamsForSport(Sport.valueOf(sport));
     }
 

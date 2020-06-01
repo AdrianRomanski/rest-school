@@ -116,11 +116,10 @@ class SportTeamServiceImplTest {
 
         when(sportTeamRepository.findAll()).thenReturn(sportTeams);
 
-        Map<Sport, Map<String, List<SportTeamDTO>>> returnDTO = sportTeamService.getTeamsForSport(FOOTBALL);
+        Map<String, List<SportTeamDTO>> returnDTO = sportTeamService.getTeamsForSport(FOOTBALL);
 
         assertEquals(returnDTO.size(), 1);
-        assertTrue(returnDTO.containsKey(FOOTBALL));
-        assertEquals(returnDTO.get(FOOTBALL).get(ETHAN.get()).size(), 2); // Checking if the List contains 2 Football Teams
+        assertEquals(returnDTO.get(ETHAN.get()).size(), 2); // Checking if the List contains 2 Football Teams
     }
 
     @DisplayName("[Happy Path], [Method] = getAllTeamsGroupedBySport")

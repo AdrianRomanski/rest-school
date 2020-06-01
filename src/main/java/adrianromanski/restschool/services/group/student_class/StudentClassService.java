@@ -11,6 +11,7 @@ import java.util.Map;
 
 public interface StudentClassService {
 
+    // GET
     List<StudentClassDTO> getAllStudentClasses();
 
     StudentClassDTO getStudentClassByID(Long id);
@@ -27,21 +28,16 @@ public interface StudentClassService {
 
     Map<Gender, List<StudentDTO>> getAllStudentsForClass(Long id);
 
+    // POST
     StudentClassDTO createNewStudentClass(StudentClassDTO studentClassDTO);
 
+    // PUT
     StudentClassDTO updateStudentClass(Long id, StudentClassDTO studentClassDTO);
 
+    // DELETE
     void deleteStudentClassById(Long id);
 
-    // To do Later
-
-//    StudentClassDTO getStudentClassForTeacher(TeacherDTO teacherDTO);
-
-//    StudentClassDTO getStudentClassForStudent(StudentDTO studentDTO);
-
 //    List<StudentClassDTO> getAllStudentClassesForSchoolYear(SchoolYear schoolYear); // i have to create SchoolYear
-
-
 
 
 }

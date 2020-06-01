@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
@@ -35,14 +34,8 @@ public class StudentClassServiceImpl implements StudentClassService {
         this.studentMapper = studentMapper;
     }
 
-//    Predicate<StudentDTO> firstNameNotNull = s -> s.getFirstName() != null;
-//    Predicate<StudentDTO> lastNameNotNull = s -> s.getLastName() != null;
-//    Predicate<StudentClass> presidentNotNull = studentClass -> studentClass.getPresident() != null;
-//    Predicate<StudentClassDTO> specNotNull = sc -> sc.getSpecialization() != null;
-//    Predicate<StudentClassDTO> nameNotNul = sc -> sc.getName() != null;
-
     Comparator<StudentDTO> studentComparator = Comparator.comparing(StudentDTO::getFirstName)
-            .thenComparing(StudentDTO::getLastName);
+                                                                .thenComparing(StudentDTO::getLastName);
 
     /**
      * @return all Student Classes
@@ -50,31 +43,34 @@ public class StudentClassServiceImpl implements StudentClassService {
     @Override
     public List<StudentClassDTO> getAllStudentClasses() {
         return studentClassRepository.findAll()
-                        .stream()
-                        .map(studentClassMapper::StudentClassToStudentClassDTO)
-                        .collect(Collectors.toList());
+                .stream()
+                .map(studentClassMapper::StudentClassToStudentClassDTO)
+                .collect(Collectors.toList());
     }
 
 
     /**
+     * @param id of StudentClass
      * @return Student Class with matching id
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public StudentClassDTO getStudentClassByID(Long id) {
-        return studentClassMapper.StudentClassToStudentClassDTO(studentClassRepository
-                                                    .findById(id)
-                                                    .orElseThrow(ResourceNotFoundException::new));
+        return studentClassRepository.findById(id)
+                .map(studentClassMapper::StudentClassToStudentClassDTO)
+                .orElseThrow(() -> new ResourceNotFoundException(id, StudentClass.class));
+
     }
 
+
     /**
+     * @param president name of the Class or either classes
      * @return a List of Student Classes with matching president
      */
     @Override
     public List<StudentClassDTO> getStudentClassByPresident(String president) {
         return studentClassRepository.findAll()
                 .stream()
-//                .filter(presidentNotNull)
                 .filter(studentClass -> studentClass.getPresident().equals(president))
                 .map(studentClassMapper::StudentClassToStudentClassDTO)
                 .collect(Collectors.toList());
@@ -82,7 +78,7 @@ public class StudentClassServiceImpl implements StudentClassService {
 
 
     /**
-     * @return Map where the keys are Specializations and values maps containing Student Classes grouped by name
+     * @return StudentClasses grouped Specializations and Names
      */
     @Override
     public Map<Subjects, Map<String, List<StudentClassDTO>>> getStudentClassesGroupedBySpecialization() {
@@ -90,7 +86,6 @@ public class StudentClassServiceImpl implements StudentClassService {
                 .findAll()
                 .stream()
                 .map(studentClassMapper::StudentClassToStudentClassDTO)
-//                .filter(specNotNull.and(nameNotNul))
                 .collect(groupingBy(
                         StudentClassDTO::getSubject,
                         groupingBy(
@@ -98,8 +93,10 @@ public class StudentClassServiceImpl implements StudentClassService {
                 ));
     }
 
+
     /**
-     * @return a list of Student Classes with matching specialization
+     * @param subject name(Specialization of the class is just a  most important subject)
+     * @return Student Classes with matching specialization
      */
     @Override
     public List<StudentClassDTO> getAllStudentClassForSpecialization(Subjects subject) {
@@ -109,6 +106,7 @@ public class StudentClassServiceImpl implements StudentClassService {
                 .map(studentClassMapper::StudentClassToStudentClassDTO)
                 .collect(toList());
     }
+
 
     /**
      * @return a list of Student Classes with largest number of students
@@ -123,6 +121,7 @@ public class StudentClassServiceImpl implements StudentClassService {
                 .collect(Collectors.toList());
     }
 
+
     /**
      * @return a list of Student Classes with smallest number of students
      */
@@ -136,35 +135,32 @@ public class StudentClassServiceImpl implements StudentClassService {
                 .collect(Collectors.toList());
     }
 
+
     /**
-     * @return Map where the keys are Genders and values List of Students of the Class
+     * @param id of StudentClass
+     * @return Students from the Class with matching id grouped by Gender
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public Map<Gender, List<StudentDTO>> getAllStudentsForClass(Long id) {
-        Predicate<StudentDTO> firstNameNotNull = s -> s.getFirstName() != null;
-        Predicate<StudentDTO> lastNameNotNull = s -> s.getLastName() != null;
-        if (studentClassRepository.findById(id).isPresent()) {
-            StudentClass studentClass = studentClassRepository.findById(id).get();
-            return studentClass.getStudentList()
-                    .stream()
-                    .map(studentMapper::studentToStudentDTO)
-                    .filter(firstNameNotNull.and(lastNameNotNull))
-                    .sorted(studentComparator)
-                    .collect(
-                            Collectors.groupingBy(
-                                    StudentDTO::getGender
-                            )
-                    );
-        } else {
-            throw new ResourceNotFoundException("Student Class with id: " + id + " not found");
-        }
+        StudentClass studentClass = studentClassRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, StudentClass.class));
+        return studentClass.getStudentList()
+                .stream()
+                .map(studentMapper::studentToStudentDTO)
+                .sorted(studentComparator)
+                .collect(
+                        Collectors.groupingBy(
+                                StudentDTO::getGender
+                        )
+                );
     }
 
+
     /**
-     *
-     * Converts DTO Object and Save it to Database
-     * @return TeacherDTO object
+     * @param studentClassDTO
+     * Save Payment to Database
+     * @return StudentClass after saving it to database
      */
     @Override
     public StudentClassDTO createNewStudentClass(StudentClassDTO studentClassDTO) {
@@ -175,37 +171,32 @@ public class StudentClassServiceImpl implements StudentClassService {
 
 
     /**
-     * Converts DTO Object, Update Student Class with Matching ID and save it to Database
-     * @return StudentClassDTO object if the Student Class was successfully saved
+     * @param id of StudentClass to be updated
+     * @param studentClassDTO object to save
+     * @return Updated Payment if successfully saved
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public StudentClassDTO updateStudentClass(Long id, StudentClassDTO studentClassDTO) {
-        if(studentClassRepository.findById(id).isPresent()) {
-            StudentClass updatedClass = studentClassMapper.StudentClassDTOToStudentClass(studentClassDTO);
-            updatedClass.setId(id);
-            studentClassRepository.save(updatedClass);
-            log.info("Student Class with id: " + id + " successfully updated");
-            return studentClassMapper.StudentClassToStudentClassDTO(updatedClass);
-        } else {
-            log.debug("Student Class id: " + id + " not found");
-            throw new ResourceNotFoundException("Student Class with id: " + id + " not found");
-        }
+        studentClassRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, StudentClass.class));
+        StudentClass updatedClass = studentClassMapper.StudentClassDTOToStudentClass(studentClassDTO);
+        updatedClass.setId(id);
+        studentClassRepository.save(updatedClass);
+        log.info("Student Class with id: " + id + " successfully updated");
+        return studentClassMapper.StudentClassToStudentClassDTO(updatedClass);
     }
 
 
     /**
-     * Delete Student Class with matching id
+     * @param id of StudentClass to be deleted
      * @throws ResourceNotFoundException if not found
      */
     @Override
     public void deleteStudentClassById(Long id) {
-        if(studentClassRepository.findById(id).isPresent()) {
-            studentClassRepository.deleteById(id);
-            log.info("Student Class with id: " + id + " successfully deleted");
-        } else {
-            log.debug("Student Class id: " + id + " not found");
-            throw new ResourceNotFoundException("Student Class with id: " + id + " not found");
-        }
+        studentClassRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, StudentClass.class));
+        studentClassRepository.deleteById(id);
+        log.info("Student Class with id: " + id + " successfully deleted");
     }
 }

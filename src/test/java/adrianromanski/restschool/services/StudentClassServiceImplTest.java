@@ -97,6 +97,7 @@ class StudentClassServiceImplTest {
         return studentClassDTO;
     }
 
+
     @DisplayName("[Happy Path], [Method] = getAllStudentClasses")
     @Test
     void getAllStudentClasses() {
@@ -109,9 +110,10 @@ class StudentClassServiceImplTest {
         assertEquals(studentClassDTOS.size(), 3);
     }
 
+
     @DisplayName("[Happy Path], [Method] = getStudentClassByID")
     @Test
-    void getStudentClassByID() {
+    void getStudentClassByIDHappyPath() {
         StudentClass studentClass = createRookies();
 
         when(studentClassRepository.findById(ID)).thenReturn(Optional.of(studentClass));
@@ -121,6 +123,16 @@ class StudentClassServiceImplTest {
         assertEquals(studentClassDTO.getName(), ROOKIES);
         assertEquals(studentClassDTO.getId(), ID);
     }
+
+
+    @DisplayName("[Unhappy Path], [Method] = getStudentClassByID")
+    @Test
+    void getStudentClassByIDUnHappyPath() {
+        Throwable ex = catchThrowable(() -> studentClassService.getStudentClassByID(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
 
     @DisplayName("[Happy Path], [Method] = getStudentClassByPresident")
     @Test
@@ -133,6 +145,7 @@ class StudentClassServiceImplTest {
 
         assertEquals(returnDTO.size(), 1);
     }
+
 
     @DisplayName("[Happy Path], [Method] = getStudentClassesGroupedBySpecialization")
     @Test
@@ -147,6 +160,7 @@ class StudentClassServiceImplTest {
         assertTrue(returnMap.containsKey(BIOLOGY));
     }
 
+
     @DisplayName("[Happy Path], [Method] = getAllStudentClassForSpecialization")
     @Test
     void getAllStudentClassForSpecialization() {
@@ -158,6 +172,8 @@ class StudentClassServiceImplTest {
 
         assertEquals(returnList.size(), 2);
     }
+
+
     @DisplayName("[Happy Path], [Method] = getLargestStudentClass")
     @Test
     void getLargestStudentClass() {
@@ -170,6 +186,7 @@ class StudentClassServiceImplTest {
         assertEquals(returnList.get(0).getName(), ROOKIES);
     }
 
+
     @DisplayName("[Happy Path], [Method] = getLargestStudentClass")
     @Test
     void getSmallestStudentClass() {
@@ -181,6 +198,8 @@ class StudentClassServiceImplTest {
 
         assertEquals(returnList.get(0).getName(), "Nerds");
     }
+
+
     @DisplayName("[Happy Path], [Method] = getAllStudentsForClass")
     @Test
     void getAllStudentsForClassHappyPath() {
@@ -196,14 +215,15 @@ class StudentClassServiceImplTest {
         assertEquals(returnMap.get(FEMALE).size(), 1);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = getAllStudentsForClass, [Reason] = Student Class with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = getAllStudentsForClass")
     @Test
     void getAllStudentsForClassUnHappyPath() {
-
         Throwable ex = catchThrowable(() -> studentClassService.getAllStudentsForClass(222L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = createNewStudentClass")
     @Test
@@ -218,6 +238,7 @@ class StudentClassServiceImplTest {
        assertEquals(returnDTO.getName(), ROOKIES);
        assertEquals(returnDTO.getId(), ID);
     }
+
 
     @DisplayName("[Happy Path], [Method] = updateStudentClass")
     @Test
@@ -234,7 +255,8 @@ class StudentClassServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = updateStudentClass, [Reason] = Student Class with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = updateStudentClass")
     @Test
     void updateStudentClassUnHappyPath() {
         StudentClassDTO studentClassDTO = createRookiesDTO();
@@ -243,6 +265,7 @@ class StudentClassServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
 
     @DisplayName("[Happy Path], [Method] = deleteStudentClassById")
     @Test
@@ -256,10 +279,10 @@ class StudentClassServiceImplTest {
         verify(studentClassRepository, times(1)).deleteById(ID);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteStudentClassById, [Reason] = Student Class with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = deleteStudentClassById")
     @Test
     void deleteStudentClassByIdUnHappyPath() {
-
         Throwable ex = catchThrowable(() -> studentClassService.deleteStudentClassById(222L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);

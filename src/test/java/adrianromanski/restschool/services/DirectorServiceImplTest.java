@@ -60,10 +60,15 @@ class DirectorServiceImplTest {
                 DirectorMapper.INSTANCE, TeacherMapper.INSTANCE, StudentMapper.INSTANCE, PaymentMapper.INSTANCE);
     }
 
+    private Director getDirector() { return Director.builder().firstName(ETHAN.get()).lastName(LOGAN.get()).build(); }
+
+    private DirectorDTO getDirectorDTO() { return DirectorDTO.builder().firstName(ETHAN.get()).lastName(LOGAN.get()).build(); }
+
+
     @DisplayName("[Happy Path], [Method] = getDirector")
     @Test
     void getDirectorHappyPath() {
-        Director director = Director.builder().firstName(ETHAN.get()).lastName(LOGAN.get()).build();
+        Director director = getDirector();
         List<Director> list = Collections.singletonList(director);
 
         when(directorRepository.findAll()).thenReturn(list);
@@ -74,6 +79,7 @@ class DirectorServiceImplTest {
         assertEquals(returnDTO.getLastName(), LOGAN.get());
     }
 
+
     @DisplayName("[UnHappy Path], [Method] = getDirector")
     @Test
     void getDirectorUnhappyPath() {
@@ -82,7 +88,8 @@ class DirectorServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
-    @DisplayName("[Happy Path], [Method] = addPaymentForWorker")
+
+    @DisplayName("[Happy Path], [Method] = addPaymentToTeacher")
     @Test
     void addPaymentForWorkerHappyPath() {
         PaymentDTO paymentDTO = PaymentDTO.builder().amount(2241.20).date(LocalDate.now()).name("Salary for May").build();
@@ -91,7 +98,7 @@ class DirectorServiceImplTest {
 
         when(teacherRepository.findById(anyLong())).thenReturn(Optional.of(teacher));
 
-        PaymentDTO returnDTO = directorService.addPaymentForWorker(1L, paymentDTO);
+        PaymentDTO returnDTO = directorService.addPaymentToTeacher(1L, paymentDTO);
 
         assertEquals(returnDTO.getTeacherDTO().getFirstName(), ETHAN.get());
         assertEquals(returnDTO.getTeacherDTO().getLastName(), LOGAN.get());
@@ -100,25 +107,66 @@ class DirectorServiceImplTest {
         verify(paymentRepository, times(1)).save(any(Payment.class));
     }
 
-    @DisplayName("[UnHappy Path], [Method] = addPaymentForWorker")
+
+    @DisplayName("[UnHappy Path], [Method] = addPaymentToTeacher")
     @Test
     void addPaymentForWorkerUnhappyPath() {
         PaymentDTO paymentDTO = PaymentDTO.builder().amount(2241.20).date(LocalDate.now()).name("Salary for May").build();
 
-        Throwable ex = catchThrowable(() -> directorService.addPaymentForWorker(223L, paymentDTO));
+        Throwable ex = catchThrowable(() -> directorService.addPaymentToTeacher(223L, paymentDTO));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+
+    @DisplayName("[Happy Path], [Method] = updateDirector")
     @Test
-    void modifyPayment() {
+    void updateDirectorHappyPath() {
+        Director director = getDirector();
+        DirectorDTO directorDTO = getDirectorDTO();
+        directorDTO.setFirstName("Updating");
+
+        when(directorRepository.findById(anyLong())).thenReturn(Optional.of(director));
+
+        DirectorDTO returnDTO = directorService.updateDirector(1L, directorDTO);
+
+        assertEquals(returnDTO.getLastName(), LOGAN.get());
+        assertEquals(returnDTO.getFirstName(), "Updating");
+
+        verify(directorRepository, times(1)).save(any(Director.class));
     }
 
+
+    @DisplayName("[UnHappy Path], [Method] = updateDirector")
     @Test
-    void deleteTeacher() {
+    void updateDirectorUnhappyPath() {
+        DirectorDTO directorDTO = getDirectorDTO();
+
+        Throwable ex = catchThrowable(() -> directorService.updateDirector(223L, directorDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+
+    @DisplayName("[Happy Path], [Method] = deleteDirectorByID")
     @Test
-    void deleteStudent() {
+    void deleteDirectorByIDHappyPath() {
+        Director director = getDirector();
+
+        when(directorRepository.findById(anyLong())).thenReturn(Optional.of(director));
+
+        directorService.deleteDirectorByID(1L);
+
+        verify(directorRepository, times(1)).deleteById(anyLong());
     }
+
+
+    @DisplayName("[UnHappy Path], [Method] = deleteDirectorByID")
+    @Test
+    void deleteDirectorByIDUnHappyPath() {
+        Throwable ex = catchThrowable(() -> directorService.deleteDirectorByID(223L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
 }

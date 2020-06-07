@@ -316,6 +316,7 @@ public class TeacherServiceImpl implements TeacherService {
         return addressMapper.addressToAddressDTO(updatedAddress);
     }
 
+
     /**
      * Update Teacher Contact with Matching ID, and save it to Database
      * @throws ResourceNotFoundException if not found
@@ -335,6 +336,7 @@ public class TeacherServiceImpl implements TeacherService {
         log.info("Contact of Teacher with id: " + teacherID + " successfully updated");
         return contactMapper.contactToContactDTO(updatedContact);
     }
+
 
     /**
      * Delete Teacher with matching id

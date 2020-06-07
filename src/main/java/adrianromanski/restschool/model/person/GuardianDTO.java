@@ -1,6 +1,7 @@
 package adrianromanski.restschool.model.person;
 
 import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
 import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GuardianDTO extends PersonDTO {
 
+    private GuardianAddressDTO addressDTO;
     private ContactDTO contactDTO;
     private List<StudentDTO> studentsDTO = new ArrayList<>();
 

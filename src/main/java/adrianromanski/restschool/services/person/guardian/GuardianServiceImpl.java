@@ -1,42 +1,50 @@
 package adrianromanski.restschool.services.person.guardian;
 
+import adrianromanski.restschool.domain.base_entity.address.Address;
+import adrianromanski.restschool.domain.base_entity.address.GuardianAddress;
 import adrianromanski.restschool.domain.person.Guardian;
-import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
+import adrianromanski.restschool.mapper.base_entity.GuardianAddressMapper;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
+import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
 import adrianromanski.restschool.model.person.GuardianDTO;
 import adrianromanski.restschool.model.person.PersonDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.repositories.base_entity.AddressRepository;
 import adrianromanski.restschool.repositories.person.GuardianRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.groupingBy;
 
 @Slf4j
 @Service
 public class GuardianServiceImpl implements GuardianService {
 
     private final GuardianMapper guardianMapper;
+    private final GuardianAddressMapper addressMapper;
     private final StudentMapper studentMapper;
     private final GuardianRepository guardianRepository;
+    private final AddressRepository addressRepository;
     private final StudentRepository studentRepository;
 
-    public GuardianServiceImpl(GuardianMapper guardianMapper, StudentMapper studentMapper,
-                               GuardianRepository guardianRepository, StudentRepository studentRepository) {
+    public GuardianServiceImpl(GuardianMapper guardianMapper, GuardianAddressMapper addressMapper, StudentMapper studentMapper,
+                               GuardianRepository guardianRepository, AddressRepository addressRepository, StudentRepository studentRepository) {
         this.guardianMapper = guardianMapper;
+        this.addressMapper = addressMapper;
         this.studentMapper = studentMapper;
         this.guardianRepository = guardianRepository;
+        this.addressRepository = addressRepository;
         this.studentRepository = studentRepository;
     }
 
-
     /**
+     * @param id of the Guardian we are looking for
      * @return Guardian with matching id
      * @throws ResourceNotFoundException if not found
      */
@@ -47,7 +55,10 @@ public class GuardianServiceImpl implements GuardianService {
                 .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class)));
     }
 
+
     /**
+     * @param firstName of Guardian we are looking for
+     * @param lastName of Guardian we are looking for
      * @return Guardian with matching firstName and lastName
      * @throws ResourceNotFoundException if not found
      */
@@ -57,6 +68,7 @@ public class GuardianServiceImpl implements GuardianService {
                 .getGuardianByFirstNameAndLastName(firstName, lastName)
                 .orElseThrow(() -> new ResourceNotFoundException(firstName, lastName, Guardian.class)));
     }
+
 
     /**
      * @return all Guardians
@@ -85,7 +97,9 @@ public class GuardianServiceImpl implements GuardianService {
                 );
     }
 
+
     /**
+     * @param id of the Guardian we are looking for
      * @return List of Students for Guardian with matching id
      */
     @Override
@@ -99,7 +113,7 @@ public class GuardianServiceImpl implements GuardianService {
 
 
     /**
-     * Save Guardian to Database
+     * @param guardianDTO and save it to Database
      * @return GuardianDTO object
      */
     @Override
@@ -111,7 +125,29 @@ public class GuardianServiceImpl implements GuardianService {
 
 
     /**
+     * @param id of the Guardian to add Address
+     * @param addressDTO to be added
+     * @return Address if successfully added to Guardian
+     * @throws ResourceNotFoundException if not found
+     */
+    @Override
+    public GuardianAddressDTO addAddress(Long id, GuardianAddressDTO addressDTO) {
+        Guardian guardian = guardianRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Address.class));
+        GuardianAddress address = addressMapper.addressDTOToAddress(addressDTO);
+        guardian.setAddress(address);
+        address.setGuardian(guardian);
+        guardianRepository.save(guardian);
+        addressRepository.save(address);
+        log.info("Address successfully added to Guardian with id: " + id);
+        return addressMapper.addressToAddressDTO(address);
+    }
+
+
+    /**
      * Update Guardian with Matching ID and save it to Database
+     * @param id of the Guardian we are looking for
+     * @param guardianDTO for update
      * @throws ResourceNotFoundException if not found
      */
     @Override
@@ -127,6 +163,31 @@ public class GuardianServiceImpl implements GuardianService {
 
 
     /**
+     * @param id of the Guardian
+     * @param addressDTO for update
+     * @return Address if successfully updated
+     * @throws UpdateBeforeInitializationException if Address wasn't initialized
+     * @throws ResourceNotFoundException if Guardian not found
+     */
+    @Override
+    public GuardianAddressDTO updateAddress(Long id, GuardianAddressDTO addressDTO) {
+        Guardian guardian = guardianRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class));
+        GuardianAddress address = guardian.getAddressOptional()
+                .orElseThrow(() -> new UpdateBeforeInitializationException(Address.class));
+        GuardianAddress updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
+            updatedAddress.setId(address.getId());
+            guardian.setAddress(updatedAddress);
+            updatedAddress.setGuardian(guardian);
+        guardianRepository.save(guardian);
+        addressRepository.save(updatedAddress);
+        log.info("Address with id: " + id + " successfully updated");
+        return addressMapper.addressToAddressDTO(updatedAddress);
+    }
+
+
+    /**
+     * @param id of the Guardian we want to delete
      * Delete Guardian with matching id
      * @throws ResourceNotFoundException if not found
      */

@@ -1,19 +1,25 @@
 package adrianromanski.restschool.services;
 
+import adrianromanski.restschool.domain.base_entity.address.GuardianAddress;
+import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.domain.person.Guardian;
 import adrianromanski.restschool.domain.person.Student;
-import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
+import adrianromanski.restschool.mapper.base_entity.GuardianAddressMapper;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
+import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
 import adrianromanski.restschool.model.person.GuardianDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
+import adrianromanski.restschool.repositories.base_entity.AddressRepository;
 import adrianromanski.restschool.repositories.person.GuardianRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
 import adrianromanski.restschool.services.person.guardian.GuardianServiceImpl;
-import org.junit.jupiter.api.*;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -27,21 +33,30 @@ import static adrianromanski.restschool.domain.enums.FemaleName.CHARLOTTE;
 import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.enums.Gender.MALE;
 import static adrianromanski.restschool.domain.enums.LastName.*;
-import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.ETHAN;
+import static adrianromanski.restschool.domain.enums.MaleName.SEBASTIAN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class GuardianServiceImplTest {
 
     public static final long ID = 1L;
+    public static final String COUNTRY = "Poland";
+    public static final String CITY = "Warsaw";
+    public static final String POSTAL_CODE = "22-44";
+    public static final String STREET_NAME = "Sesame";
 
     GuardianService guardianService;
 
     @Mock
     GuardianRepository guardianRepository;
+
+    @Mock
+    AddressRepository addressRepository;
 
     @Mock
     StudentRepository studentRepository;
@@ -50,8 +65,8 @@ class GuardianServiceImplTest {
     void beforeAll() {
         MockitoAnnotations.initMocks(this);
 
-        guardianService = new GuardianServiceImpl(GuardianMapper.INSTANCE, StudentMapper.INSTANCE,
-                                                                    guardianRepository, studentRepository);
+        guardianService = new GuardianServiceImpl(GuardianMapper.INSTANCE, GuardianAddressMapper.INSTANCE, StudentMapper.INSTANCE,
+                                                    guardianRepository, addressRepository, studentRepository);
     }
 
     GuardianDTO createEthanDTO() {
@@ -86,6 +101,10 @@ class GuardianServiceImplTest {
         return createStudent(3L, CHARLOTTE.get(), HENDERSON.get(), FEMALE);
     }
 
+    private GuardianAddress getAddress() { return GuardianAddress.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build(); }
+    private GuardianAddressDTO getAddressDTO() { return GuardianAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build(); }
+
+
 
     @DisplayName("[Happy Path], [Method] = getAllGuardians")
     @Test
@@ -98,6 +117,7 @@ class GuardianServiceImplTest {
 
         assertEquals(legalGuardians.size(), legalGuardiansDTO.size());
     }
+
 
     @DisplayName("[Happy Path], [Method] = getGuardianByID")
     @Test
@@ -113,6 +133,8 @@ class GuardianServiceImplTest {
         assertEquals(legalGuardianDTO.getId(), ID);
 
     }
+
+
     @DisplayName("[Happy Path], [Method] = getGuardianByFirstAndLastName")
     @Test
     void getLegalGuardianByFirstAndLastName() {
@@ -128,6 +150,7 @@ class GuardianServiceImplTest {
         assertEquals(legalGuardianDTO.getId(), ID);
     }
 
+
     @DisplayName("[Happy Path], [Method] = getGuardiansByAge")
     @Test
     void getGuardiansByAge() {
@@ -140,6 +163,7 @@ class GuardianServiceImplTest {
         assertEquals(guardiansByAge.size(), 1);
         assertTrue(guardiansByAge.containsKey(27L));
     }
+
 
     @DisplayName("[Happy Path], [Method] = getAllStudentsForGuardian")
     @Test
@@ -154,6 +178,7 @@ class GuardianServiceImplTest {
         assertEquals(studentsDTO.get(0).getFirstName(), SEBASTIAN.get());
         assertEquals(studentsDTO.get(1).getFirstName(), CHARLOTTE.get());
     }
+
 
     @DisplayName("[Happy Path], [Method] = createNewGuardian")
     @Test
@@ -171,6 +196,38 @@ class GuardianServiceImplTest {
         assertEquals(returnDTO.getLastName(), HENDERSON.get());
         assertEquals(returnDTO.getId(), ID);
     }
+
+
+    @DisplayName("[Happy Path], [Method] = addAddress")
+    @Test
+    void addAddressHappyPath() {
+        Guardian guardian = createEthan();
+        GuardianAddressDTO addressDTO = getAddressDTO();
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        GuardianAddressDTO returnDTO = guardianService.addAddress(ID, addressDTO);
+
+        assertEquals(returnDTO.getCountry(), COUNTRY);
+        assertEquals(returnDTO.getCity(), CITY);
+        assertEquals(returnDTO.getStreetName(), STREET_NAME);
+        assertEquals(returnDTO.getPostalCode(), POSTAL_CODE);
+
+        verify(guardianRepository, times(1)).save(any(Guardian.class));
+        verify(addressRepository, times(1)).save(any(GuardianAddress.class));
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = addAddress")
+    @Test
+    void addAddressUnhappyPath() {
+        GuardianAddressDTO addressDTO = getAddressDTO();
+
+        Throwable ex = catchThrowable(() -> guardianService.addAddress(222L, addressDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
 
     @DisplayName("[Happy Path], [Method] = updateTeacher")
     @Test
@@ -190,7 +247,8 @@ class GuardianServiceImplTest {
         assertEquals(returnDTO.getId(), ID);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = updateGuardian, [Reason] = Guardian with id 222 not found")
+
+    @DisplayName("[Unhappy Path], [Method] = updateGuardian")
     @Test
     void updateLegalGuardianUnhappyPath() {
         GuardianDTO guardianDTO = createEthanDTO();
@@ -199,6 +257,56 @@ class GuardianServiceImplTest {
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
+
+
+    @DisplayName("[Happy Path], [Method] = updateAddress")
+    @Test
+    void updateAddressHappyPath() {
+        Guardian guardian = createEthan();
+        GuardianAddress address = getAddress();
+        GuardianAddressDTO addressDTO = getAddressDTO();
+        guardian.setAddress(address);
+        address.setGuardian(guardian);
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        GuardianAddressDTO returnDTO = guardianService.updateAddress(1L, addressDTO);
+
+        assertEquals(returnDTO.getCountry(), COUNTRY);
+        assertEquals(returnDTO.getCity(), CITY);
+        assertEquals(returnDTO.getStreetName(), STREET_NAME);
+        assertEquals(returnDTO.getPostalCode(), POSTAL_CODE);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = updateAddress, [Reason] = Guardian with id not found")
+    @Test
+    void updateAddressUnhappyPathIDNotFound() {
+        Guardian guardian = createEthan();
+        GuardianAddress address = getAddress();
+        GuardianAddressDTO addressDTO = getAddressDTO();
+        guardian.setAddress(address);
+        address.setGuardian(guardian);
+
+        Throwable ex = catchThrowable(() -> guardianService.updateAddress(222L, addressDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = updateAddress, [Reason] = Address not initialized")
+    @Test
+    void updateAddressUnhappyPathNoInitialization() {
+        GuardianAddressDTO addressDTO = getAddressDTO();
+        Guardian guardian = createEthan();
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        Throwable ex = catchThrowable(() -> guardianService.updateAddress(222L, addressDTO));
+
+        assertThat(ex).isInstanceOf(UpdateBeforeInitializationException.class);
+    }
+
 
     @DisplayName("[Happy Path], [Method] = deleteGuardianByID")
     @Test
@@ -210,6 +318,7 @@ class GuardianServiceImplTest {
 
         verify(guardianRepository, times(1)).delete(guardian);
     }
+
 
     @DisplayName("[Unhappy Path], [Method] = deleteGuardianByID, [Reason] = Guardian with id 222 not found")
     @Test

@@ -48,6 +48,7 @@ public class DirectorServiceImpl implements DirectorService {
     /**
      * @return Director
      * @throws ResourceNotFoundException if not found
+     * For now i'll use this simple method then i want to track somehow active and retired directors
      */
     @Override
     public DirectorDTO getDirector() {

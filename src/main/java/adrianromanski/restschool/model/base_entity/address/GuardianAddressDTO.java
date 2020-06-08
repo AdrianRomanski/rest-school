@@ -11,10 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class GuardianAddressDTO extends AddressDTO{
 
-    private GuardianDTO guardianDTO;
-
     @Builder
     public GuardianAddressDTO(String country, String city, String streetName, String postalCode) {
         super(country, city, streetName, postalCode);
     }
+
+    private GuardianDTO guardianDTO;
 }

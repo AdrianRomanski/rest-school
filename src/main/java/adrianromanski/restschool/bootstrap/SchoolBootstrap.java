@@ -1,7 +1,9 @@
 package adrianromanski.restschool.bootstrap;
 
+import adrianromanski.restschool.domain.base_entity.address.GuardianAddress;
 import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.base_entity.address.TeacherAddress;
+import adrianromanski.restschool.domain.base_entity.contact.GuardianContact;
 import adrianromanski.restschool.domain.base_entity.contact.StudentContact;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.event.ExamResult;
@@ -51,7 +53,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
     private final StudentClassRepository studentClassRepository;
     private final GuardianRepository guardianRepository;
     private final SportTeamRepository sportTeamRepository;
-    private final ContactRepository studentContactRepository;
+    private final ContactRepository contactRepository;
     private final AddressRepository addressRepository;
 
     public SchoolBootstrap(StudentRepository studentRepository, SubjectRepository subjectRepository, ExamRepository examRepository, ExamResultRepository examResultRepository,
@@ -65,7 +67,7 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         this.studentClassRepository = studentClassRepository;
         this.guardianRepository = guardianRepository;
         this.sportTeamRepository = sportTeamRepository;
-        this.studentContactRepository = studentContactRepository;
+        this.contactRepository = studentContactRepository;
         this.addressRepository = addressRepository;
     }
 
@@ -143,8 +145,26 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         Guardian william = Guardian.builder().firstName(WILLIAM.get()).lastName(GONZALES.get())
                                     .gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
 
+        GuardianAddress williamAddress = GuardianAddress.builder().country("Poland").city("Warsaw").postalCode("22-421").streetName("District 9").build();
+        GuardianContact williamContact = GuardianContact.builder().email("SmartWilliam@Gmail.com").telephoneNumber("220211").emergencyNumber("32121421").build();
+
         Guardian henry = Guardian.builder().firstName(HENRY.get()).lastName(HENDERSON.get())
                                     .gender(MALE).dateOfBirth(LocalDate.of(1991, 12, 5)).build();
+
+        GuardianAddress henryAddress = GuardianAddress.builder().country("Poland").city("Warsaw").postalCode("22-423").streetName("District 5").build();
+        GuardianContact henryContact = GuardianContact.builder().email("HilariousHenry@Gmail.com").telephoneNumber("220211").emergencyNumber("32121421").build();
+
+        // Assign Addresses to Guardians
+        william.setAddress(williamAddress);
+        henry.setAddress(henryAddress);
+        williamAddress.setGuardian(william);
+        henryAddress.setGuardian(henry);
+
+        // Assign Contacts To Guardians
+        william.setContact(williamContact);
+        henry.setContact(henryContact);
+        williamContact.setGuardian(william);
+        henryContact.setGuardian(henry);
 
         //Add Students to Guardians
         william.getStudents().addAll(Arrays.asList(jacob, ethan));
@@ -252,11 +272,15 @@ public class SchoolBootstrap implements ApplicationListener<ContextRefreshedEven
         // Saving to repositories
 
         // Contact
-        studentContactRepository.save(contact);
+        contactRepository.save(contact);
+        contactRepository.save(henryContact);
+        contactRepository.save(williamContact);
 
         // Address
         addressRepository.save(address);
         addressRepository.save(teacherAddress);
+        addressRepository.save(henryAddress);
+        addressRepository.save(williamAddress);
 
         //Students
         studentRepository.save(jacob);

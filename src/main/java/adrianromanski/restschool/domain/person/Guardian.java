@@ -1,6 +1,7 @@
 package adrianromanski.restschool.domain.person;
 
 import adrianromanski.restschool.domain.base_entity.address.GuardianAddress;
+import adrianromanski.restschool.domain.base_entity.contact.GuardianContact;
 import adrianromanski.restschool.domain.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
@@ -30,6 +31,13 @@ public class Guardian extends Person {
     private GuardianAddress address;
 
     public Optional<GuardianAddress> getAddressOptional() { return Optional.ofNullable(this.address); }
+
+    @OneToOne(cascade={CascadeType.ALL})
+    private GuardianContact contact;
+
+    public Optional<GuardianContact> getContactOptional() {
+        return Optional.ofNullable(this.contact);
+    }
 
     @JsonBackReference
     @OneToMany(mappedBy = "guardian")

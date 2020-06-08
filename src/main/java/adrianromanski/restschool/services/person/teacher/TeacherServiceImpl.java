@@ -8,6 +8,7 @@ import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
 import adrianromanski.restschool.mapper.base_entity.TeacherAddressMapper;
 import adrianromanski.restschool.mapper.base_entity.TeacherContactMapper;
 import adrianromanski.restschool.mapper.event.ExamMapper;
@@ -226,6 +227,7 @@ public class TeacherServiceImpl implements TeacherService {
         return addressMapper.addressToAddressDTO(address);
     }
 
+
     /**
      * Adding Contact to Teacher
      * @throws ResourceNotFoundException if not found
@@ -260,6 +262,7 @@ public class TeacherServiceImpl implements TeacherService {
         return examMapper.examToExamDTO(teacher.getExams().get(examID));
     }
 
+
     /**
      * Changing class president
      * @throws ResourceNotFoundException if teacher or student not found
@@ -278,6 +281,7 @@ public class TeacherServiceImpl implements TeacherService {
             teacherRepository.save(teacher);
             return teacherMapper.teacherToTeacherDTO(teacher);
     }
+
 
     /**
      * Update Teacher with Matching ID, and save it to Database
@@ -306,7 +310,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .findById(teacherID)
                 .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
         Address address = teacher.getAddressOptional()
-                .orElseThrow(() -> new ResourceNotFoundException("Please initialize address before updating"));
+                .orElseThrow(UpdateBeforeInitializationException::new);
         TeacherAddress updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
             updatedAddress.setId(address.getId());
             teacher.setAddress(updatedAddress);
@@ -327,7 +331,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .findById(teacherID)
                 .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
         TeacherContact contact = teacher.getContactOptional()
-                .orElseThrow(() -> new ResourceNotFoundException("Please initialize address before updating"));
+                .orElseThrow(UpdateBeforeInitializationException::new);
         TeacherContact updatedContact = contactMapper.contactDTOToContact(contactDTO);
             updatedContact.setId(contact.getId());
             teacher.setContact(updatedContact);

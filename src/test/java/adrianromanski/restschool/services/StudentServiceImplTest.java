@@ -3,15 +3,16 @@ package adrianromanski.restschool.services;
 import adrianromanski.restschool.domain.base_entity.address.Address;
 import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.base_entity.contact.StudentContact;
-import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.domain.person.Student;
+import adrianromanski.restschool.exceptions.DeleteBeforeInitializationException;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.StudentAddressMapper;
 import adrianromanski.restschool.mapper.base_entity.StudentContactMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.address.AddressDTO;
-import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.base_entity.address.StudentAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
 import adrianromanski.restschool.model.base_entity.contact.StudentContactDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
@@ -31,14 +32,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static adrianromanski.restschool.domain.enums.FemaleName.*;
+import static adrianromanski.restschool.domain.enums.FemaleName.CHARLOTTE;
 import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.enums.Gender.MALE;
 import static adrianromanski.restschool.domain.enums.LastName.*;
-import static adrianromanski.restschool.domain.enums.MaleName.*;
+import static adrianromanski.restschool.domain.enums.MaleName.ETHAN;
+import static adrianromanski.restschool.domain.enums.MaleName.SEBASTIAN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -168,7 +170,7 @@ class StudentServiceImplTest {
 
     @DisplayName("[Happy Path], [Method] = getStudentByName")
     @Test
-    void getStudentByName() {
+    void getStudentByNameHappyPath() {
         Student student = createEthan();
 
         when(studentRepository.findByFirstNameAndLastName(anyString(), anyString())).thenReturn(Optional.of(student));
@@ -180,6 +182,16 @@ class StudentServiceImplTest {
         assertEquals(MALE, studentDTO.getGender());
         assertEquals(ID, studentDTO.getId());
     }
+
+
+    @DisplayName("[Unhappy Path], [Method] = getStudentByName")
+    @Test
+    void getStudentByNameUnhappy() {
+        Throwable ex = catchThrowable(() -> studentService.getStudentByName("Walter", "White"));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
 
     @DisplayName("[Happy Path], [Method] = getStudentsByAge")
     @Test
@@ -368,7 +380,7 @@ class StudentServiceImplTest {
         verify(studentRepository, times(1)).delete(student);
     }
 
-    @DisplayName("[Unhappy Path], [Method] = deleteStudentByID, [Reason] = Student with id 222 not found")
+    @DisplayName("[Unhappy Path], [Method] = deleteStudentByID")
     @Test
     void deleteStudentByIDUnHappyPath() {
         Throwable ex = catchThrowable(() -> studentService.deleteStudentByID(222L));
@@ -376,9 +388,10 @@ class StudentServiceImplTest {
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
     }
 
+
     @DisplayName("[Happy Path], [Method] = deleteStudentContact")
     @Test
-    void deleteStudentContact() {
+    void deleteStudentContactHappyPath() {
         StudentContact contact = getContact();
         Student student = createEthan();
         student.setContact(contact);
@@ -390,6 +403,20 @@ class StudentServiceImplTest {
         verify(studentContactRepository, times(1)).delete(contact);
         verify(studentRepository, times(1)).save(student);
     }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteStudentContact")
+    @Test
+    void deleteStudentContactUnhappyPath() {
+        Student student = Student.builder().firstName("Jessie").build();
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+        Throwable ex = catchThrowable(() -> studentService.deleteStudentContact(222L));
+
+        assertThat(ex).isInstanceOf(DeleteBeforeInitializationException.class);
+    }
+
 
     @DisplayName("[Happy Path], [Method] = deleteStudentAddress")
     @Test
@@ -404,5 +431,18 @@ class StudentServiceImplTest {
 
         verify(addressRepository, times(1)).delete(address);
         verify(studentRepository, times(1)).save(student);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteStudentAddress")
+    @Test
+    void deleteStudentAddressUnHappyPath() {
+        Student student = Student.builder().firstName("Jessie").build();
+
+        when(studentRepository.findById(anyLong())).thenReturn(Optional.of(student));
+
+        Throwable ex = catchThrowable(() -> studentService.deleteStudentAddress(222L));
+
+        assertThat(ex).isInstanceOf(DeleteBeforeInitializationException.class);
     }
 }

@@ -174,7 +174,7 @@ public class GuardianServiceImpl implements GuardianService {
         Guardian guardian = guardianRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class));
         GuardianAddress address = guardian.getAddressOptional()
-                .orElseThrow(() -> new UpdateBeforeInitializationException(Address.class));
+                .orElseThrow(UpdateBeforeInitializationException::new);
         GuardianAddress updatedAddress = addressMapper.addressDTOToAddress(addressDTO);
             updatedAddress.setId(address.getId());
             guardian.setAddress(updatedAddress);

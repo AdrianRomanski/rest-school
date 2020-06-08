@@ -1,11 +1,12 @@
 package adrianromanski.restschool.services.person.student;
 
 import adrianromanski.restschool.domain.base_entity.address.Address;
-import adrianromanski.restschool.domain.base_entity.contact.Contact;
 import adrianromanski.restschool.domain.base_entity.address.StudentAddress;
 import adrianromanski.restschool.domain.base_entity.contact.StudentContact;
 import adrianromanski.restschool.domain.person.Student;
+import adrianromanski.restschool.exceptions.DeleteBeforeInitializationException;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
 import adrianromanski.restschool.mapper.base_entity.StudentAddressMapper;
 import adrianromanski.restschool.mapper.base_entity.StudentContactMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
@@ -25,7 +26,8 @@ import java.util.function.Function;
 
 import static adrianromanski.restschool.domain.enums.Gender.FEMALE;
 import static adrianromanski.restschool.domain.enums.Gender.MALE;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 @Slf4j
 @Service
@@ -217,6 +219,7 @@ public class StudentServiceImpl implements StudentService{
            return studentMapper.studentToStudentDTO(updatedStudent);
     }
 
+
     /**
      * Update Contact  of Student Matching ID and save it to Database
      * @return ContactDTO
@@ -227,7 +230,7 @@ public class StudentServiceImpl implements StudentService{
         Student student = studentRepository.findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         StudentContact contact = student.getContactOptional()
-                .orElseThrow(() -> new ResourceNotFoundException("Contact can't be updated"));
+                .orElseThrow(UpdateBeforeInitializationException::new);
         StudentContact updatedContact = contactMapper.contactDTOToContact(contactDTO);
             updatedContact.setId(contact.getId());
             student.setContact(updatedContact);
@@ -237,6 +240,7 @@ public class StudentServiceImpl implements StudentService{
         log.info("Contact of Student with id: " + studentID + " successfully updated");
         return contactMapper.contactToContactDTO(updatedContact);
     }
+
 
     /**
      * Update Address of Student Matching ID and save it to Database
@@ -248,7 +252,7 @@ public class StudentServiceImpl implements StudentService{
         Student student = studentRepository.findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         StudentAddress address = student.getAddressOptional()
-                .orElseThrow(() -> new ResourceNotFoundException("Address can't be updated"));
+                .orElseThrow(UpdateBeforeInitializationException::new);
         StudentAddress updatedAddress = studentAddressMapper.addressDTOToAddress(addressDTO);
             updatedAddress.setId(address.getId());
             student.setAddress(updatedAddress);
@@ -258,6 +262,7 @@ public class StudentServiceImpl implements StudentService{
         log.info("Address of Student with id: " + studentID + " successfully updated");
         return studentAddressMapper.addressToAddressDTO(updatedAddress);
     }
+
 
     /**
      * Delete Student with matching id
@@ -283,7 +288,7 @@ public class StudentServiceImpl implements StudentService{
                 .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         StudentContact contact = student.getContactOptional().
-                orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class, StudentContact.class));
+                orElseThrow(DeleteBeforeInitializationException::new);
         StudentContact emptyContact = new StudentContact();
             emptyContact.setStudent(student);
             student.setContact(emptyContact);
@@ -302,7 +307,7 @@ public class StudentServiceImpl implements StudentService{
                 .findById(studentID)
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         StudentAddress address = student.getAddressOptional()
-                .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class, Address.class));
+                .orElseThrow(DeleteBeforeInitializationException::new);
         StudentAddress emptyAddress = new StudentAddress();
             emptyAddress.setStudent(student);
             student.setAddress(emptyAddress);

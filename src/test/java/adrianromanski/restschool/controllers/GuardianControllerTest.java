@@ -3,6 +3,7 @@ package adrianromanski.restschool.controllers;
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.GuardianController;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
+import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
 import adrianromanski.restschool.model.person.GuardianDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
@@ -37,6 +38,10 @@ class GuardianControllerTest {
 
     public static final long ID = 1L;
     public static final String GUARDIANS = "/guardians/";
+    public static final String COUNTRY = "Poland";
+    public static final String CITY = "Warsaw";
+    public static final String POSTAL_CODE = "22-44";
+    public static final String STREET_NAME = "Sesame";
 
     MockMvc mockMvc;
 
@@ -58,6 +63,9 @@ class GuardianControllerTest {
     private GuardianDTO createEthan() { return GuardianDTO.builder().firstName(ETHAN.get()).lastName(HENDERSON.get()).build(); }
 
     private List<GuardianDTO> getGuardians() { return Arrays.asList(createEthan(), createEthan(), createEthan()); }
+
+    private GuardianAddressDTO getAddressDTO() { return GuardianAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build(); }
+
 
 
     @DisplayName("[GET], [Happy Path], [Method] = getAllGuardians")
@@ -164,6 +172,25 @@ class GuardianControllerTest {
     }
 
 
+    @DisplayName("[POST], [Happy Path], [Method] = addAddress")
+    @Test
+    void addAddress() throws Exception {
+        GuardianAddressDTO addressDTO = getAddressDTO();
+
+        when(guardianService.addAddress(anyLong(), any(GuardianAddressDTO.class))).thenReturn(addressDTO);
+
+        mockMvc.perform(post(GUARDIANS + "addAddress/guardian-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(addressDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.country", equalTo(COUNTRY)))
+                .andExpect(jsonPath("$.city", equalTo(CITY)))
+                .andExpect(jsonPath("$.postalCode", equalTo(POSTAL_CODE)))
+                .andExpect(jsonPath("$.streetName", equalTo(STREET_NAME)));
+    }
+
+
     @DisplayName("[PUT], [Happy Path], [Method] = updateGuardian")
     @Test
     void updateGuardian() throws Exception {
@@ -180,6 +207,25 @@ class GuardianControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.firstName", equalTo(ETHAN.get())))
                 .andExpect(jsonPath("$.lastName", equalTo(HENDERSON.get())));
+    }
+
+
+    @DisplayName("[PUT], [Happy Path], [Method] = updateAddress")
+    @Test
+    void updateAddress() throws Exception {
+        GuardianAddressDTO addressDTO = getAddressDTO();
+
+        when(guardianService.updateAddress(anyLong(), any(GuardianAddressDTO.class))).thenReturn(addressDTO);
+
+        mockMvc.perform(put(GUARDIANS + "updateAddress/guardian-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(addressDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.country", equalTo(COUNTRY)))
+                .andExpect(jsonPath("$.city", equalTo(CITY)))
+                .andExpect(jsonPath("$.postalCode", equalTo(POSTAL_CODE)))
+                .andExpect(jsonPath("$.streetName", equalTo(STREET_NAME)));
     }
 
 

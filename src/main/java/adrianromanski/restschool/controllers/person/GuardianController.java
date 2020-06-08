@@ -1,5 +1,6 @@
 package adrianromanski.restschool.controllers.person;
 
+import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
 import adrianromanski.restschool.model.person.GuardianDTO;
 import adrianromanski.restschool.model.person.GuardianListDTO;
 import adrianromanski.restschool.model.person.StudentListDTO;
@@ -31,12 +32,14 @@ public class GuardianController {
         return guardianService.getGuardianByID(Long.valueOf(ID));
     }
 
+
     @ApiOperation("Returns an Guardian with matching firsName and lastName")
     @GetMapping("getByName/{firstName}-{lastName}")
     @ResponseStatus(HttpStatus.OK)
     GuardianDTO getGuardianByFirstAndLastName(@PathVariable String firstName, @PathVariable String lastName) {
         return guardianService.getGuardianByFirstAndLastName(firstName, lastName);
     }
+
 
     @ApiOperation("Returns all Guardians")
     @GetMapping({"/list", "/", "", "getAll", "findAll"})
@@ -45,12 +48,14 @@ public class GuardianController {
         return new GuardianListDTO(guardianService.getAllGuardians());
     }
 
+
     @ApiOperation("Returns Guardians grouped by Age")
     @GetMapping("groupedBy/age")
     @ResponseStatus(HttpStatus.OK)
     Map<Long, List<GuardianDTO>> getGuardiansByAge() {
         return guardianService.getGuardiansByAge();
     }
+
 
     @ApiOperation("Returns all Students for Guardian")
     @GetMapping("getStudents/guardian-{ID}")
@@ -59,6 +64,7 @@ public class GuardianController {
         return new StudentListDTO(guardianService.getAllStudentsForGuardian(Long.valueOf(ID)));
     }
 
+
     @ApiOperation("Create and save new Guardian")
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
@@ -66,12 +72,28 @@ public class GuardianController {
         return guardianService.createNewGuardian(guardianDTO);
     }
 
+
+    @PostMapping("addAddress/guardian-{ID}")
+    @ResponseStatus(HttpStatus.CREATED)
+    GuardianAddressDTO addAddress(@PathVariable String ID, @RequestBody GuardianAddressDTO addressDTO) {
+        return guardianService.addAddress(Long.valueOf(ID), addressDTO);
+    }
+
+
     @ApiOperation("Update an existing Guardian with matching ID and save it")
     @PutMapping("updateGuardian/guardian-{ID}")
     @ResponseStatus(HttpStatus.OK)
-    GuardianDTO updateGuardian(@RequestBody GuardianDTO guardianDTO, @PathVariable String ID) {
+    GuardianDTO updateGuardian(@PathVariable String ID, @RequestBody GuardianDTO guardianDTO) {
         return guardianService.updateGuardian(guardianDTO, Long.valueOf(ID));
     }
+
+
+    @PutMapping("updateAddress/guardian-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    GuardianAddressDTO updateAddress(@PathVariable String ID, @RequestBody GuardianAddressDTO addressDTO) {
+        return guardianService.updateAddress(Long.valueOf(ID), addressDTO);
+    }
+
 
     @ApiOperation("Delete Guardian with matching ID")
     @DeleteMapping("deleteGuardian/guardian-{ID}")
@@ -79,5 +101,4 @@ public class GuardianController {
     void deleteGuardian(@PathVariable String ID) {
         guardianService.deleteGuardianByID(Long.valueOf(ID));
     }
-
 }

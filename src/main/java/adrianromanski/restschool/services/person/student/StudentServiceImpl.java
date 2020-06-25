@@ -215,12 +215,12 @@ public class StudentServiceImpl implements StudentService{
            Student updatedStudent = studentMapper.studentDTOToStudent(studentDTO);
                updatedStudent.setId(studentID);
            studentRepository.save(updatedStudent);
-           log.info("Student with id:" + studentID +  " successfully updated");
+           log.info("Student with id    :" + studentID +  " successfully updated");
            return studentMapper.studentToStudentDTO(updatedStudent);
     }
 
 
-    /**
+    /**  
      * Update Contact  of Student Matching ID and save it to Database
      * @return ContactDTO
      * @throws ResourceNotFoundException if not found

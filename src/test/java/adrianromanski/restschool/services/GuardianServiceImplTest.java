@@ -1,18 +1,23 @@
 package adrianromanski.restschool.services;
 
 import adrianromanski.restschool.domain.base_entity.address.GuardianAddress;
+import adrianromanski.restschool.domain.base_entity.contact.GuardianContact;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.domain.person.Guardian;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
 import adrianromanski.restschool.mapper.base_entity.GuardianAddressMapper;
+import adrianromanski.restschool.mapper.base_entity.GuardianContactMapper;
 import adrianromanski.restschool.mapper.person.GuardianMapper;
 import adrianromanski.restschool.mapper.person.StudentMapper;
 import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.ContactDTO;
+import adrianromanski.restschool.model.base_entity.contact.GuardianContactDTO;
 import adrianromanski.restschool.model.person.GuardianDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.repositories.base_entity.AddressRepository;
+import adrianromanski.restschool.repositories.base_entity.ContactRepository;
 import adrianromanski.restschool.repositories.person.GuardianRepository;
 import adrianromanski.restschool.repositories.person.StudentRepository;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
@@ -49,6 +54,9 @@ class GuardianServiceImplTest {
     public static final String CITY = "Warsaw";
     public static final String POSTAL_CODE = "22-44";
     public static final String STREET_NAME = "Sesame";
+    public static final String EMAIL = "Email@gmail.com";
+    public static final String EMERGENCY_NUMBER = "22-33";
+    public static final String NUMBER = "21-34";
 
     GuardianService guardianService;
 
@@ -61,12 +69,15 @@ class GuardianServiceImplTest {
     @Mock
     StudentRepository studentRepository;
 
+    @Mock
+    ContactRepository contactRepository;
+
     @BeforeEach
     void beforeAll() {
         MockitoAnnotations.initMocks(this);
 
-        guardianService = new GuardianServiceImpl(GuardianMapper.INSTANCE, GuardianAddressMapper.INSTANCE, StudentMapper.INSTANCE,
-                                                    guardianRepository, addressRepository, studentRepository);
+        guardianService = new GuardianServiceImpl(GuardianMapper.INSTANCE, GuardianAddressMapper.INSTANCE, GuardianContactMapper.INSTANCE, StudentMapper.INSTANCE,
+                                                    guardianRepository, addressRepository, contactRepository, studentRepository);
     }
 
     GuardianDTO createEthanDTO() {
@@ -92,17 +103,18 @@ class GuardianServiceImplTest {
         student.setId(id);
         return student;
     }
-
     Student createSebastian() {
         return createStudent(2L, SEBASTIAN.get(), RODRIGUEZ.get(), MALE);
     }
-
     Student createCharlotte() {
         return createStudent(3L, CHARLOTTE.get(), HENDERSON.get(), FEMALE);
     }
 
     private GuardianAddress getAddress() { return GuardianAddress.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build(); }
     private GuardianAddressDTO getAddressDTO() { return GuardianAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build(); }
+
+    private GuardianContactDTO getContactDTO() { return GuardianContactDTO.builder().email(EMAIL).emergencyNumber(EMERGENCY_NUMBER).telephoneNumber(NUMBER).build(); }
+    private GuardianContact getContact() { return GuardianContact.builder().email(EMAIL).emergencyNumber(EMERGENCY_NUMBER).telephoneNumber(NUMBER).build(); }
 
 
 
@@ -229,6 +241,36 @@ class GuardianServiceImplTest {
     }
 
 
+    @DisplayName("[Happy Path], [Method] = addContact")
+    @Test
+    void addContactHappyPath() {
+        Guardian guardian = createEthan();
+        GuardianContactDTO contactDTO = getContactDTO();
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        GuardianContactDTO returnDTO = guardianService.addContact(1L, contactDTO);
+
+        assertEquals(returnDTO.getEmail(), EMAIL);
+        assertEquals(returnDTO.getEmergencyNumber(), EMERGENCY_NUMBER);
+        assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
+
+        verify(guardianRepository, times(1)).save(any(Guardian.class));
+        verify(contactRepository, times(1)).save(any(GuardianContact.class));
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = addContact")
+    @Test
+    void addContactUnhappyPath() {
+        GuardianContactDTO contactDTO = getContactDTO();
+
+        Throwable ex = catchThrowable(() -> guardianService.addContact(222L, contactDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
     @DisplayName("[Happy Path], [Method] = updateTeacher")
     @Test
     void updateLegalGuardianHappyPath() {
@@ -303,6 +345,57 @@ class GuardianServiceImplTest {
         when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
 
         Throwable ex = catchThrowable(() -> guardianService.updateAddress(222L, addressDTO));
+
+        assertThat(ex).isInstanceOf(UpdateBeforeInitializationException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = updateContact")
+    @Test
+    void updateContactHappyPath() {
+        Guardian guardian = createEthan();
+        GuardianContact contact = getContact();
+        GuardianContactDTO contactDTO = getContactDTO();
+        guardian.setContact(contact);
+        contact.setGuardian(guardian);
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        GuardianContactDTO returnDTO = guardianService.updateContact(1L, contactDTO);
+
+        assertEquals(returnDTO.getEmail(), EMAIL);
+        assertEquals(returnDTO.getEmergencyNumber(), EMERGENCY_NUMBER);
+        assertEquals(returnDTO.getTelephoneNumber(), NUMBER);
+
+        verify(guardianRepository, times(1)).save(any(Guardian.class));
+        verify(contactRepository, times(1)).save(any(GuardianContact.class));
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = updateContact, [Reason] = Guardian with id not found")
+    @Test
+    void updateContactUnhappyPathIDNotFound() {
+        Guardian guardian = createEthan();
+        GuardianContact contact = getContact();
+        GuardianContactDTO contactDTO = getContactDTO();
+        guardian.setContact(contact);
+        contact.setGuardian(guardian);
+
+        Throwable ex = catchThrowable(() -> guardianService.updateContact(222L, contactDTO));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = updateContact, [Reason] = Contact not initialized")
+    @Test
+    void updateContactUnhappyPathNoInitialization() {
+        GuardianContactDTO contactDTO = getContactDTO();
+        Guardian guardian = createEthan();
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        Throwable ex = catchThrowable(() -> guardianService.updateContact(222L,  contactDTO));
 
         assertThat(ex).isInstanceOf(UpdateBeforeInitializationException.class);
     }

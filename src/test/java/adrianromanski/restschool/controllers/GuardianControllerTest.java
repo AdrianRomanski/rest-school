@@ -2,8 +2,10 @@ package adrianromanski.restschool.controllers;
 
 import adrianromanski.restschool.controllers.exception_handler.RestResponseEntityExceptionHandler;
 import adrianromanski.restschool.controllers.person.GuardianController;
+import adrianromanski.restschool.domain.base_entity.contact.GuardianContact;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.GuardianContactDTO;
 import adrianromanski.restschool.model.person.GuardianDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.services.person.guardian.GuardianService;
@@ -35,13 +37,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class GuardianControllerTest {
 
-
     public static final long ID = 1L;
     public static final String GUARDIANS = "/guardians/";
     public static final String COUNTRY = "Poland";
     public static final String CITY = "Warsaw";
     public static final String POSTAL_CODE = "22-44";
     public static final String STREET_NAME = "Sesame";
+    public static final String EMAIL = "Email@gmail.com";
+    public static final String EMERGENCY_NUMBER = "22-33";
+    public static final String NUMBER = "21-34";
 
     MockMvc mockMvc;
 
@@ -65,6 +69,7 @@ class GuardianControllerTest {
     private List<GuardianDTO> getGuardians() { return Arrays.asList(createEthan(), createEthan(), createEthan()); }
 
     private GuardianAddressDTO getAddressDTO() { return GuardianAddressDTO.builder().country(COUNTRY).city(CITY).postalCode(POSTAL_CODE).streetName(STREET_NAME).build(); }
+    private GuardianContactDTO getContactDTO() { return GuardianContactDTO.builder().email(EMAIL).emergencyNumber(EMERGENCY_NUMBER).telephoneNumber(NUMBER).build(); }
 
 
 
@@ -191,12 +196,28 @@ class GuardianControllerTest {
     }
 
 
+    @DisplayName("[POST], [Happy Path], [Method] = addContact")
+    @Test
+    void addContact() throws Exception {
+        GuardianContactDTO contactDTO = getContactDTO();
+
+        when(guardianService.addContact(anyLong(), any(GuardianContactDTO.class))).thenReturn(contactDTO);
+
+        mockMvc.perform(post(GUARDIANS + "addContact/guardian-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(contactDTO)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.email", equalTo(EMAIL)))
+                .andExpect(jsonPath("$.emergencyNumber", equalTo(EMERGENCY_NUMBER)))
+                .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
+    }
+
+
     @DisplayName("[PUT], [Happy Path], [Method] = updateGuardian")
     @Test
     void updateGuardian() throws Exception {
-
         GuardianDTO guardianDTO = createEthan();
-
 
         when(guardianService.updateGuardian(any(GuardianDTO.class), anyLong())).thenReturn(guardianDTO);
 
@@ -226,6 +247,24 @@ class GuardianControllerTest {
                 .andExpect(jsonPath("$.city", equalTo(CITY)))
                 .andExpect(jsonPath("$.postalCode", equalTo(POSTAL_CODE)))
                 .andExpect(jsonPath("$.streetName", equalTo(STREET_NAME)));
+    }
+
+
+    @DisplayName("[PUT], [Happy Path], [Method] = updateContact")
+    @Test
+    void updateContact() throws Exception {
+        GuardianContactDTO contactDTO = getContactDTO();
+
+        when(guardianService.updateContact(anyLong(), any(GuardianContactDTO.class))).thenReturn(contactDTO);
+
+        mockMvc.perform(put(GUARDIANS + "updateContact/guardian-1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(contactDTO)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.email", equalTo(EMAIL)))
+                .andExpect(jsonPath("$.emergencyNumber", equalTo(EMERGENCY_NUMBER)))
+                .andExpect(jsonPath("$.telephoneNumber", equalTo(NUMBER)));
     }
 
 

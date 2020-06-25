@@ -1,6 +1,7 @@
 package adrianromanski.restschool.controllers.person;
 
 import adrianromanski.restschool.model.base_entity.address.GuardianAddressDTO;
+import adrianromanski.restschool.model.base_entity.contact.GuardianContactDTO;
 import adrianromanski.restschool.model.person.GuardianDTO;
 import adrianromanski.restschool.model.person.GuardianListDTO;
 import adrianromanski.restschool.model.person.StudentListDTO;
@@ -73,10 +74,19 @@ public class GuardianController {
     }
 
 
+    @ApiOperation("Add address to Guardian")
     @PostMapping("addAddress/guardian-{ID}")
     @ResponseStatus(HttpStatus.CREATED)
     GuardianAddressDTO addAddress(@PathVariable String ID, @RequestBody GuardianAddressDTO addressDTO) {
         return guardianService.addAddress(Long.valueOf(ID), addressDTO);
+    }
+
+
+    @ApiOperation("Add contact to Guardian")
+    @PostMapping("addContact/guardian-{ID}")
+    @ResponseStatus(HttpStatus.CREATED)
+    GuardianContactDTO addContact(@PathVariable String ID, @RequestBody GuardianContactDTO contactDTO) {
+        return guardianService.addContact(Long.valueOf(ID), contactDTO);
     }
 
 
@@ -88,10 +98,19 @@ public class GuardianController {
     }
 
 
+    @ApiOperation("Update Address of Guardian with matching ID and save it")
     @PutMapping("updateAddress/guardian-{ID}")
     @ResponseStatus(HttpStatus.OK)
     GuardianAddressDTO updateAddress(@PathVariable String ID, @RequestBody GuardianAddressDTO addressDTO) {
         return guardianService.updateAddress(Long.valueOf(ID), addressDTO);
+    }
+
+
+    @ApiOperation("Update Contact of Guardian with matching ID and save it")
+    @PutMapping("updateContact/guardian-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    GuardianContactDTO updateContact(@PathVariable String ID, @RequestBody GuardianContactDTO contactDTO)  {
+        return guardianService.updateContact(Long.valueOf(ID), contactDTO);
     }
 
 

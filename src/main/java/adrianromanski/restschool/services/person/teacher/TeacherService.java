@@ -53,5 +53,9 @@ public interface TeacherService {
     void deleteTeacherById(Long id);
 
     void removeStudentFromClass(Long teacherID, Long studentID);
+
+    void deleteAddress(Long teacherID);
+
+    void deleteContact(Long teacherID);
 }
 

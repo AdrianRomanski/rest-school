@@ -8,6 +8,7 @@ import adrianromanski.restschool.domain.group.StudentClass;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.person.Teacher;
 import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.exceptions.DeleteBeforeInitializationException;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.mapper.base_entity.TeacherAddressMapper;
 import adrianromanski.restschool.mapper.base_entity.TeacherContactMapper;
@@ -549,7 +550,6 @@ class TeacherServiceImplTest {
     @DisplayName("[Unhappy Path], [Method] = deleteTeacherById")
     @Test
     void deleteTeacherByIDUnHappyPath() {
-
         Throwable ex = catchThrowable(() -> teacherService.deleteTeacherById(222L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
@@ -575,7 +575,6 @@ class TeacherServiceImplTest {
     @DisplayName("[Unhappy Path], [Method] = deleteTeacherById")
     @Test
     void removeStudentFromClassUnHappyPathTeacher()  {
-
         Throwable ex = catchThrowable(() -> teacherService.removeStudentFromClass(1L, 1L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
@@ -592,5 +591,87 @@ class TeacherServiceImplTest {
         Throwable ex = catchThrowable(() -> teacherService.removeStudentFromClass(1L, 1L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = deleteAddress")
+    @Test
+    void deleteAddressHappyPath() {
+        Teacher teacher = createEthan();
+        TeacherAddress address = createAddress();
+        teacher.setAddress(address);
+        address.setTeacher(teacher);
+
+        when(teacherRepository.findById(ID)).thenReturn(Optional.of(teacher));
+
+        teacherService.deleteAddress(ID);
+
+        verify(teacherRepository, times(1)).save(any(Teacher.class));
+        verify(addressRepository, times(1)).delete(any(TeacherAddress.class));
+
+        assertEquals(teacher.getAddress().getCountry(), "default");
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteAddress, [reason] = teacher not found")
+    @Test
+    void deleteAddressUnHappyPathTeacherNotFound()  {
+        Throwable ex = catchThrowable(() -> teacherService.deleteAddress(1L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteAddress, [reason] = address not initialized")
+    @Test
+    void deleteAddressUnHappyPathAddressNotInitialized()  {
+        Teacher teacher = createEthan();
+
+        when(teacherRepository.findById(ID)).thenReturn(Optional.of(teacher));
+
+        Throwable ex = catchThrowable(() -> teacherService.deleteAddress(1L));
+
+        assertThat(ex).isInstanceOf(DeleteBeforeInitializationException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = deleteContact")
+    @Test
+    void deleteContactHappyPath() {
+        Teacher teacher = createEthan();
+        TeacherContact contact = createContact();
+        teacher.setContact(contact);
+        contact.setTeacher(teacher);
+
+        when(teacherRepository.findById(ID)).thenReturn(Optional.of(teacher));
+
+        teacherService.deleteContact(ID);
+
+        verify(teacherRepository, times(1)).save(any(Teacher.class));
+        verify(contactRepository, times(1)).delete(any(TeacherContact.class));
+
+        assertEquals(teacher.getContact().getEmail(), "default@gmail.com");
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteAddress, [reason] = teacher not found")
+    @Test
+    void deleteContactUnHappyPathTeacherNotFound()  {
+        Throwable ex = catchThrowable(() -> teacherService.deleteAddress(1L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteAddress, [reason] = contact not initialized")
+    @Test
+    void deleteContactUnHappyPathContactNotInitialized()  {
+        Teacher teacher = createEthan();
+
+        when(teacherRepository.findById(ID)).thenReturn(Optional.of(teacher));
+
+        Throwable ex = catchThrowable(() -> teacherService.deleteContact(1L));
+
+        assertThat(ex).isInstanceOf(DeleteBeforeInitializationException.class);
     }
 }

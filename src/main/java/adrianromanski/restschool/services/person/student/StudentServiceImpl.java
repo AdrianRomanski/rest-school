@@ -289,13 +289,12 @@ public class StudentServiceImpl implements StudentService{
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         StudentContact contact = student.getContactOptional().
                 orElseThrow(DeleteBeforeInitializationException::new);
-        StudentContact emptyContact = new StudentContact();
-            emptyContact.setStudent(student);
-            student.setContact(emptyContact);
+        student.setContact(new StudentContact());
         contactRepository.delete(contact);
         studentRepository.save(student);
         log.info("Contact successfully deleted from the Student with id: " + studentID);
     }
+
 
     /**
      * Delete Address from the Student with matching id and replaces it with default Address
@@ -308,9 +307,7 @@ public class StudentServiceImpl implements StudentService{
                 .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
         StudentAddress address = student.getAddressOptional()
                 .orElseThrow(DeleteBeforeInitializationException::new);
-        StudentAddress emptyAddress = new StudentAddress();
-            emptyAddress.setStudent(student);
-            student.setAddress(emptyAddress);
+        student.setAddress(new StudentAddress());
         addressRepository.delete(address);
         studentRepository.save(student);
         log.info("Address successfully deleted from the Student with id: " + studentID);

@@ -7,6 +7,7 @@ import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.person.Teacher;
+import adrianromanski.restschool.exceptions.DeleteBeforeInitializationException;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
 import adrianromanski.restschool.mapper.base_entity.TeacherAddressMapper;
@@ -352,6 +353,7 @@ public class TeacherServiceImpl implements TeacherService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id, Teacher.class));
         teacherRepository.delete(teacher);
+        log.info("Teacher with id: " + id + " successfully removed");
     }
 
 
@@ -369,6 +371,36 @@ public class TeacherServiceImpl implements TeacherService {
                     .orElseThrow(() -> new ResourceNotFoundException(studentID, Student.class));
             teacher.getStudentClass().getStudentList().remove(student);
             log.info("Student with id: " + student + " successfully removed");
+    }
+
+
+    /**
+     * Deletes Address from the Teacher by replacing it with default values
+     */
+    @Override
+    public void deleteAddress(Long teacherID) {
+        Teacher teacher = teacherRepository.findById(teacherID)
+                .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
+        TeacherAddress address = teacher.getAddressOptional()
+                .orElseThrow(DeleteBeforeInitializationException::new);
+        teacher.setAddress(new TeacherAddress());
+        addressRepository.delete(address);
+        teacherRepository.save(teacher);
+    }
+
+
+    /**
+     * Deletes Contact from the Teacher by replacing it with default values
+     */
+    @Override
+    public void deleteContact(Long teacherID) {
+        Teacher teacher = teacherRepository.findById(teacherID)
+                .orElseThrow(() -> new ResourceNotFoundException(teacherID, Teacher.class));
+        TeacherContact contact = teacher.getContactOptional()
+                .orElseThrow(DeleteBeforeInitializationException::new);
+        teacher.setContact(new TeacherContact());
+        contactRepository.delete(contact);
+        teacherRepository.save(teacher);
     }
 }
 

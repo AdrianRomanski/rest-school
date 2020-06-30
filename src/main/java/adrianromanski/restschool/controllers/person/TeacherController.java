@@ -148,4 +148,23 @@ public class TeacherController {
     public void deleteTeacherById(@PathVariable String ID) {
         teacherService.deleteTeacherById(Long.valueOf(ID));
     }
+
+
+    @ApiOperation("Delete Contact from Teacher")
+    @DeleteMapping("deleteContact/teacher-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteContact(@PathVariable String ID) {
+        teacherService.deleteContact(Long.valueOf(ID));
+    }
+
+
+    @ApiOperation("Delete Address from Teacher")
+    @DeleteMapping("deleteAddress/teacher-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAddress(@PathVariable String ID) {
+        teacherService.deleteAddress(Long.valueOf(ID));
+    }
+
+
+
 }

@@ -382,6 +382,28 @@
         }
 
 
+        @DisplayName("[DELETE], [Happy Path], [Method] = deleteContact")
+        @Test
+        void deleteContact() throws Exception {
+            mockMvc.perform(delete(TEACHERS + "deleteContact/teacher-1")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+
+            verify(teacherService).deleteContact(ID);
+        }
+
+
+        @DisplayName("[DELETE], [Happy Path], [Method] = deleteAddress")
+        @Test
+        void deleteAddress() throws Exception {
+            mockMvc.perform(delete(TEACHERS + "deleteAddress/teacher-1")
+                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+
+            verify(teacherService).deleteAddress(ID);
+        }
+
+
         @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Teacher with id 222 not found")
         @Test
         public void testNotFoundException() throws Exception {

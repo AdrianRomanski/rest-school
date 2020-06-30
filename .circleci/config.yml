@@ -44,6 +44,7 @@ jobs:
       - store_test_results:
           path: target/surefire-reports
 
+      # Checking why it's not working
       - run:
           name: Send to CodeCov
           command: bash <(curl -s https://codecov.io/bash)

@@ -38,4 +38,8 @@ public interface GuardianService {
     // DELETE
     void deleteGuardianByID(Long id);
 
+    void deleteAddress(Long id);
+
+    void deleteContact(Long id);
+
 }

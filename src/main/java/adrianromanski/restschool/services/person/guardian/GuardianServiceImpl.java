@@ -5,6 +5,7 @@ import adrianromanski.restschool.domain.base_entity.address.GuardianAddress;
 import adrianromanski.restschool.domain.base_entity.contact.Contact;
 import adrianromanski.restschool.domain.base_entity.contact.GuardianContact;
 import adrianromanski.restschool.domain.person.Guardian;
+import adrianromanski.restschool.exceptions.DeleteBeforeInitializationException;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
 import adrianromanski.restschool.mapper.base_entity.GuardianAddressMapper;
@@ -251,5 +252,40 @@ public class GuardianServiceImpl implements GuardianService {
                 .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class));
         guardianRepository.delete(guardian);
         log.info("Guardian with id: " + id + " successfully deleted");
+    }
+
+
+    /**
+     * @param id  of the Guardian we want to delete Address
+     * Delete old Address and replace it with default one
+     */
+    @Override
+    public void deleteAddress(Long id) {
+        Guardian guardian = guardianRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class));
+        GuardianAddress address = guardian.getAddressOptional()
+                .orElseThrow(DeleteBeforeInitializationException::new);
+        addressRepository.delete(address);
+        guardian.setAddress(new GuardianAddress());
+        guardianRepository.save(guardian);
+        log.info("Address of Guardian with id: " + id + " successfully deleted");
+
+    }
+
+
+    /**
+     * @param id  of the Guardian we want to delete Contact
+     * Delete Contact Address and replace it with default one
+     */
+    @Override
+    public void deleteContact(Long id) {
+        Guardian guardian = guardianRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(id, Guardian.class));
+        GuardianContact contact = guardian.getContactOptional()
+                .orElseThrow(DeleteBeforeInitializationException::new);
+        contactRepository.delete(contact);
+        guardian.setContact(new GuardianContact());
+        guardianRepository.save(guardian);
+        log.info("Contact of Guardian with id: " + id + " successfully deleted");
     }
 }

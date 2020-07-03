@@ -1,10 +1,13 @@
 package adrianromanski.restschool.services;
 
+import adrianromanski.restschool.domain.base_entity.address.Address;
 import adrianromanski.restschool.domain.base_entity.address.GuardianAddress;
+import adrianromanski.restschool.domain.base_entity.contact.Contact;
 import adrianromanski.restschool.domain.base_entity.contact.GuardianContact;
 import adrianromanski.restschool.domain.enums.Gender;
 import adrianromanski.restschool.domain.person.Guardian;
 import adrianromanski.restschool.domain.person.Student;
+import adrianromanski.restschool.exceptions.DeleteBeforeInitializationException;
 import adrianromanski.restschool.exceptions.ResourceNotFoundException;
 import adrianromanski.restschool.exceptions.UpdateBeforeInitializationException;
 import adrianromanski.restschool.mapper.base_entity.GuardianAddressMapper;
@@ -57,6 +60,7 @@ class GuardianServiceImplTest {
     public static final String EMAIL = "Email@gmail.com";
     public static final String EMERGENCY_NUMBER = "22-33";
     public static final String NUMBER = "21-34";
+    public static final String E = "SomeEmail@gmail.com";
 
     GuardianService guardianService;
 
@@ -419,6 +423,83 @@ class GuardianServiceImplTest {
         Throwable ex = catchThrowable(() -> guardianService.deleteGuardianByID(222L));
 
         assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = deleteContact")
+    @Test
+    void deleteContactHappyPath() {
+        Guardian guardian = createEthan();
+        GuardianContact contact = getContact();
+        guardian.setContact(contact);
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        guardianService.deleteContact(1L);
+
+        verify(guardianRepository, times(1)).save(any(Guardian.class));
+        verify(contactRepository, times(1)).delete(any(Contact.class));
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteContact, [Reason] = Guardian not found")
+    @Test
+    void deleteContactUnhappyPathGuardian() {
+        Throwable ex = catchThrowable(() -> guardianService.deleteContact(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteContact, [Reason] = Contact not initialized")
+    @Test
+    void deleteContactUnhappyPathInitialization() {
+        Guardian guardian = createEthan();
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        Throwable ex = catchThrowable(() -> guardianService.deleteContact(222L));
+
+        assertThat(ex).isInstanceOf(DeleteBeforeInitializationException.class);
+    }
+
+
+    @DisplayName("[Happy Path], [Method] = deleteAddress")
+    @Test
+    void deleteAddressHappyPath() {
+        Guardian guardian = createEthan();
+        GuardianAddress address = getAddress();
+
+        guardian.setAddress(address);
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        guardianService.deleteAddress(1L);
+
+        verify(guardianRepository, times(1)).save(any(Guardian.class));
+        verify(addressRepository, times(1)).delete(any(Address.class));
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteAddress, [Reason] = Guardian not found")
+    @Test
+    void deleteAddressUnhappyPathGuardian() {
+        Throwable ex = catchThrowable(() -> guardianService.deleteAddress(222L));
+
+        assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
+    }
+
+
+    @DisplayName("[Unhappy Path], [Method] = deleteAddress, [Reason] = Address not initialized")
+    @Test
+    void deleteAddressUnhappyPathInitialization() {
+        Guardian guardian = createEthan();
+
+        when(guardianRepository.findById(anyLong())).thenReturn(Optional.of(guardian));
+
+        Throwable ex = catchThrowable(() -> guardianService.deleteAddress(222L));
+
+        assertThat(ex).isInstanceOf(DeleteBeforeInitializationException.class);
     }
 }
 

@@ -120,4 +120,18 @@ public class GuardianController {
     void deleteGuardian(@PathVariable String ID) {
         guardianService.deleteGuardianByID(Long.valueOf(ID));
     }
+
+    @ApiOperation("Delete Contact of Guardian with matching ID")
+    @DeleteMapping("deleteContact/guardian-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    void deleteContact(@PathVariable String ID) {
+        guardianService.deleteContact(Long.valueOf(ID));
+    }
+
+    @ApiOperation("Delete Address of Guardian with matching ID")
+    @DeleteMapping("deleteAddress/guardian-{ID}")
+    @ResponseStatus(HttpStatus.OK)
+    void deleteAddress(@PathVariable String ID) {
+        guardianService.deleteAddress(Long.valueOf(ID));
+    }
 }

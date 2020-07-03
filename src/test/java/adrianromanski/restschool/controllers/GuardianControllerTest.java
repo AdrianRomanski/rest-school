@@ -279,6 +279,28 @@ class GuardianControllerTest {
     }
 
 
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteAddress")
+    @Test
+    void deleteAddress() throws Exception {
+        mockMvc.perform(delete(GUARDIANS + "deleteAddress/guardian-1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(guardianService).deleteAddress(ID);
+    }
+
+
+    @DisplayName("[DELETE], [Happy Path], [Method] = deleteContact")
+    @Test
+    void deleteContact() throws Exception {
+        mockMvc.perform(delete(GUARDIANS + "deleteContact/guardian-1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(guardianService).deleteContact(ID);
+    }
+
+
     @DisplayName("[GET, PUT, DELETE], [Unhappy Path], [Reason] = Guardian with id 222 not found")
     @Test
     public void testNotFoundException() throws Exception {

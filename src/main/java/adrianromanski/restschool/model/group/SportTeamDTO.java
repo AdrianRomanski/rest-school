@@ -1,6 +1,7 @@
 package adrianromanski.restschool.model.group;
 
 import adrianromanski.restschool.domain.enums.Sport;
+import adrianromanski.restschool.model.event.SchoolYearDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -21,6 +22,7 @@ public class SportTeamDTO extends GroupDTO{
         this.sport = sport;
     }
 
+    private SchoolYearDTO schoolYearDTO;
     private List<StudentDTO> studentsDTO = new ArrayList<>();
 
     @JsonIgnore

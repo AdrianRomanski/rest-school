@@ -1,11 +1,13 @@
 package adrianromanski.restschool.domain.group;
 
 import adrianromanski.restschool.domain.enums.Sport;
+import adrianromanski.restschool.domain.event.SchoolYear;
 import adrianromanski.restschool.domain.person.Student;
 import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,11 @@ public class SportTeam extends Group {
         this.sport = sport;
     }
 
+    @OneToOne
+    private SchoolYear schoolYear;
+
     @OneToMany(mappedBy = "sportTeam")
     private List<Student> students = new ArrayList<>();
+
 
 }

@@ -1,12 +1,15 @@
 package adrianromanski.restschool.model.person;
 
 import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.model.event.SchoolYearDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,4 +24,6 @@ public class DirectorDTO extends SchoolWorkerDTO {
         super(firstName, lastName, gender, dateOfBirth, age, yearsOfExperience, firstDay);
         this.budget = budget;
     }
+
+    private List<SchoolYearDTO> schoolYearsDTO = new ArrayList<>();
 }

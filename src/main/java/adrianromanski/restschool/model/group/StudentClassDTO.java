@@ -1,6 +1,7 @@
 package adrianromanski.restschool.model.group;
 
 import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.model.event.SchoolYearDTO;
 import adrianromanski.restschool.model.person.StudentDTO;
 import adrianromanski.restschool.model.person.TeacherDTO;
 import lombok.*;
@@ -22,5 +23,6 @@ public class StudentClassDTO extends GroupDTO {
     }
 
     private TeacherDTO teacherDTO;
+    private SchoolYearDTO schoolYearDTO;
     private List<StudentDTO> studentDTOList = new ArrayList<>();
 }

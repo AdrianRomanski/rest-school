@@ -1,6 +1,7 @@
 package adrianromanski.restschool.domain.group;
 
 import adrianromanski.restschool.domain.enums.Subjects;
+import adrianromanski.restschool.domain.event.SchoolYear;
 import adrianromanski.restschool.domain.person.Student;
 import adrianromanski.restschool.domain.person.Teacher;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -28,6 +29,9 @@ public class StudentClass extends Group {
 
     @OneToOne
     private Teacher teacher;
+
+    @OneToOne
+    private SchoolYear schoolYear;
 
     @JsonBackReference
     @OneToMany(mappedBy = "studentClass")

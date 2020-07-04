@@ -1,13 +1,18 @@
 package adrianromanski.restschool.domain.person;
 
 import adrianromanski.restschool.domain.enums.Gender;
+import adrianromanski.restschool.domain.event.SchoolYear;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -27,6 +32,8 @@ public class Director extends SchoolWorker {
                     Long age, Long yearsOfExperience, LocalDate firstDay, Double budget) {
         super(firstName, lastName, gender, dateOfBirth, age, yearsOfExperience, firstDay);
         this.budget = budget;
-
     }
+
+    @OneToMany(mappedBy = "director")
+    private List<SchoolYear> schoolYears = new ArrayList<>();
 }

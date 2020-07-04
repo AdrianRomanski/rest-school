@@ -12,10 +12,11 @@ public interface TeachingStaffMapper {
     TeachingStaffMapper INSTANCE = Mappers.getMapper(TeachingStaffMapper.class);
 
 
+    @Mapping(source = "schoolYear", target = "schoolYearDTO")
     @Mapping(source = "teachers", target = "teachersDTO")
     TeachingStaffDTO teachingStaffToTeachingStaffDTO(TeachingStaff teachingStaff);
 
-
+    @Mapping(source = "schoolYearDTO", target = "schoolYear")
     @Mapping(source = "teachersDTO",target = "teachers")
     TeachingStaff teachingStaffToTeachingStaffDTO(TeachingStaffDTO teachingStaffDTO);
 }

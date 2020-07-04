@@ -7,15 +7,13 @@ import adrianromanski.restschool.domain.enums.Subjects;
 import adrianromanski.restschool.domain.event.Exam;
 import adrianromanski.restschool.domain.event.Payment;
 import adrianromanski.restschool.domain.group.StudentClass;
+import adrianromanski.restschool.domain.group.TeachingStaff;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +54,9 @@ public class Teacher extends SchoolWorker {
 
     @OneToMany(mappedBy = "teacher")
     private List<Payment> payments = new ArrayList<>();
+
+    @ManyToOne
+    private TeachingStaff teachingStaff;
 
 
 }

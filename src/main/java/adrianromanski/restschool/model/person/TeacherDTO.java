@@ -7,6 +7,7 @@ import adrianromanski.restschool.model.base_entity.contact.TeacherContactDTO;
 import adrianromanski.restschool.model.event.ExamDTO;
 import adrianromanski.restschool.model.event.PaymentDTO;
 import adrianromanski.restschool.model.group.StudentClassDTO;
+import adrianromanski.restschool.model.group.TeachingStaffDTO;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -39,5 +40,7 @@ public class TeacherDTO extends SchoolWorkerDTO {
 
     @JsonIgnore
     private StudentClassDTO studentClassDTO;
+
+    private TeachingStaffDTO teachingStaffDTO;
 
 }

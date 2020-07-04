@@ -17,7 +17,8 @@ public interface TeacherMapper {
             @Mapping(source = "contact", target = "contactDTO"),
             @Mapping(source = "studentClass", target = "studentClassDTO"),
             @Mapping(source = "exams", target = "examsDTO"),
-            @Mapping(source = "payments",target = "paymentsDTO")
+            @Mapping(source = "payments",target = "paymentsDTO"),
+            @Mapping(source = "teachingStaff",target = "teachingStaffDTO")
     })
     TeacherDTO teacherToTeacherDTO(Teacher teacher);
 
@@ -26,7 +27,8 @@ public interface TeacherMapper {
             @Mapping(source = "contactDTO", target = "contact"),
             @Mapping(source = "studentClassDTO", target = "studentClass"),
             @Mapping(source = "examsDTO", target = "exams"),
-            @Mapping(source = "paymentsDTO", target = "payments")
+            @Mapping(source = "paymentsDTO", target = "payments"),
+            @Mapping(source = "teachingStaffDTO",target = "teachingStaff")
     })
     Teacher teacherDTOToTeacher(TeacherDTO teacherDTO);
 }
